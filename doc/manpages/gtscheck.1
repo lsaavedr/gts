@@ -1,0 +1,40 @@
+.TH gtscheck 1 "June 2, 2008" "" "GNU Triangulated Surface utils"
+
+.SH NAME
+gtscheck \- checks that a surface defines a closed, orientable non self-intersecting manifold.
+
+.SH SYNOPSIS
+.B gtscheck
+.RI [\| OPTION \|]\ <\  FILE
+.SH DESCRIPTION
+This manual page documents briefly the
+.B gtscheck
+command.
+
+.SH OPTIONS
+These programs follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.BR \-v ,\  \-\-verbose
+Print statistics about the surface.
+.TP
+.BR \-h ,\  \-\-help
+Display the help and exit.
+
+.SH EXIT STATUS
+The return status reflects the error encountered:
+.B 0
+none
+.B 1
+the input file is not a valid GTS file
+.B 2
+the surface is not an orientable manifold
+.B 3
+the surface is an orientable manifold but is self-intersecting
+
+.SH AUTHOR
+gtscheck was written by Stephane Popinet <popinet@users.sourceforge.net>.
+.PP
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>,
+for the Debian project (but may be used by others).

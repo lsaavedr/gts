@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+GTS_VERSION = $(shell grep -o "[0-9]*\.[0-9]*\.[0-9]*" $(CURDIR)/debian/changelog)
+DEB_DH_MAKESHLIBS_ARGS_libgts-snapshot = -- -v$(GTS_VERSION) -c0
+
+clean::
+	rm -f src/predicates_init

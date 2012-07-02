@@ -1,0 +1,16 @@
+# fast_expansion_sum_zeroelim in predicates.c reads uninitialised array values
+# but subsequently discards them (hopefully).
+
+{
+  fast_expansion_sum_zeroelim/orient
+  Memcheck:Value8
+  fun:fast_expansion_sum_zeroelim
+  fun:orient*adapt
+}
+
+{
+  fast_expansion_sum_zeroelim/incircle
+  Memcheck:Value8
+  fun:fast_expansion_sum_zeroelim
+  fun:incircleadapt
+}

@@ -1,0 +1,67 @@
+.TH delaunay 1 "June 2, 2008" "" "GNU Triangulated Surface utils"
+
+.SH NAME
+delaunay \- constructs the constrained Delaunay triangulation of the input
+
+.SH SYNOPSIS
+.B delaunay
+.RI [\| OPTIONS \|]\ <\  file.gts
+
+.SH DESCRIPTION
+This manual page documents briefly the
+.B delaunay
+command. This command constructs the
+constrained Delaunay triangulation of the input
+
+.SH OPTIONS
+This program follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.BR \-b ,\  \-\-hull
+Do not keep convex hull.
+.TP
+.BR \-e ,\  \-\-noconst
+Do not add constrained edges.
+.TP
+.BR \-S ,\  \-\-split
+Split constraints (experimental).
+.TP
+.BR \-H ,\  \-\-holes
+Remove holes from the triangulation.
+.TP
+.BR \-d ,\  \-\-duplicates
+Remove duplicate vertices.
+.TP
+.BR \-r ,\  \-\-randomize
+Shuffle input vertex list.
+.TP
+.BR \-c ,\  \-\-check
+Check Delaunay property.
+.TP
+.BI \-f\  FNAME\fR,\  \-\-files= FNAME
+Generate evolution files.
+.TP
+.BR \-o ,\  \-\-conform
+Generate conforming triangulation.
+.TP
+.BI \-s\  N\fR,\  \-\-steiner= N
+Maximum number of Steiner points for conforming triangulation (default is no limit).
+.TP
+.BI \-q\  Q\fR,\  \-\-quality= Q
+Set the minimum acceptable face quality.
+.TP
+.BI \-a\  A\fR,\  \-\-area= A
+Set the maximum acceptable face area.
+.TP
+.BR \-v ,\  \-\-verbose
+Print statistics about the triangulation.
+.TP
+.BR \-h ,\  \-\-help
+Display the help and exit.
+
+.SH AUTHOR
+delaunay was written by Stephane Popinet <popinet@users.sourceforge.net>.
+.PP
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>,
+for the Debian project (but may be used by others).

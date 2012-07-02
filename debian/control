@@ -1,0 +1,44 @@
+Source: gts-snapshot
+Section: math
+Priority: optional
+Maintainer: Stephane Popinet <popinet@users.sf.net>
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libglib2.0-dev, libnetpbm10-dev, gtk-doc-tools (>= 1.3-4)
+Homepage: http://gts.sourceforge.net/
+
+Package: libgts-snapshot-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libglib2.0-dev, libgts-snapshot (= ${binary:Version})
+Conflicts: libgts-dev, libgts-bin
+Suggests: libgts-snapshot-doc
+Description: GTS Library (development snapshot)
+ GTS includes a number of useful functions to deal with triangulated
+ surfaces including, but not limited to, multi-resolution models,
+ Delaunay and Constrained Delaunay triangulations, set operations on
+ surfaces (intersection, union etc ...), bounding-boxes trees for
+ efficient collision and intersection detection, triangle strips and
+ binary heaps.
+
+Package: libgts-snapshot
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libgts-0.7-1, libgts-0.7-5, libgts-bin
+Description: GTS Library (development snapshot) -- runtime environment
+ GTS includes a number of useful functions to deal with triangulated
+ surfaces.  Refer to the libgts-dev package description for more
+ details.
+ .
+ This package provides runtime support for GTS
+
+Package: libgts-snapshot-doc
+Section: doc
+Architecture: all
+Conflicts: libgts-doc
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: GTS Library documentation (development snapshot)
+ GTS includes a number of useful functions to deal with triangulated
+ surfaces.  Refer to the libgts-dev package description for more
+ details.
+ .
+ This package contains the GTS Reference, in HTML format.

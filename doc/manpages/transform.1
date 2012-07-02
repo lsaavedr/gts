@@ -1,0 +1,78 @@
+.TH transform 1 "June 2, 2008" "" "GNU Triangulated Surface utils"
+
+.SH NAME
+transform \- apply geometric transformations to the input.
+
+.SH SYNOPSIS
+.B transform
+.RI [\| OPTIONS \|]\ <\  file.gts
+
+.SH DESCRIPTION
+This manual page documents briefly the 
+.B transform
+command.
+
+.SH OPTIONS
+This program follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.BI \-r\  ANGLE\fR,\  \-\-rx= ANGLE
+Rotate around x-axis
+.RI ( ANGLE
+in degrees).
+.TP
+.BI \-m\  ANGLE\fR,\  \-\-ry= ANGLE
+Rotate around y-axis.
+.TP
+.BI \-m\  ANGLE\fR,\  \-\-rz= ANGLE
+Rotate around z-axis.
+.TP
+.BI \-s\  FACTOR\fR,\  \-\-scale= FACTOR
+Scale by
+.IR FACTOR .
+.TP
+.BI \-R\  FACTOR\fR,\  \-\-sx= FACTOR
+Scale x-axis by
+.IR FACTOR .
+.TP
+.BI \-M\  FACTOR\fR,\  \-\-sy= FACTOR
+Scale y-axis by
+.IR FACTOR .
+.TP
+.BI \-N\  FACTOR\fR,\  \-\-sz= FACTOR
+Scale z-axis by
+.IR FACTOR .
+.TP
+.BI \-t\  V\fR,\  \-\-tx= V
+Translate of
+.I V
+along x-axis.
+.TP
+.BI \-u\  V\fR,\  \-\-ty= V
+Translate of
+.I V
+along y-axis.
+.TP
+.BI \-w\  V\fR,\  \-\-tz= V
+Translate of
+.I V
+along z-axis.
+.TP
+.BR \-i ,\  \-\-revert
+Turn surface inside out.
+.TP
+.BR \-o ,\  \-\-normalize
+Fit the resulting surface in a cube of size 1 centered at the origin.
+.TP
+.BR \-v ,\  \-\-verbose
+Print statistics about the surface.
+.TP
+.BR \-h ,\  \-\-help
+Display the help and exit.
+
+.SH AUTHOR
+transform was written by Stephane Popinet <popinet@users.sourceforge.net>.
+.PP
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>,
+for the Debian project (but may be used by others).

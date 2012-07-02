@@ -1,0 +1,23 @@
+- cvs update
+- make changelog
+- update NEWS
+- commit ChangeLog and NEWS
+- check version number in configure.in
+  * if changed:
+    - autoconf
+    - ./configure
+    - commit configure.in
+- make dist
+- cvs tag release_...
+- http://sourceforge.net/docman/display_doc.php?docid=6445&group_id=1#howtoupload
+- ftp://upload.sf.net/incoming/
+- runsocks ncftp upload.sf.net
+- https://sourceforge.net/project/admin/editpackages.php?group_id=1343
+- update ../www/macros.m4 `m4_gts_version'
+         ../www/menu.html "Download Version m4_gts_version"
+	 /bin/cp doc/html/* ../www/publish/reference/
+  update News section
+  cd ../www
+  make
+  make sync
+- mail gts-general, gts-devel, gts-announce

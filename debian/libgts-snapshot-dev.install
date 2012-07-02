@@ -1,0 +1,7 @@
+debian/tmp/usr/bin/gts-config
+debian/tmp/usr/include
+debian/tmp/usr/lib/*.so
+debian/tmp/usr/lib/*.a
+debian/tmp/usr/lib/*.la
+debian/tmp/usr/share/aclocal
+debian/tmp/usr/share/man/man1/gts-config.1
