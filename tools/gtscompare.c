@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -269,10 +269,10 @@ int main (int argc, char * argv[])
       break;
     }
     case 'm': /* minimum value */
-      min = strtod (optarg, NULL);
+      min = atof (optarg);
       break;
     case 'M': /* maximum value */
-      max = strtod (optarg, NULL);
+      max = atof (optarg);
       break;
     case 'r': /* reverse colormap */
       colormap->reversed = TRUE;
@@ -308,7 +308,7 @@ int main (int argc, char * argv[])
     return 1;
   }
 
-  delta = strtod (argv[optind + 2], NULL);
+  delta = atof (argv[optind + 2]);
   if (delta <= 0. || delta >= 1.0) {
     fprintf (stderr, "gtscompare: DELTA must be in ]0,1[\n");
     fprintf (stderr, "Try `gtscompare --help' for more information.\n");

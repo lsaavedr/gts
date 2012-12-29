@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999-2003  Wagner Toledo Correa, StÃ©phane Popinet
+ * Copyright (C) 1999-2003  Wagner Toledo Correa, Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public

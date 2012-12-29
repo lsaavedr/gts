@@ -1,0 +1,343 @@
+<!-- ##### SECTION Title ##### -->
+Triangles
+
+<!-- ##### SECTION Short_Description ##### -->
+triangle object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A #GtsTriangle is defined by three #GtsEdge. They are oriented, the normal to the triangle points toward an observer seing the three edges in counter-clockwise order.
+</para>
+<para>
+When destroying a #GtsTriangle, all the edges not used by another triangle are also destroyed. This default behaviour can be changed punctually by setting the global variable gts_allow_floating_edges to %TRUE. You must not forget to set this variable back to %FALSE as all the algorithms of GTS assume the default behaviour.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_TRIANGLE_CLASS ##### -->
+<para>
+Casts @klass to #GtsTriangleClass.
+</para>
+
+@klass: a descendant of #GtsTriangleClass.
+
+
+<!-- ##### MACRO GTS_TRIANGLE ##### -->
+<para>
+Casts @obj to #GtsTriangle.
+</para>
+
+@obj: a descendant of #GtsTriangle.
+
+
+<!-- ##### MACRO GTS_IS_TRIANGLE ##### -->
+<para>
+Evaluates to %TRUE if @obj is a descendant of #GtsTriangle, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsTriangleClass ##### -->
+<para>
+The triangle class, just derived from #GtsObject.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsTriangle ##### -->
+<para>
+The triangle object.
+</para>
+
+@object: Parent object.
+@e1: First edge.
+@e2: Second edge.
+@e3: Third edge.
+
+<!-- ##### FUNCTION gts_triangle_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@e1: 
+@e2: 
+@e3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_set ##### -->
+<para>
+
+</para>
+
+@triangle: 
+@e1: 
+@e2: 
+@e3: 
+
+
+<!-- ##### FUNCTION gts_triangle_area ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_perimeter ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_quality ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_normal ##### -->
+<para>
+
+</para>
+
+@t: 
+@x: 
+@y: 
+@z: 
+
+
+<!-- ##### FUNCTION gts_triangle_revert ##### -->
+<para>
+
+</para>
+
+@t: 
+
+
+<!-- ##### FUNCTION gts_triangle_orientation ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_is_duplicate ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangles_angle ##### -->
+<para>
+
+</para>
+
+@t1: 
+@t2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangles_are_compatible ##### -->
+<para>
+
+</para>
+
+@t1: 
+@t2: 
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_enclosing ##### -->
+<para>
+
+</para>
+
+@klass: 
+@points: 
+@scale: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangles_common_edge ##### -->
+<para>
+
+</para>
+
+@t1: 
+@t2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_neighbor_number ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_neighbors ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_vertices_edges ##### -->
+<para>
+
+</para>
+
+@t: 
+@e: 
+@v1: 
+@v2: 
+@v3: 
+@e1: 
+@e2: 
+@e3: 
+
+
+<!-- ##### FUNCTION gts_triangle_vertex_opposite ##### -->
+<para>
+
+</para>
+
+@t: 
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_edge_opposite ##### -->
+<para>
+
+</para>
+
+@t: 
+@v: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_vertices ##### -->
+<para>
+
+</para>
+
+@t: 
+@v1: 
+@v2: 
+@v3: 
+
+
+<!-- ##### MACRO gts_triangle_vertex ##### -->
+<para>
+Evaluates to the #GtsVertex of @t not used by @t->e1.
+</para>
+
+@t: a #GtsTriangle.
+
+
+<!-- ##### FUNCTION gts_triangle_is_ok ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_use_edges ##### -->
+<para>
+
+</para>
+
+@e1: 
+@e2: 
+@e3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_circumcircle_center ##### -->
+<para>
+
+</para>
+
+@t: 
+@point_class: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_is_stabbed ##### -->
+<para>
+
+</para>
+
+@t: 
+@p: 
+@orientation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangles_are_folded ##### -->
+<para>
+
+</para>
+
+@triangles: 
+@A: 
+@B: 
+@max: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangles_from_edges ##### -->
+<para>
+
+</para>
+
+@edges: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_triangle_interpolate_height ##### -->
+<para>
+
+</para>
+
+@t: 
+@p: 
+
+

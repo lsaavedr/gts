@@ -1,0 +1,121 @@
+<!-- ##### SECTION Title ##### -->
+Hierarchical surfaces
+
+<!-- ##### SECTION Short_Description ##### -->
+extension of progressive surfaces allowing arbitrary sequences of vertex split or collapse.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Hierarchical surfaces are used to manage sequences of vertex splits or collapses which can be different from the initial sequence described by the progressive surface. In this way different branches of the vertex split tree can be collapsed or expanded resulting in a level of detail varying across different parts of the surface. This is the fundamental mechanism of view-dependent level of detail.
+</para>
+<para>
+Hierarchical surfaces maintain two priority heaps one containing the next vertices (#GtsHSplit) ready to be expanded, the other the next vertices ready to be collapsed. By updating the priorities for these vertices as the view point changes and collapsing or expanding the top ones until a given criterium is verified, the level of detail can be dynamically adapted.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_HSURFACE_CLASS ##### -->
+<para>
+Casts @klass to #GtsHSurfaceClass.
+</para>
+
+@klass: a descendant of #GtsHSurfaceClass.
+
+
+<!-- ##### MACRO GTS_HSURFACE ##### -->
+<para>
+Casts @obj to #GtsHSurface.
+</para>
+
+@obj: a descendant of #GtsHSurface.
+
+
+<!-- ##### MACRO GTS_IS_HSURFACE ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsHSurface.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsHSurfaceClass ##### -->
+<para>
+The hierarchical surface class derived from #GtsObjectClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsHSurface ##### -->
+<para>
+The hierarchical surface object.
+</para>
+
+@object: The parent object.
+@s: The #GtsSurface being refined or coarsened.
+@roots: Private field.
+@expandable: #GtsEHeap of the expandable #GtsHSplit sorted by priority.
+@collapsable: #GtsEHeap of the collapsable #GtsHSplit sorted by priority.
+@split: Private field.
+@nvertex: Private field.
+
+<!-- ##### FUNCTION gts_hsurface_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_hsurface_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@hsplit_class: 
+@psurface: 
+@expand_key: 
+@expand_data: 
+@collapse_key: 
+@collapse_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_hsurface_traverse ##### -->
+<para>
+
+</para>
+
+@hsurface: 
+@order: 
+@depth: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_hsurface_height ##### -->
+<para>
+
+</para>
+
+@hsurface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_hsurface_foreach ##### -->
+<para>
+
+</para>
+
+@hsurface: 
+@order: 
+@func: 
+@data: 
+
+

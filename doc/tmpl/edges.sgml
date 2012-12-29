@@ -1,0 +1,224 @@
+<!-- ##### SECTION Title ##### -->
+Edges
+
+<!-- ##### SECTION Short_Description ##### -->
+edge object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Edges are derived from #GtsSegment. They are used to define #GtsTriangle.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_EDGE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_EDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_EDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsEdgeClass ##### -->
+<para>
+The edge class. No virtual function associated.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsEdge ##### -->
+<para>
+The edge object.
+</para>
+
+@segment: The parent object.
+@triangles: List of #GtsTriangle using this edge.
+
+<!-- ##### FUNCTION gts_edge_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@v1: 
+@v2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_replace ##### -->
+<para>
+
+</para>
+
+@e: 
+@with: 
+
+
+<!-- ##### MACRO gts_edge_is_unattached ##### -->
+<para>
+
+</para>
+
+@s: 
+
+
+<!-- ##### FUNCTION gts_edge_is_duplicate ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_has_parent_surface ##### -->
+<para>
+
+</para>
+
+@e: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_has_any_parent_surface ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_is_boundary ##### -->
+<para>
+
+</para>
+
+@e: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_is_contact ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_belongs_to_tetrahedron ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_face_number ##### -->
+<para>
+
+</para>
+
+@e: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_manifold_faces ##### -->
+<para>
+
+</para>
+
+@e: 
+@s: 
+@f1: 
+@f2: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GtsEncroachFunc ##### -->
+<para>
+
+</para>
+
+@v: 
+@e: 
+@s: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_is_encroached ##### -->
+<para>
+
+</para>
+
+@e: 
+@s: 
+@encroaches: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edges_merge ##### -->
+<para>
+
+</para>
+
+@edges: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edges_from_vertices ##### -->
+<para>
+
+</para>
+
+@vertices: 
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_swap ##### -->
+<para>
+
+</para>
+
+@e: 
+@s: 
+
+

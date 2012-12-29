@@ -1,0 +1,108 @@
+<!-- ##### SECTION Title ##### -->
+Hierarchical vertex split
+
+<!-- ##### SECTION Short_Description ##### -->
+hierarchical extension of the vertex split.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Hierarchical vertex splits are the building blocks of hierarchical surfaces. They are derived from #GtsSplit objects but add pointers to their parents in the vertex split tree and information on the state (collapsed or expanded) of their children.
+</para>
+<para>
+Together with #GtsEHeapPair fields these informations allow to manage any valid sequence of expansions or collapses.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_HSPLIT_CLASS ##### -->
+<para>
+Casts @klass to #GtsHSplitClass.
+</para>
+
+@klass: a descendant of #GtsHSplitClass.
+
+
+<!-- ##### MACRO GTS_HSPLIT ##### -->
+<para>
+Casts @obj to #GtsHSplit.
+</para>
+
+@obj: a descendant of #GtsHSplit.
+
+
+<!-- ##### MACRO GTS_IS_HSPLIT ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsHSplit, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsHSplitClass ##### -->
+<para>
+The hierarchical split vertex class derived from #GtsSplitClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsHSplit ##### -->
+<para>
+The hierarchical split vertex object.
+</para>
+
+@split: The parent object.
+@index: Used when managing priority heaps for vertex split and collapse.
+@parent: Parent of this hierarchical split vertex in the split vertex tree.
+@nchild: Number of expanded children of this vertex split (0, 1, or 2).
+
+<!-- ##### FUNCTION gts_hsplit_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_hsplit_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@vs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_hsplit_collapse ##### -->
+<para>
+
+</para>
+
+@hs: 
+@hsurface: 
+
+
+<!-- ##### FUNCTION gts_hsplit_expand ##### -->
+<para>
+
+</para>
+
+@hs: 
+@hsurface: 
+
+
+<!-- ##### FUNCTION gts_hsplit_force_expand ##### -->
+<para>
+
+</para>
+
+@hs: 
+@hsurface: 
+
+

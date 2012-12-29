@@ -17,25 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/**
- * SECTION: hsplit
- * @short_description: hierarchical extension of the vertex split.
- * @title: Hierarchical vertex split
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Hierarchical vertex splits are the building blocks of hierarchical
- * surfaces. They are derived from #GtsSplit objects but add pointers
- * to their parents in the vertex split tree and information on the
- * state (collapsed or expanded) of their children.
- *
- * Together with #GtsEHeapPair fields these informations allow to
- * manage any valid sequence of expansions or collapses.
- */
-
 #include <stdlib.h>
 #include <string.h>
 #include "gts.h"
@@ -548,6 +529,7 @@ static gboolean edge_collapse_is_valid (GtsEdge * e)
 
   return TRUE;
 }
+#endif /* DEBUG */
 
 static void print_split (GtsSplit * vs, FILE * fptr)
 {
@@ -567,7 +549,6 @@ static void print_split (GtsSplit * vs, FILE * fptr)
     cf++;
   }
 }
-#endif /* DEBUG */
 
 /**
  * gts_split_collapse:
@@ -883,7 +864,6 @@ void gts_split_expand (GtsSplit * vs,
   }
 }
 
-#ifndef DYNAMIC_SPLIT
 static void cface_neighbors (GtsSplitCFace * cf,
 			     GtsEdge * e,
 			     GtsVertex * v1,
@@ -919,7 +899,6 @@ static void cface_neighbors (GtsSplitCFace * cf,
   }
   *a = NULL;
 }
-#endif
 
 /**
  * gts_split_new:
@@ -940,6 +919,9 @@ GtsSplit * gts_split_new (GtsSplitClass * klass,
 {
   GtsSplit * vs;
   GtsVertex * v1, * v2;
+  GtsEdge * e;
+  GSList * i;
+  GtsSplitCFace * cf;
 
   g_return_val_if_fail (klass != NULL, NULL);
   g_return_val_if_fail (v != NULL, NULL);
@@ -956,10 +938,6 @@ GtsSplit * gts_split_new (GtsSplitClass * klass,
   vs->ncf = 0;
   vs->cfaces = NULL;
 #else
-  GtsEdge * e;
-  GSList * i;
-  GtsSplitCFace * cf;
-
   g_assert ((e = GTS_EDGE (gts_vertices_are_connected (v1, v2))));
   i = e->triangles;
   vs->ncf = g_slist_length (i);
@@ -1124,7 +1102,6 @@ guint gts_split_height (GtsSplit * root)
   return height + 1;
 }
 
-#ifndef DYNAMIC_SPLIT
 static gboolean list_array_are_identical (GSList * list, 
 					  gpointer * array,
 					  gpointer excluded)
@@ -1145,7 +1122,6 @@ static gboolean list_array_are_identical (GSList * list,
   }
   return TRUE;
 }
-#endif
 
 #ifndef NEW
 gboolean gts_split_is_collapsable (GtsSplit * vs)
@@ -1394,21 +1370,21 @@ static guint surface_read (GtsSurface * surface,
     gts_file_error (f, "expecting an integer (number of vertices)");
     return f->line;
   }
-  nv = strtol (f->token->str, NULL, 0);
+  nv = atoi (f->token->str);
 
   gts_file_next_token (f);
   if (f->type != GTS_INT) {
     gts_file_error (f, "expecting an integer (number of edges)");
     return f->line;
   }
-  ne = strtol (f->token->str, NULL, 0);
+  ne = atoi (f->token->str);
 
   gts_file_next_token (f);
   if (f->type != GTS_INT) {
     gts_file_error (f, "expecting an integer (number of faces)");
     return f->line;
   }
-  nf = strtol (f->token->str, NULL, 0);
+  nf = atoi (f->token->str);
 
   gts_file_next_token (f);
   if (f->type == GTS_STRING) {
@@ -1470,7 +1446,7 @@ static guint surface_read (GtsSurface * surface,
     if (f->type != GTS_INT)
       gts_file_error (f, "expecting an integer (first vertex index)");
     else {
-      p1 = strtol (f->token->str, NULL, 0);
+      p1 = atoi (f->token->str);
       if (p1 == 0 || p1 > nv)
 	gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
 			p1, nv);
@@ -1479,7 +1455,7 @@ static guint surface_read (GtsSurface * surface,
 	if (f->type != GTS_INT)
 	  gts_file_error (f, "expecting an integer (second vertex index)");
 	else {
-	  p2 = strtol (f->token->str, NULL, 0);
+	  p2 = atoi (f->token->str);
 	  if (p2 == 0 || p2 > nv)
 	    gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
 			    p2, nv);
@@ -1511,7 +1487,7 @@ static guint surface_read (GtsSurface * surface,
     if (f->type != GTS_INT)
       gts_file_error (f, "expecting an integer (first edge index)");
     else {
-      s1 = strtol (f->token->str, NULL, 0);
+      s1 = atoi (f->token->str);
       if (s1 == 0 || s1 > ne)
 	gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 			s1, ne);
@@ -1520,7 +1496,7 @@ static guint surface_read (GtsSurface * surface,
 	if (f->type != GTS_INT)
 	  gts_file_error (f, "expecting an integer (second edge index)");
 	else {
-	  s2 = strtol (f->token->str, NULL, 0);
+	  s2 = atoi (f->token->str);
 	  if (s2 == 0 || s2 > ne)
 	    gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 			    s2, ne);
@@ -1529,7 +1505,7 @@ static guint surface_read (GtsSurface * surface,
 	    if (f->type != GTS_INT)
 	      gts_file_error (f, "expecting an integer (third edge index)");
 	    else {
-	      s3 = strtol (f->token->str, NULL, 0);
+	      s3 = atoi (f->token->str);
 	      if (s3 == 0 || s3 > ne)
 		gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 				s3, ne);
@@ -1616,7 +1592,7 @@ GtsPSurface * gts_psurface_open (GtsPSurfaceClass * klass,
   ps->pos = 0;
 
   if (f->type == GTS_INT) {
-    gint ns = strtol (f->token->str, NULL, 0);
+    gint ns = atoi (f->token->str);
     
     if (ns > 0) {
       g_ptr_array_set_size (ps->split, ns);
@@ -1658,7 +1634,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
     gts_file_error (fp, "expecting an integer (vertex index)");
     return NULL;
   }
-  nv = strtol (fp->token->str, NULL, 0);
+  nv = atoi (fp->token->str);
   if (nv == 0 || nv > ps->vertices->len) {
     gts_file_error (fp, "vertex index `%d' is out of range `[1,%d]'",
 		    nv, ps->vertices->len);
@@ -1670,7 +1646,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
     gts_file_error (fp, "expecting an integer (ncf)");
     return NULL;
   }
-  ncf = strtol (fp->token->str, NULL, 0);
+  ncf = atoi (fp->token->str);
   
   vs = GTS_SPLIT (gts_object_new (GTS_OBJECT_CLASS (ps->split_class)));
 
@@ -1715,7 +1691,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
       if (fp->type != GTS_INT)
 	gts_file_error (fp, "expecting an integer (face index)");
       else {
-	it = strtol (fp->token->str, NULL, 0);
+	it = atoi (fp->token->str);
 	if (it == 0 || it > ps->faces->len)
 	  gts_file_error (fp, "face index `%d' is out of range `[1,%d]'",
 			  it, ps->faces->len);
@@ -1724,7 +1700,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
 	  if (fp->type != GTS_INT)
 	    gts_file_error (fp, "expecting an integer (flags)");
 	  else {
-	    flags = strtol (fp->token->str, NULL, 0);
+	    flags = atoi (fp->token->str);
 	    f = 
 	      GTS_FACE (gts_object_new (GTS_OBJECT_CLASS (ps->s->face_class)));
 
@@ -1747,7 +1723,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
 		if (fp->type != GTS_INT)
 		  gts_file_error (fp, "expecting an integer (face index)");
 		else {
-		  it = strtol (fp->token->str, NULL, 0);
+		  it = atoi (fp->token->str);
 		  if (it > ps->faces->len)
 		    gts_file_error (fp, 
 				    "face index `%d' is out of range `[1,%d]'",
@@ -1770,7 +1746,7 @@ GtsSplit * gts_psurface_read_vertex (GtsPSurface * ps, GtsFile * fp)
 		  if (fp->type != GTS_INT)
 		    gts_file_error (fp, "expecting an integer (face index)");
 		  else {
-		    it = strtol (fp->token->str, NULL, 0);
+		    it = atoi (fp->token->str);
 		    if (it > ps->faces->len)
 		      gts_file_error (fp, 
 				   "face index `%d' is out of range `[1,%d]'",

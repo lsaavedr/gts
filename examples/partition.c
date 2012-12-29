@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -97,16 +97,16 @@ int main (int argc, char * argv[])
     switch ((c = getopt (argc, argv, "hvt:m:n:i:"))) {
 #endif /* not HAVE_GETOPT_LONG */
     case 'i': /* imbalance */
-      imbalance = strtod (optarg, NULL);
+      imbalance = atof (optarg);
       break;
     case 't': /* try */
-      ntry = strtol (optarg, NULL, 0);
+      ntry = atoi (optarg);
       break;
     case 'm': /* mmax */
-      mmax = strtol (optarg, NULL, 0);
+      mmax = atoi (optarg);
       break;
     case 'n': /* nmin */
-      nmin = strtol (optarg, NULL, 0);
+      nmin = atoi (optarg);
       break;
     case 'v': /* verbose */
       verbose = TRUE;
@@ -144,7 +144,7 @@ int main (int argc, char * argv[])
 	     "Try `partition --help' for more information.\n");
     return 1; /* failure */
   }
-  np = strtol (argv[optind], NULL, 0);
+  np = atoi (argv[optind]);
 
   s = gts_surface_new (gts_surface_class (),
 		       gts_face_class (),

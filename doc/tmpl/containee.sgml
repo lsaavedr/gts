@@ -1,0 +1,145 @@
+<!-- ##### SECTION Title ##### -->
+Containee classes
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_CONTAINEE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_CONTAINEE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_CONTAINEE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsContaineeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@add_container: 
+@remove_container: 
+@foreach: 
+@is_contained: 
+@replace: 
+
+<!-- ##### STRUCT GtsContainee ##### -->
+<para>
+The containee object.
+</para>
+
+@object: The parent object.
+
+<!-- ##### FUNCTION gts_containee_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_containee_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_containee_is_contained ##### -->
+<para>
+
+</para>
+
+@item: 
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_containee_replace ##### -->
+<para>
+
+</para>
+
+@item: 
+@with: 
+
+
+<!-- ##### MACRO GTS_SLIST_CONTAINEE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_SLIST_CONTAINEE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_SLIST_CONTAINEE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsSListContaineeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsSListContainee ##### -->
+<para>
+The singly-linked list containee object.
+</para>
+
+@containee: The parent object.
+@containers: A list of #GtsContainer containing this object.
+
+<!-- ##### FUNCTION gts_slist_containee_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

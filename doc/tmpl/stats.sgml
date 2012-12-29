@@ -1,0 +1,74 @@
+<!-- ##### SECTION Title ##### -->
+Simple statistics
+
+<!-- ##### SECTION Short_Description ##### -->
+a basic structure for computing min, max, average and variance.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Using gts_range_init(), gts_range_add_value() and gts_range_update(), you can easily maintain basic statistics about an ensemble of values.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GtsRange ##### -->
+<para>
+A simple statistics structure.
+</para>
+
+@min: Minimum value of the population.
+@max: Maximum value of the population.
+@sum: 
+@sum2: 
+@mean: Average value of the population.
+@stddev: Standard deviation of the population.
+@n: Number of samples in the population.
+
+<!-- ##### FUNCTION gts_range_init ##### -->
+<para>
+
+</para>
+
+@r: 
+
+
+<!-- ##### FUNCTION gts_range_add_value ##### -->
+<para>
+
+</para>
+
+@r: 
+@val: 
+
+
+<!-- ##### FUNCTION gts_range_update ##### -->
+<para>
+
+</para>
+
+@r: 
+
+
+<!-- ##### FUNCTION gts_range_reset ##### -->
+<para>
+
+</para>
+
+@r: 
+
+
+<!-- ##### FUNCTION gts_range_print ##### -->
+<para>
+
+</para>
+
+@r: 
+@fptr: 
+
+

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -25,12 +25,20 @@ gboolean gts_allow_floating_vertices = FALSE;
 static void vertex_destroy (GtsObject * object)
 {
   GtsVertex * vertex = GTS_VERTEX (object);
+  GSList * i;
 
-  GSList * i = vertex->segments;
+  i = vertex->segments;
   while (i) {
-    gts_object_destroy (GTS_OBJECT (i->data));
-    i = vertex->segments;
+    GTS_OBJECT_SET_FLAGS (i->data, GTS_DESTROYED);
+    i = i->next;
   }
+  i = vertex->segments;
+  while (i) {
+    GSList * next = i->next;
+    gts_object_destroy (i->data);
+    i = next;
+  }
+  g_assert (vertex->segments == NULL);
 
   (* GTS_OBJECT_CLASS (gts_vertex_class ())->parent_class->destroy) (object);
 }
@@ -360,7 +368,7 @@ GList * gts_vertices_merge (GList * vertices,
   GList * i;
   GNode * kdtree;
 
-  g_return_val_if_fail (vertices != NULL, NULL);
+  g_return_val_if_fail (vertices != NULL, 0);
 
   array = g_ptr_array_new ();
   i = vertices;

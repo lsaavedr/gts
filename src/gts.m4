@@ -1,5 +1,5 @@
 # Configure paths for GTS
-# StÃ©phane Popinet  2001-10-4
+# Stéphane Popinet  2001-10-4
 #       adapted from
 # Configure paths for GLIB
 # Owen Taylor       97-11-3

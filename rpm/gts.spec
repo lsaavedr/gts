@@ -133,6 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/gtstemplate
 %{_bindir}/gtshapprox
 %{_bindir}/stl2gts
+%{_bindir}/gts2xyz
 %{_bindir}/gtstransform
 %{_libdir}/*.so.*
 %{_mandir}/man1/*.1.*

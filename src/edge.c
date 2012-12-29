@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,20 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/**
- * SECTION: edges
- * @short_description: edge object and related functions.
- * @title: Edges
- * @section_id:
- * @see_also: #GtsSegment, #GtsTriangle
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Edges are derived from #GtsSegment. They are used to define
- * #GtsTriangle.
- */
-
 #include "gts.h"
 
 gboolean gts_allow_floating_edges = FALSE;
@@ -38,12 +24,15 @@ gboolean gts_allow_floating_edges = FALSE;
 static void edge_destroy (GtsObject * object)
 {
   GtsEdge * edge = GTS_EDGE (object);
+  GSList * i;
 
-  GSList * i = edge->triangles;
+  i = edge->triangles;
   while (i) {
+    GSList * next = i->next;
     gts_object_destroy (i->data);
-    i = edge->triangles;
+    i = next;
   }
+  g_assert (edge->triangles == NULL);
 
   (* GTS_OBJECT_CLASS (gts_edge_class ())->parent_class->destroy) (object);
 }
@@ -586,35 +575,4 @@ gboolean gts_edge_manifold_faces (GtsEdge * e, GtsSurface * s,
   }
 
   return (*f1 && *f2);
-}
-
-/**
- * gts_edge_is_compatible:
- * @e: a #GtsEdge.
- * @t: a #GtsTriangle.
- *
- * Evaluates if the edge @e is oriented with respect
- * to the triangle @t.
- *
- * Returns: %TRUE if @e is oriented with respect to
- * the @t, %FALSE otherwise.
- */
-gboolean gts_edge_is_compatible (GtsEdge * e, GtsTriangle * t)
-{
-  GtsVertex * v1, * v2, * v3;
-  gts_triangle_vertices (t, &v1, &v2, &v3);
-
-  if (GTS_SEGMENT (e)->v1 == v1) {
-    return GTS_SEGMENT (e)->v2 == v2;
-  }
-
-  if (GTS_SEGMENT (e)->v1 == v2) {
-    return GTS_SEGMENT (e)->v2 == v3;
-  }
-
-  if (GTS_SEGMENT (e)->v1 == v3) {
-    return GTS_SEGMENT (e)->v2 == v1;
-  }
-
-  return FALSE;
 }

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,6 +28,10 @@
 #  include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include "gts.h"
+
+#ifndef PI
+#define PI 3.14159265359
+#endif
 
 int main (int argc, char * argv[])
 {
@@ -78,7 +82,7 @@ int main (int argc, char * argv[])
       GtsMatrix * rot, * p;
       
       rot = gts_matrix_identity (NULL);
-      angle = strtod (optarg, NULL)*M_PI/180.;
+      angle = atof (optarg)*PI/180.;
       cosa = cos (angle);
       sina = sin (angle);
       rot[1][1] = cosa; rot[1][2] = -sina;
@@ -94,7 +98,7 @@ int main (int argc, char * argv[])
       GtsMatrix * rot, * p;
       
       rot = gts_matrix_identity (NULL);
-      angle = strtod (optarg, NULL)*M_PI/180.;
+      angle = atof (optarg)*PI/180.;
       cosa = cos (angle);
       sina = sin (angle);
       rot[0][0] = cosa; rot[0][2] = sina;
@@ -110,7 +114,7 @@ int main (int argc, char * argv[])
       GtsMatrix * rot, * p;
       
       rot = gts_matrix_identity (NULL);
-      angle = strtod (optarg, NULL)*M_PI/180.;
+      angle = atof (optarg)*PI/180.;
       cosa = cos (angle);
       sina = sin (angle);
       rot[0][0] = cosa; rot[0][1] = -sina;
@@ -123,7 +127,7 @@ int main (int argc, char * argv[])
     }
     case 's': { /* scale */
       GtsMatrix * scale, * p;
-      gdouble s = strtod (optarg, NULL);
+      gdouble s = atof (optarg);
 
       scale = gts_matrix_identity (NULL);
       scale[0][0] = scale[1][1] = scale[2][2] = s;
@@ -135,7 +139,7 @@ int main (int argc, char * argv[])
     }
     case 'R': { /* sx */
       GtsMatrix * scale, * p;
-      gdouble s = strtod (optarg, NULL);
+      gdouble s = atof (optarg);
 
       scale = gts_matrix_identity (NULL);
       scale[0][0] = s;
@@ -147,7 +151,7 @@ int main (int argc, char * argv[])
     }
     case 'M': { /* sy */
       GtsMatrix * scale, * p;
-      gdouble s = strtod (optarg, NULL);
+      gdouble s = atof (optarg);
 
       scale = gts_matrix_identity (NULL);
       scale[1][1] = s;
@@ -159,7 +163,7 @@ int main (int argc, char * argv[])
     }
     case 'N': { /* sz */
       GtsMatrix * scale, * p;
-      gdouble s = strtod (optarg, NULL);
+      gdouble s = atof (optarg);
 
       scale = gts_matrix_identity (NULL);
       scale[2][2] = s;
@@ -170,13 +174,13 @@ int main (int argc, char * argv[])
       break;
     }
     case 't': /* tx */
-      m[0][3] += strtod (optarg, NULL);
+      m[0][3] += atof (optarg);
       break;
     case 'u': /* ty */
-      m[1][3] += strtod (optarg, NULL);
+      m[1][3] += atof (optarg);
       break;
     case 'w': /* tz */
-      m[2][3] += strtod (optarg, NULL);
+      m[2][3] += atof (optarg);
       break;
     case 'i': /* revert */
       revert = TRUE;

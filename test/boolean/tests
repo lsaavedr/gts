@@ -78,3 +78,35 @@ a25.gts b25.gts
 
 # Spheres by Romain Behar
 gts-crash.gts gts-crash1.gts
+
+# Big tests
+
+# DTM and buildings
+# illustrates problems with interior loops
+buildings wcc3
+buildings wcc2
+buildings wcc1
+buildings wcc
+
+# gerris failed test cases
+gerris.gts gerris.1
+gerris.gts gerris.2
+gerris.gts gerris.3
+gerris.gts gerris.4
+gerris.gts gerris.5
+gerris.gts gerris.6
+gerris.gts gerris.7
+gerris.gts gerris.8
+gerris.gts gerris.9
+gerris.gts gerris.10
+gerris.gts gerris.11
+gerris.gts gerris.12
+gerris.gts gerris.13
+gerris.gts gerris.14
+gerris.gts gerris.15
+gerris.gts gerris.16
+gerris.gts gerris.17
+gerris.gts gerris.18
+gerris.gts gerris.19
+gerris.gts gerris.20
+gerris.gts gerris.21

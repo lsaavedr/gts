@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -8,26 +8,13 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.         See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION:points
- * @short_description: point object and related functions
- * @title: Points
- * @section_id:
- * @see_also: #GtsVertex
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Three-dimensional points and a few geometrical functions
  */
 
 #include <math.h>
@@ -59,22 +46,22 @@ static void point_read (GtsObject ** o, GtsFile * f)
       gts_file_error (f, "expecting a number (x coordinate)");
       return;
     }
-    p->x = strtod (f->token->str, NULL);
-
+    p->x = atof (f->token->str);
+    
     gts_file_next_token (f);
     if (f->type != GTS_INT && f->type != GTS_FLOAT) {
       gts_file_error (f, "expecting a number (y coordinate)");
       return;
     }
-    p->y = strtod (f->token->str, NULL);
-
+    p->y = atof (f->token->str);
+    
     gts_file_next_token (f);
     if (f->type != GTS_INT && f->type != GTS_FLOAT) {
       gts_file_error (f, "expecting a number (z coordinate)");
       return;
     }
-    p->z = strtod (f->token->str, NULL);
-
+    p->z = atof (f->token->str);
+    
     gts_file_next_token (f);
   }
 }
@@ -117,8 +104,8 @@ GtsPointClass * gts_point_class (void)
       (GtsArgSetFunc) NULL,
       (GtsArgGetFunc) NULL
     };
-    klass = gts_object_class_new (gts_object_class (),
-                                  &point_info);
+    klass = gts_object_class_new (gts_object_class (), 
+				  &point_info);
   }
 
   return klass;
@@ -134,10 +121,10 @@ GtsPointClass * gts_point_class (void)
  * Returns: a new #GtsPoint.
  */
 GtsPoint * gts_point_new (GtsPointClass * klass,
-                          gdouble x, gdouble y, gdouble z)
+			  gdouble x, gdouble y, gdouble z)
 {
   GtsPoint * p;
-
+  
   p = GTS_POINT (gts_object_new (GTS_OBJECT_CLASS (klass)));
   p->x = x;
   p->y = y;
@@ -165,77 +152,6 @@ void gts_point_set (GtsPoint * p, gdouble x, gdouble y, gdouble z)
 }
 
 /**
- * gts_point_dot:
- * @p1: a #GtsPoint.
- * @p2: a #GtsPoint.
- *
- * This function is not geometrically robust.
- *
- * Returns: dot product of @p1 and p2.
- */
-gdouble gts_point_dot (GtsPoint * p1, GtsPoint * p2)
-{
-  g_return_val_if_fail (p1 != NULL, 0.);
-  g_return_val_if_fail (p2 != NULL, 0.);
-
-  gdouble dot = p1->x*p2->x;
-  dot += p1->y*p2->y;
-  dot += p1->z*p2->z;
-
-  return dot;
-}
-
-/**
- * gts_point_cross:
- * @p1: a #GtsPoint.
- * @p2: a #GtsPoint.
- *
- * This function is not geometrically robust.
- *
- * Returns: a new #GtsPoint representing the cross
- * product of @p1 and p2, using the "right-handed"
- * coordinate system.
- */
-GtsPoint * gts_point_cross (GtsPoint * p1, GtsPoint * p2)
-{
-  g_return_val_if_fail (p1 != NULL, NULL);
-  g_return_val_if_fail (p2 != NULL, NULL);
-
-  gdouble x = p1->y*p2->z - p1->z*p2->y;
-  gdouble y = p1->z*p2->x - p1->x*p2->z;
-  gdouble z = p1->x*p2->y - p1->y*p2->x;
-
-  return gts_point_new (gts_point_class (), x, y, z);
-  return NULL;
-}
-
-/**
- * gts_point_normal:
- * @p1: a #GtsPoint.
- * @p2: a #GtsPoint.
- * @p3: a #GtsPoint.
- *
- * This function is not geometrically robust.
- *
- * Returns: a new #GtsPoint representing the oriented
- * normal of the triangle defined by @p1, @p2 and @p3,
- * using the right-hand rule in the "right-handed"
- * coordinate system. The normal is not normalized.
- */
-GtsPoint * gts_point_normal (GtsPoint * p1, GtsPoint * p2, GtsPoint * p3)
-{
-  g_return_val_if_fail (p1 != NULL, NULL);
-  g_return_val_if_fail (p2 != NULL, NULL);
-  g_return_val_if_fail (p3 != NULL, NULL);
-
-  gdouble x = p1->y*(p2->z-p3->z) + p3->y*(p1->z-p2->z) + p2->y*(p3->z-p1->z);
-  gdouble y = p1->z*(p2->x-p3->x) + p3->z*(p1->x-p2->x) + p2->z*(p3->x-p1->x);
-  gdouble z = p1->x*(p2->y-p3->y) + p3->x*(p1->y-p2->y) + p2->x*(p3->y-p1->y);
-
-  return gts_point_new (gts_point_class (), x, y, z);
-}
-
-/**
  * gts_point_distance:
  * @p1: a #GtsPoint.
  * @p2: another #GtsPoint.
@@ -245,10 +161,10 @@ GtsPoint * gts_point_normal (GtsPoint * p1, GtsPoint * p2, GtsPoint * p3)
 gdouble gts_point_distance (GtsPoint * p1, GtsPoint * p2)
 {
   g_return_val_if_fail (p1 != NULL && p2 != NULL, 0.0);
-
-  return sqrt ((p1->x - p2->x)*(p1->x - p2->x) +
-               (p1->y - p2->y)*(p1->y - p2->y) +
-               (p1->z - p2->z)*(p1->z - p2->z));
+  
+  return sqrt ((p1->x - p2->x)*(p1->x - p2->x) + 
+	       (p1->y - p2->y)*(p1->y - p2->y) + 
+	       (p1->z - p2->z)*(p1->z - p2->z));
 }
 
 /**
@@ -261,10 +177,10 @@ gdouble gts_point_distance (GtsPoint * p1, GtsPoint * p2)
 gdouble gts_point_distance2 (GtsPoint * p1, GtsPoint * p2)
 {
   g_return_val_if_fail (p1 != NULL && p2 != NULL, 0.0);
-
+  
   return
     (p1->x - p2->x)*(p1->x - p2->x) +
-    (p1->y - p2->y)*(p1->y - p2->y) +
+    (p1->y - p2->y)*(p1->y - p2->y) + 
     (p1->z - p2->z)*(p1->z - p2->z);
 }
 
@@ -284,19 +200,19 @@ gdouble gts_point_distance2 (GtsPoint * p1, GtsPoint * p2)
  * consequently geometrically robust.
  *
  * Returns: a positive value if @p4 lies below, a negative value if
- * @p4 lies above the plane, zero if the four points are coplanar.
+ * @p4 lies above the plane, zero if the four points are coplanar.  
  */
 gdouble gts_point_orientation_3d (GtsPoint * p1,
-                                  GtsPoint * p2,
-                                  GtsPoint * p3,
-                                  GtsPoint * p4)
+				  GtsPoint * p2,
+				  GtsPoint * p3,
+				  GtsPoint * p4)
 {
-  g_return_val_if_fail (p1 != NULL && p2 != NULL &&
-                        p3 != NULL && p4 != NULL, 0.0);
-  return orient3d ((gdouble *) &p1->x,
-                   (gdouble *) &p2->x,
-                   (gdouble *) &p3->x,
-                   (gdouble *) &p4->x);
+  g_return_val_if_fail (p1 != NULL && p2 != NULL && 
+			p3 != NULL && p4 != NULL, 0.0);
+  return orient3d ((gdouble *) &p1->x, 
+		   (gdouble *) &p2->x, 
+		   (gdouble *) &p3->x, 
+		   (gdouble *) &p4->x);
 }
 
 /**
@@ -307,9 +223,9 @@ gdouble gts_point_orientation_3d (GtsPoint * p1,
  * Tests if the planar projection (x, y) of @p is inside, outside or
  * on the boundary of the planar projection of @t.  This function is
  * geometrically robust.
- *
+ * 
  * Returns: %GTS_IN if @p is inside @t, %GTS_ON if @p is on the boundary of
- * @t, %GTS_OUT otherwise.
+ * @t, %GTS_OUT otherwise.  
  */
 GtsIntersect gts_point_is_in_triangle (GtsPoint * p, GtsTriangle * t)
 {
@@ -342,10 +258,10 @@ GtsIntersect gts_point_is_in_triangle (GtsPoint * p, GtsTriangle * t)
  * Tests if the planar projection (x, y) of @p is inside or outside
  * the circumcircle of the planar projection of @t. This function is
  * geometrically robust.
- *
+ * 
  * Returns: a positive number if @p lies inside,
- * a negative number if @p lies outside and zero if @p lies on
- * the circumcircle of @t.
+ * a negative number if @p lies outside and zero if @p lies on 
+ * the circumcircle of @t.  
  */
 gdouble gts_point_in_triangle_circle (GtsPoint * p, GtsTriangle * t)
 {
@@ -353,15 +269,15 @@ gdouble gts_point_in_triangle_circle (GtsPoint * p, GtsTriangle * t)
 
   g_return_val_if_fail (p != NULL && t != NULL, 0.0);
 
-  gts_triangle_vertices (t,
-                         (GtsVertex **) &p1,
-                         (GtsVertex **) &p2,
-                         (GtsVertex **) &p3);
+  gts_triangle_vertices (t, 
+			 (GtsVertex **) &p1, 
+			 (GtsVertex **) &p2, 
+			 (GtsVertex **) &p3);
 
-  return incircle ((gdouble *) &p1->x,
-                   (gdouble *) &p2->x,
-                   (gdouble *) &p3->x,
-                   (gdouble *) &p->x);
+  return incircle ((gdouble *) &p1->x, 
+		   (gdouble *) &p2->x, 
+		   (gdouble *) &p3->x, 
+		   (gdouble *) &p->x);
 }
 
 /**
@@ -373,21 +289,21 @@ gdouble gts_point_in_triangle_circle (GtsPoint * p, GtsTriangle * t)
  *
  * Tests if the planar projection (x, y) of @p is inside or outside the
  * circle defined by the planar projection of @p1, @p2 and @p3.
- *
+ * 
  * Returns: a positive number if @p lies inside,
- * a negative number if @p lies outside and zero if @p lies on
+ * a negative number if @p lies outside and zero if @p lies on 
  * the circle.
  */
-gdouble gts_point_in_circle (GtsPoint * p,
-                             GtsPoint * p1, GtsPoint * p2, GtsPoint * p3)
+gdouble gts_point_in_circle (GtsPoint * p, 
+			     GtsPoint * p1, GtsPoint * p2, GtsPoint * p3)
 {
-  g_return_val_if_fail (p != NULL && p1 != NULL && p2 != NULL && p3 != NULL,
-                        0.0);
+  g_return_val_if_fail (p != NULL && p1 != NULL && p2 != NULL && p3 != NULL, 
+			0.0);
 
-  return incircle ((gdouble *) &p1->x,
-                   (gdouble *) &p2->x,
-                   (gdouble *) &p3->x,
-                   (gdouble *) &p->x);
+  return incircle ((gdouble *) &p1->x, 
+		   (gdouble *) &p2->x, 
+		   (gdouble *) &p3->x, 
+		   (gdouble *) &p->x);
 }
 
 /**
@@ -400,22 +316,22 @@ gdouble gts_point_in_circle (GtsPoint * p,
  *
  * Tests if @p is inside or outside the sphere defined by @p1, @p2,
  * @p3 and @p4.
- *
+ * 
  * Returns: a positive number if @p lies inside,
- * a negative number if @p lies outside and zero if @p lies on
+ * a negative number if @p lies outside and zero if @p lies on 
  * the sphere.
  */
-gdouble gts_point_in_sphere (GtsPoint * p,
-                             GtsPoint * p1, GtsPoint * p2, GtsPoint * p3, GtsPoint * p4)
+gdouble gts_point_in_sphere (GtsPoint * p, 
+			     GtsPoint * p1, GtsPoint * p2, GtsPoint * p3, GtsPoint * p4)
 {
-  g_return_val_if_fail (p != NULL && p1 != NULL && p2 != NULL && p3 != NULL && p4 != NULL,
-                        0.0);
+  g_return_val_if_fail (p != NULL && p1 != NULL && p2 != NULL && p3 != NULL && p4 != NULL, 
+			0.0);
 
-  return insphere ((gdouble *) &p1->x,
-                   (gdouble *) &p2->x,
-                   (gdouble *) &p3->x,
-                   (gdouble *) &p4->x,
-                   (gdouble *) &p->x);
+  return insphere ((gdouble *) &p1->x, 
+		   (gdouble *) &p2->x, 
+		   (gdouble *) &p3->x, 
+		   (gdouble *) &p4->x, 
+		   (gdouble *) &p->x);
 }
 
 /**
@@ -438,7 +354,7 @@ gdouble gts_point_segment_distance2 (GtsPoint * p, GtsSegment * s)
   ns2 = gts_point_distance2 (p1, p2);
   if (ns2 == 0.0)
     return gts_point_distance2 (p, p1);
-  t = ((p2->x - p1->x)*(p->x - p1->x) +
+  t = ((p2->x - p1->x)*(p->x - p1->x) + 
        (p2->y - p1->y)*(p->y - p1->y) +
        (p2->z - p1->z)*(p->z - p1->z))/ns2;
   if (t > 1.0)
@@ -475,16 +391,16 @@ gdouble gts_point_segment_distance (GtsPoint * p, GtsSegment * s)
  * Set the coordinates of @closest to the coordinates of the point belonging
  * to @s closest to @p.
  */
-void gts_point_segment_closest (GtsPoint * p,
-                                GtsSegment * s,
-                                GtsPoint * closest)
+void gts_point_segment_closest (GtsPoint * p, 
+				GtsSegment * s,
+				GtsPoint * closest)
 {
+  gdouble t, ns2;
+  GtsPoint * p1, * p2;
+
   g_return_if_fail (p != NULL);
   g_return_if_fail (s != NULL);
   g_return_if_fail (closest != NULL);
-
-  gdouble t, ns2;
-  GtsPoint * p1, * p2;
 
   p1 = GTS_POINT (s->v1);
   p2 = GTS_POINT (s->v2);
@@ -495,7 +411,7 @@ void gts_point_segment_closest (GtsPoint * p,
     return;
   }
 
-  t = ((p2->x - p1->x)*(p->x - p1->x) +
+  t = ((p2->x - p1->x)*(p->x - p1->x) + 
        (p2->y - p1->y)*(p->y - p1->y) +
        (p2->z - p1->z)*(p->z - p1->z))/ns2;
 
@@ -505,9 +421,9 @@ void gts_point_segment_closest (GtsPoint * p,
     gts_point_set (closest, p1->x, p1->y, p1->z);
   else
     gts_point_set (closest,
-                   (1. - t)*p1->x + t*p2->x,
-                   (1. - t)*p1->y + t*p2->y,
-                   (1. - t)*p1->z + t*p2->z);
+		   (1. - t)*p1->x + t*p2->x,
+		   (1. - t)*p1->y + t*p2->y,
+		   (1. - t)*p1->z + t*p2->z);
 }
 
 /**
@@ -515,14 +431,10 @@ void gts_point_segment_closest (GtsPoint * p,
  * @p: a #GtsPoint.
  * @t: a #GtsTriangle.
  *
- * Returns: the square of the minimun Euclidean distance between @p and @t,
- * if @p or @t is a %NULL pointer, return %G_MAXDOUBLE.
+ * Returns: the square of the minimun Euclidean distance between @p and @t.
  */
 gdouble gts_point_triangle_distance2 (GtsPoint * p, GtsTriangle * t)
 {
-  g_return_val_if_fail (p != NULL, G_MAXDOUBLE);
-  g_return_val_if_fail (t != NULL, G_MAXDOUBLE);
-
   GtsPoint * p1, * p2, * p3;
   GtsEdge * e1, * e2, * e3;
   GtsVector p1p2, p1p3, pp1;
@@ -530,11 +442,14 @@ gdouble gts_point_triangle_distance2 (GtsPoint * p, GtsTriangle * t)
   gdouble t1, t2;
   gdouble x, y, z;
 
-  gts_triangle_vertices_edges (t, NULL,
-                               (GtsVertex **) &p1,
-                               (GtsVertex **) &p2,
-                               (GtsVertex **) &p3,
-                               &e1, &e2, &e3);
+  g_return_val_if_fail (p != NULL, 0.0);
+  g_return_val_if_fail (t != NULL, 0.0);
+
+  gts_triangle_vertices_edges (t, NULL, 
+			       (GtsVertex **) &p1, 
+			       (GtsVertex **) &p2, 
+			       (GtsVertex **) &p3, 
+			       &e1, &e2, &e3);
 
   gts_vector_init (p1p2, p1, p2);
   gts_vector_init (p1p3, p1, p3);
@@ -543,7 +458,7 @@ gdouble gts_point_triangle_distance2 (GtsPoint * p, GtsTriangle * t)
   B = gts_vector_scalar (p1p3, p1p2);
   E = gts_vector_scalar (p1p2, p1p2);
   C = gts_vector_scalar (p1p3, p1p3);
-
+  
   det = B*B - E*C;
   if (det == 0.) { /* p1p2 and p1p3 are colinear */
     gdouble d1 = gts_point_segment_distance2 (p, GTS_SEGMENT (e1));
@@ -555,7 +470,7 @@ gdouble gts_point_triangle_distance2 (GtsPoint * p, GtsTriangle * t)
 
   A = gts_vector_scalar (p1p3, pp1);
   D = gts_vector_scalar (p1p2, pp1);
-
+  
   t1 = (D*C - A*B)/det;
   t2 = (A*E - D*B)/det;
 
@@ -578,13 +493,12 @@ gdouble gts_point_triangle_distance2 (GtsPoint * p, GtsTriangle * t)
  * @p: a #GtsPoint.
  * @t: a #GtsTriangle.
  *
- * Returns: the minimun Euclidean distance between @p and @t,
- * if @p or @t is a %NULL pointer, return %G_MAXDOUBLE.
+ * Returns: the minimun Euclidean distance between @p and @t.
  */
 gdouble gts_point_triangle_distance (GtsPoint * p, GtsTriangle * t)
 {
-  g_return_val_if_fail (p != NULL, G_MAXDOUBLE);
-  g_return_val_if_fail (t != NULL, G_MAXDOUBLE);
+  g_return_val_if_fail (p != NULL, 0.0);
+  g_return_val_if_fail (t != NULL, 0.0);
 
   return sqrt (gts_point_triangle_distance2 (p, t));
 }
@@ -595,12 +509,12 @@ gdouble gts_point_triangle_distance (GtsPoint * p, GtsTriangle * t)
  * @t: a #GtsTriangle.
  * @closest: a #GtsPoint.
  *
- * Set the coordinates of @closest to those of the point belonging to @t and
+ * Set the coordinates of @closest to those of the point belonging to @t and 
  * closest to @p.
  */
-void gts_point_triangle_closest (GtsPoint * p,
-                                 GtsTriangle * t,
-                                 GtsPoint * closest)
+void gts_point_triangle_closest (GtsPoint * p, 
+				 GtsTriangle * t, 
+				 GtsPoint * closest)
 {
   GtsPoint * p1, * p2, * p3;
   GtsEdge * e1, * e2, * e3;
@@ -612,11 +526,11 @@ void gts_point_triangle_closest (GtsPoint * p,
   g_return_if_fail (t != NULL);
   g_return_if_fail (closest != NULL);
 
-  gts_triangle_vertices_edges (t, NULL,
-                               (GtsVertex **) &p1,
-                               (GtsVertex **) &p2,
-                               (GtsVertex **) &p3,
-                               &e1, &e2, &e3);
+  gts_triangle_vertices_edges (t, NULL, 
+			       (GtsVertex **) &p1, 
+			       (GtsVertex **) &p2, 
+			       (GtsVertex **) &p3, 
+			       &e1, &e2, &e3);
 
   gts_vector_init (p1p2, p1, p2);
   gts_vector_init (p1p3, p1, p3);
@@ -625,10 +539,10 @@ void gts_point_triangle_closest (GtsPoint * p,
   B = gts_vector_scalar (p1p3, p1p2);
   E = gts_vector_scalar (p1p2, p1p2);
   C = gts_vector_scalar (p1p3, p1p3);
-
+  
   det = B*B - E*C;
   if (det == 0.) { /* p1p2 and p1p3 are colinear */
-    GtsPoint * cp =
+    GtsPoint * cp = 
       GTS_POINT (gts_object_new (GTS_OBJECT_CLASS (gts_point_class ())));
     gts_point_segment_closest (p, GTS_SEGMENT (e1), cp);
     gts_point_segment_closest (p, GTS_SEGMENT (e3), closest);
@@ -641,7 +555,7 @@ void gts_point_triangle_closest (GtsPoint * p,
 
   A = gts_vector_scalar (p1p3, pp1);
   D = gts_vector_scalar (p1p2, pp1);
-
+  
   t1 = (D*C - A*B)/det;
   t2 = (A*E - D*B)/det;
 
@@ -652,16 +566,103 @@ void gts_point_triangle_closest (GtsPoint * p,
   else if (t1 + t2 > 1.)
     gts_point_segment_closest (p, GTS_SEGMENT (e2), closest);
   else
-    gts_point_set (closest,
-                   p1->x + t1*p1p2[0] + t2*p1p3[0],
-                   p1->y + t1*p1p2[1] + t2*p1p3[1],
-                   p1->z + t1*p1p2[2] + t2*p1p3[2]);
+    gts_point_set (closest, 
+		   p1->x + t1*p1p2[0] + t2*p1p3[0],
+		   p1->y + t1*p1p2[1] + t2*p1p3[1],
+		   p1->z + t1*p1p2[2] + t2*p1p3[2]);
+}
+
+/**
+ * gts_segment_triangle_intersection:
+ * @s: a #GtsSegment.
+ * @t: a #GtsTriangle.
+ * @boundary: if %TRUE, the boundary of @t is taken into account.
+ * @klass: a #GtsPointClass to be used for the new point.
+ *
+ * Checks if @s intersects @t. If this is the case, creates a new
+ * point pi intersection of @s with @t.
+ *
+ * This function is geometrically robust in the sense that it will not
+ * return a point if @s and @t do not intersect and will return a
+ * point if @s and @t do intersect. However, the point coordinates are
+ * subject to round-off errors.
+ *
+ * Note that this function will not return any point if @s is contained in
+ * the plane defined by @t.
+ * 
+ * Returns: a summit of @t (if @boundary is set to %TRUE), one of the endpoints
+ * of @s or a new #GtsPoint, intersection of @s with @t or %NULL if @s 
+ * and @t don't intersect.  
+ */
+GtsPoint * gts_segment_triangle_intersection (GtsSegment * s,
+					      GtsTriangle * t,
+					      gboolean boundary,
+					      GtsPointClass * klass)
+{
+  GtsPoint * A, * B, * C, * D, * E, * I;
+  gdouble ABCE, ABCD, ADCE, ABDE, BCDE;
+  gdouble c;
+
+  g_return_val_if_fail (s != NULL, NULL);
+  g_return_val_if_fail (t != NULL, NULL);
+  g_return_val_if_fail (klass != NULL, NULL);
+
+  A = GTS_POINT (GTS_SEGMENT (t->e1)->v1);
+  B = GTS_POINT (GTS_SEGMENT (t->e1)->v2);
+  C = GTS_POINT (gts_triangle_vertex (t));
+  D = GTS_POINT (s->v1); 
+  E = GTS_POINT (s->v2);
+
+  ABCE = gts_point_orientation_3d (A, B, C, E);
+  ABCD = gts_point_orientation_3d (A, B, C, D);
+  if (ABCE < 0.0 || ABCD > 0.0) {
+    GtsPoint * tmpp;
+    gdouble tmp;
+    tmpp = E; E = D; D = tmpp;
+    tmp = ABCE; ABCE = ABCD; ABCD = tmp;
+  }
+  if (ABCE < 0.0 || ABCD > 0.0)
+    return NULL;
+  ADCE = gts_point_orientation_3d (A, D, C, E);
+  if ((boundary && ADCE < 0.) || (!boundary && ADCE <= 0.))
+    return NULL;
+  ABDE = gts_point_orientation_3d (A, B, D, E);
+  if ((boundary && ABDE < 0.) || (!boundary && ABDE <= 0.))
+    return NULL;
+  BCDE = gts_point_orientation_3d (B, C, D, E);
+  if ((boundary && BCDE < 0.) || (!boundary && BCDE <= 0.))
+    return NULL;
+  if (ABCE == 0.0) {
+    if (ABCD == 0.0)
+      /* s is contained in the plane defined by t*/
+      return NULL;
+    return E;
+  }
+  if (ABCD == 0.0)
+    return D;
+  if (boundary) { /* corners of @t */
+    if (ABDE == 0.) {
+      if (ADCE == 0.)
+	return A;
+      if (BCDE == 0.)
+	return B;
+    }
+    else if (BCDE == 0. && ADCE == 0.)
+      return C;
+  }
+  c = ABCE/(ABCE - ABCD);
+  I = GTS_POINT (gts_object_new (GTS_OBJECT_CLASS (klass)));
+  gts_point_set (I,
+		 E->x + c*(D->x - E->x),
+		 E->y + c*(D->y - E->y),
+		 E->z + c*(D->z - E->z));
+  return I;
 }
 
 /**
  * gts_point_transform:
  * @p: a #GtsPoint.
- * @m: the #GtsMatrix representing the transformation to
+ * @m: the #GtsMatrix representing the transformation to 
  * apply to the coordinates of @p.
  *
  * Transform the coordinates of @p according to @m. (p[] becomes m[][].p[]).
@@ -690,26 +691,26 @@ void gts_point_transform (GtsPoint * p, GtsMatrix * m)
  *
  * Returns: a positive value if @p1, @p2 and @p3 appear in
  * counterclockwise order, a negative value if they appear in
- * clockwise order and zero if they are colinear.
+ * clockwise order and zero if they are colinear.  
  */
 gdouble gts_point_orientation (GtsPoint * p1, GtsPoint * p2, GtsPoint * p3)
 {
   g_return_val_if_fail (p1 != NULL && p2 != NULL && p3 != NULL, 0.0);
 
-  return orient2d ((gdouble *) &p1->x,
-                   (gdouble *) &p2->x,
-                   (gdouble *) &p3->x);
+  return orient2d ((gdouble *) &p1->x, 
+		   (gdouble *) &p2->x, 
+		   (gdouble *) &p3->x);
 }
 
 static gboolean ray_intersects_triangle (GtsPoint * D, GtsPoint * E,
-                                         GtsTriangle * t)
+					 GtsTriangle * t)
 {
   GtsPoint * A, * B, * C;
   gint ABCE, ABCD, ADCE, ABDE, BCDE;
 
-  gts_triangle_vertices (t, (GtsVertex **) &A,
-                         (GtsVertex **) &B,
-                         (GtsVertex **) &C);
+  gts_triangle_vertices (t, (GtsVertex **) &A, 
+			 (GtsVertex **) &B, 
+			 (GtsVertex **) &C);
 
   ABCE = gts_point_orientation_3d_sos (A, B, C, E);
   ABCD = gts_point_orientation_3d_sos (A, B, C, D);
@@ -734,20 +735,20 @@ static gboolean ray_intersects_triangle (GtsPoint * D, GtsPoint * E,
   return TRUE;
 }
 
-/**
- * gts_point_is_inside_surface:
- * @p: a #GtsPoint.
+/** 
+ * gts_point_is_inside_surface: 
+ * @p: a #GtsPoint.  
  * @tree: a bounding box tree of the faces of a closed, orientable
  * surface (see gts_bb_tree_surface()).
- * @is_open: %TRUE if the surface defined by @tree is "open" i.e. its volume
+ * @is_open: %TRUE if the surface defined by @tree is "open" i.e. its volume 
  * is negative, %FALSE otherwise.
  *
  * Returns: %TRUE if @p is inside the surface defined by @tree, %FALSE
- * otherwise.
+ * otherwise.  
  */
-gboolean gts_point_is_inside_surface (GtsPoint * p,
-                                      GNode * tree,
-                                      gboolean is_open)
+gboolean gts_point_is_inside_surface (GtsPoint * p, 
+				      GNode * tree,
+				      gboolean is_open)
 {
   GSList * list, * i;
   guint nc = 0;
@@ -784,11 +785,11 @@ static gint sortp (gpointer * p, guint n)
   for (i = 0; i < n - 1; i++)
     for (j = 0; j < n - 1 - i; j++)
       if (GPOINTER_TO_UINT (p[j+1]) < GPOINTER_TO_UINT (p[j])) {
-        gpointer tmp = p[j];
+	gpointer tmp = p[j];
 
-        p[j] = p[j+1];
-        p[j+1] = tmp;
-        sign = - sign;
+	p[j] = p[j+1];
+	p[j+1] = tmp;
+	sign = - sign;
       }
   return sign;
 }
@@ -810,22 +811,22 @@ static gint sortp (gpointer * p, guint n)
  * orientation is degenerate (i.e. @p4 lies on the plane defined by
  * @p1, @p2 and @p3).
  *
- * Returns: +1 if @p4 lies below, -1 if @p4 lies above the plane.
+ * Returns: +1 if @p4 lies below, -1 if @p4 lies above the plane.  
  */
 gint gts_point_orientation_3d_sos (GtsPoint * p1,
-                                   GtsPoint * p2,
-                                   GtsPoint * p3,
-                                   GtsPoint * p4)
+				   GtsPoint * p2,
+				   GtsPoint * p3,
+				   GtsPoint * p4)
 {
   gdouble o;
 
-  g_return_val_if_fail (p1 != NULL && p2 != NULL &&
-                        p3 != NULL && p4 != NULL, 0);
+  g_return_val_if_fail (p1 != NULL && p2 != NULL && 
+			p3 != NULL && p4 != NULL, 0);
 
-  o = orient3d ((gdouble *) &p1->x,
-                (gdouble *) &p2->x,
-                (gdouble *) &p3->x,
-                (gdouble *) &p4->x);
+  o = orient3d ((gdouble *) &p1->x, 
+		(gdouble *) &p2->x, 
+		(gdouble *) &p3->x, 
+		(gdouble *) &p4->x);
   if (o != 0.)
     return SIGN (o);
   else {
@@ -835,7 +836,7 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
 
     p[0] = p1; p[1] = p2; p[2] = p3; p[3] = p4;
     sign = sortp ((gpointer *) p, 4);
-
+    
     /* epsilon^1/8 */
     a[0] = p[1]->x; a[1] = p[1]->y;
     b[0] = p[2]->x; b[1] = p[2]->y;
@@ -843,7 +844,7 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = orient2d (a, b, c);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^1/4 */
     a[0] = p[1]->x; a[1] = p[1]->z;
     b[0] = p[2]->x; b[1] = p[2]->z;
@@ -851,7 +852,7 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = orient2d (a, b, c);
     if (o != 0.)
       return - SIGN (o)*sign;
-
+    
     /* epsilon^1/2 */
     a[0] = p[1]->y; a[1] = p[1]->z;
     b[0] = p[2]->y; b[1] = p[2]->z;
@@ -859,7 +860,7 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = orient2d (a, b, c);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon */
     a[0] = p[0]->x; a[1] = p[0]->y;
     b[0] = p[2]->x; b[1] = p[2]->y;
@@ -867,17 +868,17 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = orient2d (a, b, c);
     if (o != 0.)
       return - SIGN (o)*sign;
-
+    
     /* epsilon^5/4 */
     o = ORIENT1D (p[2]->x, p[3]->x);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^3/2 */
     o = ORIENT1D (p[2]->y, p[3]->y);
     if (o != 0.)
       return - SIGN (o)*sign;
-
+    
     /* epsilon^2 */
     a[0] = p[0]->x; a[1] = p[0]->z;
     b[0] = p[2]->x; b[1] = p[2]->z;
@@ -890,7 +891,7 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = ORIENT1D (p[2]->z, p[3]->z);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^4 */
     a[0] = p[0]->y; a[1] = p[0]->z;
     b[0] = p[2]->y; b[1] = p[2]->z;
@@ -911,17 +912,17 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
     o = ORIENT1D (p[1]->x, p[3]->x);
     if (o != 0.)
       return - SIGN (o)*sign;
-
+    
     /* epsilon^17/2 */
     o = ORIENT1D (p[1]->y, p[3]->y);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^10 */
     o = ORIENT1D (p[0]->x, p[3]->x);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^21/2 */
     return sign;
   }
@@ -942,19 +943,19 @@ gint gts_point_orientation_3d_sos (GtsPoint * p1,
  *
  * Returns: a positive value if @p1, @p2 and @p3 appear in
  * counterclockwise order or a negative value if they appear in
- * clockwise order.
+ * clockwise order.  
  */
 gint gts_point_orientation_sos (GtsPoint * p1,
-                                GtsPoint * p2,
-                                GtsPoint * p3)
+				GtsPoint * p2,
+				GtsPoint * p3)
 {
   gdouble o;
 
   g_return_val_if_fail (p1 != NULL && p2 != NULL && p3 != NULL, 0);
 
-  o = orient2d ((gdouble *) &p1->x,
-                (gdouble *) &p2->x,
-                (gdouble *) &p3->x);
+  o = orient2d ((gdouble *) &p1->x, 
+		(gdouble *) &p2->x, 
+		(gdouble *) &p3->x);
   if (o != 0.)
     return SIGN (o);
   else {
@@ -963,22 +964,22 @@ gint gts_point_orientation_sos (GtsPoint * p1,
 
     p[0] = p1; p[1] = p2; p[2] = p3;
     sign = sortp ((gpointer *) p, 3);
-
+    
     /* epsilon^1/4 */
     o = ORIENT1D (p[1]->x, p[2]->x);
     if (o != 0.)
       return - SIGN (o)*sign;
-
+    
     /* epsilon^1/2 */
     o = ORIENT1D (p[1]->y, p[2]->y);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon */
     o = ORIENT1D (p[0]->x, p[2]->x);
     if (o != 0.)
       return SIGN (o)*sign;
-
+    
     /* epsilon^3/2 */
     return sign;
   }

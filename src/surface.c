@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -226,21 +226,21 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     gts_file_error (f, "expecting an integer (number of vertices)");
     return f->line;
   }
-  nv = strtol (f->token->str, NULL, 0);
+  nv = atoi (f->token->str);
 
   gts_file_next_token (f);
   if (f->type != GTS_INT) {
     gts_file_error (f, "expecting an integer (number of edges)");
     return f->line;
   }
-  ne = strtol (f->token->str, NULL, 0);
+  ne = atoi (f->token->str);
 
   gts_file_next_token (f);
   if (f->type != GTS_INT) {
     gts_file_error (f, "expecting an integer (number of faces)");
     return f->line;
   }
-  nf = strtol (f->token->str, NULL, 0);
+  nf = atoi (f->token->str);
   
   gts_file_next_token (f);
   if (f->type == GTS_STRING) {
@@ -306,7 +306,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     if (f->type != GTS_INT)
       gts_file_error (f, "expecting an integer (first vertex index)");
     else {
-      p1 = strtol (f->token->str, NULL, 0);
+      p1 = atoi (f->token->str);
       if (p1 == 0 || p1 > nv)
 	gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
 			p1, nv);
@@ -315,7 +315,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
 	if (f->type != GTS_INT)
 	  gts_file_error (f, "expecting an integer (second vertex index)");
 	else {
-	  p2 = strtol (f->token->str, NULL, 0);
+	  p2 = atoi (f->token->str);
 	  if (p2 == 0 || p2 > nv)
 	    gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
 			    p2, nv);
@@ -346,7 +346,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     if (f->type != GTS_INT)
       gts_file_error (f, "expecting an integer (first edge index)");
     else {
-      s1 = strtol (f->token->str, NULL, 0);
+      s1 = atoi (f->token->str);
       if (s1 == 0 || s1 > ne)
 	gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 			s1, ne);
@@ -355,7 +355,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
 	if (f->type != GTS_INT)
 	  gts_file_error (f, "expecting an integer (second edge index)");
 	else {
-	  s2 = strtol (f->token->str, NULL, 0);
+	  s2 = atoi (f->token->str);
 	  if (s2 == 0 || s2 > ne)
 	    gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 			    s2, ne);
@@ -364,7 +364,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
 	    if (f->type != GTS_INT)
 	      gts_file_error (f, "expecting an integer (third edge index)");
 	    else {
-	      s3 = strtol (f->token->str, NULL, 0);
+	      s3 = atoi (f->token->str);
 	      if (s3 == 0 || s3 > ne)
 		gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
 				s3, ne);
@@ -1557,7 +1557,6 @@ static GtsVertex * edge_collapse (GtsEdge * e,
   return mid;
 }
 
-#ifdef DEBUG
 static void update_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
 {
   GSList * i = v->segments;
@@ -1571,7 +1570,6 @@ static void update_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
     i = i->next;
   }
 }
-#endif /* DEBUG */
 
 static void update_2nd_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
 {

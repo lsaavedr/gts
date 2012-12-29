@@ -1,0 +1,211 @@
+<!-- ##### SECTION Title ##### -->
+Container classes
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_CONTAINER_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsContainerClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@add: 
+@remove: 
+@foreach: 
+@size: 
+
+<!-- ##### STRUCT GtsContainer ##### -->
+<para>
+The container object.
+</para>
+
+@object: The parent object.
+
+<!-- ##### FUNCTION gts_container_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_container_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_container_add ##### -->
+<para>
+
+</para>
+
+@c: 
+@item: 
+
+
+<!-- ##### FUNCTION gts_container_remove ##### -->
+<para>
+
+</para>
+
+@c: 
+@item: 
+
+
+<!-- ##### FUNCTION gts_container_size ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_container_foreach ##### -->
+<para>
+
+</para>
+
+@c: 
+@func: 
+@data: 
+
+
+<!-- ##### MACRO GTS_HASH_CONTAINER_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_HASH_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_HASH_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsHashContainerClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsHashContainer ##### -->
+<para>
+
+</para>
+
+@c: 
+@items: 
+@frozen: 
+
+<!-- ##### FUNCTION gts_hash_container_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO GTS_SLIST_CONTAINER_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_SLIST_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_SLIST_CONTAINER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsSListContainerClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsSListContainer ##### -->
+<para>
+
+</para>
+
+@c: 
+@items: 
+@frozen: 
+
+<!-- ##### FUNCTION gts_slist_container_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

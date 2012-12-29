@@ -1,0 +1,184 @@
+<!-- ##### SECTION Title ##### -->
+Isosurfaces from 3D functions
+
+<!-- ##### SECTION Short_Description ##### -->
+computing triangulated isosurfaces of a given function f(x,y,z).
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Using the gts_isosurface_cartesian() function, it is possible to build a triangulated isosurface of a given user-defined function. As its name indicates this function assumes that the values of the user-defined function are defined for points located on a regular cartesian grid described by the #GtsCartesianGrid parameter. The triangles describing the isosurface are computed for each pair of successive planes z and z+dz in a pipelined manner. Consequently only two planes need to be stored in memory at any time. This allows to construct isosurfaces for datasets too large to fit in main memory.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GtsCartesianGrid ##### -->
+<para>
+A regular cartesian grid is defined by the number of points in each direction, the spatial increment in each direction and the coordinates of the first point.
+</para>
+
+@nx: Number of points in direction x.
+@ny: Number of points in direction y.
+@nz: Number of points in direction z.
+@x: x coordinate of the first point.
+@dx: Increment in direction x.
+@y: y coordinate of the first point.
+@dy: Increment in direction y.
+@z: z coordinate of the first point.
+@dz: Increment in direction z.
+
+<!-- ##### STRUCT GtsGridPlane ##### -->
+<para>
+
+</para>
+
+@p: 
+@nx: 
+@ny: 
+
+<!-- ##### FUNCTION gts_grid_plane_new ##### -->
+<para>
+
+</para>
+
+@nx: 
+@ny: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_grid_plane_destroy ##### -->
+<para>
+
+</para>
+
+@g: 
+
+
+<!-- ##### STRUCT GtsIsoSlice ##### -->
+<para>
+A GtsIsoSlice is an opaque data structure containing the coordinates of the points located on the isosurface for a given slice of the user-defined function.
+</para>
+
+
+<!-- ##### FUNCTION gts_iso_slice_new ##### -->
+<para>
+
+</para>
+
+@nx: 
+@ny: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_iso_slice_fill ##### -->
+<para>
+
+</para>
+
+@slice: 
+@plane1: 
+@plane2: 
+@f1: 
+@f2: 
+@iso: 
+@klass: 
+
+
+<!-- ##### FUNCTION gts_iso_slice_fill_cartesian ##### -->
+<para>
+
+</para>
+
+@slice: 
+@g: 
+@f1: 
+@f2: 
+@iso: 
+@klass: 
+
+
+<!-- ##### FUNCTION gts_iso_slice_destroy ##### -->
+<para>
+
+</para>
+
+@slice: 
+
+
+<!-- ##### FUNCTION gts_isosurface_slice ##### -->
+<para>
+
+</para>
+
+@slice1: 
+@slice2: 
+@surface: 
+
+
+<!-- ##### USER_FUNCTION GtsIsoCartesianFunc ##### -->
+<para>
+This user-defined function is passed to the gts_isosurface_cartesian() 
+function. Given a particular #GtsCartesianGrid @g it must fill the array @a
+with the values of the function for the plane z=@g.z (or for the corresponding 
+index @i). This function is always called in order by gts_isosurface_cartesian(), i.e. @i varies from 0 to @g.nz - 1 with an increment of one (and similarly @g.z is incremented every time by @g.dz).
+</para>
+
+@a: the 2D array to be filled.
+@g: a #GtsCartesianGrid.
+@i: the z direction index of the plane to be filled.
+@data: user data.
+
+
+<!-- ##### FUNCTION gts_isosurface_cartesian ##### -->
+<para>
+
+</para>
+
+@surface: 
+@g: 
+@f: 
+@data: 
+@iso: 
+
+
+<!-- ##### FUNCTION gts_isosurface_tetra ##### -->
+<para>
+
+</para>
+
+@surface: 
+@g: 
+@f: 
+@data: 
+@iso: 
+
+
+<!-- ##### FUNCTION gts_isosurface_tetra_bounded ##### -->
+<para>
+
+</para>
+
+@surface: 
+@g: 
+@f: 
+@data: 
+@iso: 
+
+
+<!-- ##### FUNCTION gts_isosurface_tetra_bcl ##### -->
+<para>
+
+</para>
+
+@surface: 
+@g: 
+@f: 
+@data: 
+@iso: 
+
+

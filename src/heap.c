@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,22 +15,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION: heaps
- * @short_description: efficient data structure for priority heaps.
- * @title: Binary heaps
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * The basic operations gts_heap_insert() and gts_heap_remove_top()
- * are performed in O(log n) time. Calling gts_heap_freeze(),
- * inserting elements using gts_heap_insert() and calling
- * gts_heap_thaw() allows to build the binary heap in O(n) time.
  */
 
 #include <stdlib.h>

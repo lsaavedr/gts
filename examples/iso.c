@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -29,6 +29,10 @@
 #  include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include "gts.h"
+
+#ifndef PI
+#  define PI 3.14159265359
+#endif
 
 static void sphere (gdouble ** f, GtsCartesianGrid g, guint k, gpointer data)
 {
@@ -165,7 +169,7 @@ int main (int argc, char * argv[])
 	     "Try `iso --help' for more information.\n");
     return 1; /* failure */
   }
-  g.nx = strtol (argv[optind], NULL, 0);
+  g.nx = atoi (argv[optind]);
   
   if (optind + 1 >= argc) { /* missing NY */
     fprintf (stderr, 
@@ -173,7 +177,7 @@ int main (int argc, char * argv[])
 	     "Try `iso --help' for more information.\n");
     return 1; /* failure */
   }
-  g.ny = strtol (argv[optind + 1], NULL, 0);
+  g.ny = atoi (argv[optind + 1]);
 
   if (optind + 2 >= argc) { /* missing NZ */
     fprintf (stderr, 
@@ -181,7 +185,7 @@ int main (int argc, char * argv[])
 	     "Try `iso --help' for more information.\n");
     return 1; /* failure */
   }
-  g.nz = strtol (argv[optind + 2], NULL, 0);
+  g.nz = atoi (argv[optind + 2]);
 
   if (optind + 3 >= argc) { /* missing VAL */
     fprintf (stderr, 
@@ -189,7 +193,7 @@ int main (int argc, char * argv[])
 	     "Try `iso --help' for more information.\n");
     return 1; /* failure */
   }
-  iso = strtod (argv[optind + 3], NULL);
+  iso = atof (argv[optind + 3]);
 
   /* interval is [-10:10][-10:10][-10:10] */
   g.x = -10.0; g.dx = 20./(gdouble) (g.nx - 1);

@@ -1,0 +1,155 @@
+<!-- ##### SECTION Title ##### -->
+Vertex split
+
+<!-- ##### SECTION Short_Description ##### -->
+object encoding a reversible edge-collapse operation.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The vertex split object is the building block of the progressive mesh representation proposed by Hoppe ("Progressive meshes", SIGGRAPH, 1996). It encodes an edge collapse operation and its inverse the "vertex split". The implementation of vertex split in GTS is somewhat more general than the original version of Hoppe. Non-manifold edges can be collapsed and non-manifold vertices can be split.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_SPLIT_CLASS ##### -->
+<para>
+Casts @klass to #GtsSplitClass.
+</para>
+
+@klass: a descendant of #GtsSplitClass.
+
+
+<!-- ##### MACRO GTS_SPLIT ##### -->
+<para>
+Casts @obj to #GtsSplit.
+</para>
+
+@obj: a descendant of #GtsSplit.
+
+
+<!-- ##### MACRO GTS_IS_SPLIT ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsSplit.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### MACRO GTS_SPLIT_V1 ##### -->
+<para>
+Evaluates to the first vertex of the edge collapsed by @vs.
+</para>
+
+@vs: a #GtsSplit.
+
+
+<!-- ##### MACRO GTS_SPLIT_V2 ##### -->
+<para>
+Evaluates to the second vertex of the edge collapsed by @vs.
+</para>
+
+@vs: a #GtsSplit.
+
+
+<!-- ##### STRUCT GtsSplitClass ##### -->
+<para>
+The vertex split class.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsSplitCFace ##### -->
+<para>
+An opaque structure describing the faces collapsed by a vertex split.
+</para>
+
+
+<!-- ##### STRUCT GtsSplit ##### -->
+<para>
+The vertex split object. If @v1 is a #GtsSplit the corresponding vertex can be found in GTS_SPLIT(v1)->v. This conversion is performed directly by the two macros #GTS_SPLIT_V1 and #GTS_SPLIT_V2. Together with the current #GtsSplit, @v1 and @v2 define one level of a vertex split tree. If @v1 or @v2 are both #GtsVertex, the current vertex split is a leaf of the tree.
+</para>
+
+@object: 
+@v: Vertex to be split.
+@v1: Either a #GtsSplit or #GtsVertex, first vertex of the edge to be expanded.
+@v2: Either a #GtsSplit or #GtsVertex, second vertex of the edge to be expanded.
+@cfaces: An array of #GtsSplitCFace describing the faces collapsed by the vertex split.
+@ncf: Number of faces collapsed in @cfaces.
+
+<!-- ##### FUNCTION gts_split_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_split_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@v: 
+@o1: 
+@o2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_split_collapse ##### -->
+<para>
+
+</para>
+
+@vs: 
+@klass: 
+@heap: 
+
+
+<!-- ##### FUNCTION gts_split_expand ##### -->
+<para>
+
+</para>
+
+@vs: 
+@s: 
+@klass: 
+
+
+<!-- ##### FUNCTION gts_split_height ##### -->
+<para>
+
+</para>
+
+@root: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GtsSplitTraverseFunc ##### -->
+<para>
+A user-defined function to be called when traversing a vertex split tree.
+</para>
+
+@vs: the #GtsSplit for which this function is called.
+@data: user data passed to the function.
+@Returns: %TRUE to stop the traversal, %FALSE to continue.
+
+
+<!-- ##### FUNCTION gts_split_traverse ##### -->
+<para>
+
+</para>
+
+@root: 
+@order: 
+@depth: 
+@func: 
+@data: 
+
+

@@ -1,0 +1,313 @@
+<!-- ##### SECTION Title ##### -->
+Object class
+
+<!-- ##### SECTION Short_Description ##### -->
+parent class for all GTS objects.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+All GTS objects are derived from this base class. Objects of any class can be constructed using the gts_object_new() function and destroyed using the gts_object_destroy() function. Default virtual methods include read() and write() functions which can be used to read or write associated objects attributes from or to GTS geometrical files.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_CLASS_NAME_LENGTH ##### -->
+<para>
+Maximum class name length for #GtsObjectClass.
+</para>
+
+
+
+<!-- ##### MACRO GTS_OBJECT_CLASS ##### -->
+<para>
+Casts @klass to #GtsObjectClass.
+</para>
+
+@klass: a #GtsObjectClass.
+
+
+<!-- ##### MACRO GTS_OBJECT ##### -->
+<para>
+Casts @obj to #GtsObject.
+</para>
+
+@obj: a #GtsObject.
+
+
+<!-- ##### MACRO GTS_IS_OBJECT ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsObject, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### MACRO GTS_OBJECT_CLASS_CAST ##### -->
+<para>
+This macro is used to define casting macros for object classes. You should need it only when writing new object class functions.
+</para>
+
+@objklass: a #GtsObjectClass.
+@type: The class type to cast @objklass to (example: GtsObjectClass).
+@klass: the class to cast @objklass to (example: gts_object_class()).
+
+
+<!-- ##### MACRO GTS_OBJECT_CAST ##### -->
+<para>
+This macro is used to define casting macros for object. You should need it only when writing new object functions.
+</para>
+
+@obj: a #GtsObject.
+@type: the object type to cast @obj to (example: GtsObject).
+@klass: the object class to cast @obj to (example: gts_object()).
+
+
+<!-- ##### MACRO GTS_OBJECT_FLAGS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_OBJECT_SET_FLAGS ##### -->
+<para>
+
+</para>
+
+@obj: 
+@flag: 
+
+
+<!-- ##### MACRO GTS_OBJECT_UNSET_FLAGS ##### -->
+<para>
+
+</para>
+
+@obj: 
+@flag: 
+
+
+<!-- ##### MACRO GTS_OBJECT_DESTROYED ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsObjectClass ##### -->
+<para>
+The base object class structure. All the virtual functions @clone, @destroy, @read and @write can be overloaded. The default @read and @write methods are undefined. The default @clone method just copies the object structure. The default @destroy method frees the memory allocated for a given object structure.
+</para>
+
+@info: 
+@parent_class: 
+@clone: 
+@destroy: 
+@read: 
+@write: 
+@color: 
+@attributes: 
+
+<!-- ##### STRUCT GtsObject ##### -->
+<para>
+The base object structure.
+</para>
+
+@klass: The object class.
+@reserved: Used internally by the library.
+@flags: Used internally.
+
+<!-- ##### STRUCT GtsObjectClassInfo ##### -->
+<para>
+Informations about a #GtsObjectClass, including name, size of the object structure to be allocated when constructing the object, size of the object class structure to be allocated when instanciating the object class, class initialization function, object initialization function.
+</para>
+
+@name: 
+@object_size: 
+@class_size: 
+@class_init_func: 
+@object_init_func: 
+@arg_set_func: 
+@arg_get_func: 
+
+<!-- ##### USER_FUNCTION GtsObjectClassInitFunc ##### -->
+<para>
+A function to call to initialize an object class.
+</para>
+
+@objclass: a #GtsObjectClass to be initialized.
+
+
+<!-- ##### USER_FUNCTION GtsObjectInitFunc ##### -->
+<para>
+A function to call to initialize an object.
+</para>
+
+@obj: a #GtsObject.
+
+
+<!-- ##### USER_FUNCTION GtsArgSetFunc ##### -->
+<para>
+Defined for future use.
+</para>
+
+@obj: a #GtsObject.
+
+
+<!-- ##### USER_FUNCTION GtsArgGetFunc ##### -->
+<para>
+Defined for future use.
+</para>
+
+@obj: a #GtsObject.
+
+
+<!-- ##### ENUM GtsObjectFlags ##### -->
+<para>
+
+</para>
+
+@GTS_DESTROYED: 
+@GTS_USER_FLAG: 
+
+<!-- ##### STRUCT GtsColor ##### -->
+<para>
+
+</para>
+
+@r: 
+@g: 
+@b: 
+
+<!-- ##### FUNCTION gts_object_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_class_new ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@info: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_class_check_cast ##### -->
+<para>
+
+</para>
+
+@klass: 
+@from: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_class_is_from_class ##### -->
+<para>
+
+</para>
+
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_class_from_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_init ##### -->
+<para>
+
+</para>
+
+@object: 
+@klass: 
+
+
+<!-- ##### FUNCTION gts_object_clone ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_attributes ##### -->
+<para>
+
+</para>
+
+@object: 
+@from: 
+
+
+<!-- ##### FUNCTION gts_object_check_cast ##### -->
+<para>
+
+</para>
+
+@object: 
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_is_from_class ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_object_reset_reserved ##### -->
+<para>
+
+</para>
+
+@object: 
+
+
+<!-- ##### FUNCTION gts_object_destroy ##### -->
+<para>
+
+</para>
+
+@object: 
+
+
+<!-- ##### FUNCTION gts_finalize ##### -->
+<para>
+
+</para>
+
+
+

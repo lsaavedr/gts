@@ -1,0 +1,411 @@
+<!-- ##### SECTION Title ##### -->
+Bounding boxes trees
+
+<!-- ##### SECTION Short_Description ##### -->
+implementation of axis-aligned bounding-box trees.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Axis-aligned bounding box trees can be used for intersection/collision detection using gts_bb_tree_traverse_overlapping(), or to compute the minimum distance between an object and a collection of others using gts_bb_tree_point_distance(), gts_bb_tree_segment_distance(), gts_bb_tree_triangle_distance() or gts_bb_tree_surface_distance().
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_BBOX_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_BBOX ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_BBOX ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsBBoxClass ##### -->
+<para>
+The bounding box class derived from #GtsObjectClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsBBox ##### -->
+<para>
+The bounding box structure.
+</para>
+
+@object: Parent object.
+@bounded: Bounded object.
+@x1: x coordinate of the lower-left front corner.
+@y1: y coordinate of the lower-left front corner.
+@z1: z coordinate of the lower-left front corner.
+@x2: x coordinate of the upper-right back corner.
+@y2: y coordinate of the upper-right back corner.
+@z2: z coordinate of the upper-right back corner.
+
+<!-- ##### FUNCTION gts_bbox_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@bounded: 
+@x1: 
+@y1: 
+@z1: 
+@x2: 
+@y2: 
+@z2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_set ##### -->
+<para>
+
+</para>
+
+@bbox: 
+@bounded: 
+@x1: 
+@y1: 
+@z1: 
+@x2: 
+@y2: 
+@z2: 
+
+
+<!-- ##### FUNCTION gts_bbox_segment ##### -->
+<para>
+
+</para>
+
+@klass: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_triangle ##### -->
+<para>
+
+</para>
+
+@klass: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_surface ##### -->
+<para>
+
+</para>
+
+@klass: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_points ##### -->
+<para>
+
+</para>
+
+@klass: 
+@points: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_bboxes ##### -->
+<para>
+
+</para>
+
+@klass: 
+@bboxes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_draw ##### -->
+<para>
+
+</para>
+
+@bb: 
+@fptr: 
+
+
+<!-- ##### MACRO gts_bbox_point_is_inside ##### -->
+<para>
+
+</para>
+
+@bbox: 
+@p: 
+
+
+<!-- ##### FUNCTION gts_bboxes_are_overlapping ##### -->
+<para>
+
+</para>
+
+@bb1: 
+@bb2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_diagonal2 ##### -->
+<para>
+
+</para>
+
+@bb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_point_distance2 ##### -->
+<para>
+
+</para>
+
+@bb: 
+@p: 
+@min: 
+@max: 
+
+
+<!-- ##### FUNCTION gts_bbox_is_stabbed ##### -->
+<para>
+
+</para>
+
+@bb: 
+@p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bbox_overlaps_triangle ##### -->
+<para>
+
+</para>
+
+@bb: 
+@t: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GtsBBTreeTraverseFunc ##### -->
+<para>
+
+</para>
+
+@bb1: 
+@bb2: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_new ##### -->
+<para>
+
+</para>
+
+@bboxes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_surface ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_overlap ##### -->
+<para>
+
+</para>
+
+@tree: 
+@bbox: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_is_overlapping ##### -->
+<para>
+
+</para>
+
+@tree: 
+@bbox: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_traverse_overlapping ##### -->
+<para>
+
+</para>
+
+@tree1: 
+@tree2: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_draw ##### -->
+<para>
+
+</para>
+
+@tree: 
+@depth: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_destroy ##### -->
+<para>
+
+</para>
+
+@tree: 
+@free_leaves: 
+
+
+<!-- ##### USER_FUNCTION GtsBBoxDistFunc ##### -->
+<para>
+
+</para>
+
+@p: 
+@bounded: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GtsBBoxClosestFunc ##### -->
+<para>
+
+</para>
+
+@p: 
+@bounded: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_point_distance ##### -->
+<para>
+
+</para>
+
+@tree: 
+@p: 
+@distance: 
+@bbox: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_point_closest ##### -->
+<para>
+
+</para>
+
+@tree: 
+@p: 
+@closest: 
+@distance: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_segment_distance ##### -->
+<para>
+
+</para>
+
+@tree: 
+@s: 
+@distance: 
+@delta: 
+@range: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_triangle_distance ##### -->
+<para>
+
+</para>
+
+@tree: 
+@t: 
+@distance: 
+@delta: 
+@range: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_point_closest_bboxes ##### -->
+<para>
+
+</para>
+
+@tree: 
+@p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_surface_boundary_distance ##### -->
+<para>
+
+</para>
+
+@tree: 
+@s: 
+@distance: 
+@delta: 
+@range: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_surface_distance ##### -->
+<para>
+
+</para>
+
+@tree: 
+@s: 
+@distance: 
+@delta: 
+@range: 
+
+
+<!-- ##### FUNCTION gts_bb_tree_stabbed ##### -->
+<para>
+
+</para>
+
+@tree: 
+@p: 
+@Returns: 
+
+

@@ -1,0 +1,200 @@
+<!-- ##### SECTION Title ##### -->
+Graph partitioning
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GtsGraphBisection ##### -->
+<para>
+
+</para>
+
+@g: 
+@g1: 
+@g2: 
+@bg1: 
+@bg2: 
+
+<!-- ##### FUNCTION gts_graph_bisection_new ##### -->
+<para>
+
+</para>
+
+@wg: 
+@ntry: 
+@mmax: 
+@nmin: 
+@imbalance: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_ggg_bisection ##### -->
+<para>
+
+</para>
+
+@g: 
+@ntry: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_bfgg_bisection ##### -->
+<para>
+
+</para>
+
+@g: 
+@ntry: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_bisection_check ##### -->
+<para>
+
+</para>
+
+@bg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_bisection_kl_refine ##### -->
+<para>
+
+</para>
+
+@bg: 
+@mmax: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_bisection_bkl_refine ##### -->
+<para>
+
+</para>
+
+@bg: 
+@mmax: 
+@imbalance: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_recursive_bisection ##### -->
+<para>
+
+</para>
+
+@wg: 
+@n: 
+@ntry: 
+@mmax: 
+@nmin: 
+@imbalance: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_bisection_destroy ##### -->
+<para>
+
+</para>
+
+@bg: 
+@destroy_graphs: 
+
+
+<!-- ##### FUNCTION gts_graph_bubble_partition ##### -->
+<para>
+
+</para>
+
+@g: 
+@np: 
+@niter: 
+@step_info: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_edges_cut ##### -->
+<para>
+
+</para>
+
+@g: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_edges_cut_weight ##### -->
+<para>
+
+</para>
+
+@g: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_edges_cut ##### -->
+<para>
+
+</para>
+
+@partition: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_balance ##### -->
+<para>
+
+</para>
+
+@partition: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_clone ##### -->
+<para>
+
+</para>
+
+@partition: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_print_stats ##### -->
+<para>
+
+</para>
+
+@partition: 
+@fp: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_edges_cut_weight ##### -->
+<para>
+
+</para>
+
+@partition: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_partition_destroy ##### -->
+<para>
+
+</para>
+
+@partition: 
+
+

@@ -1,0 +1,283 @@
+<!-- ##### SECTION Title ##### -->
+Vectors and matrices
+
+<!-- ##### SECTION Short_Description ##### -->
+simple operations on vectors and matrices.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The functions described in this section allow to perform simple transformations on point coordinates. In particular projection onto a plane passing through the vertices of a given triangle or quadratic optimization problems.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO gts_vector_init ##### -->
+<para>
+Given two points @p1 and @p2, fills @v with the coordinates of vector @p1->@p2.
+</para>
+
+@v: a #GtsVector.
+@p1: a #GtsPoint.
+@p2: another #GtsPoint.
+
+
+<!-- ##### MACRO gts_vector_scalar ##### -->
+<para>
+Given two vectors @v1 and @v2 evaluates to the scalar product @v1.@v2.
+</para>
+
+@v1: a #GtsVector.
+@v2: another #GtsVector.
+
+
+<!-- ##### MACRO gts_vector_cross ##### -->
+<para>
+Given two vectors @A and @B fills @C with the coordinates of the cross-product @A^@B.
+</para>
+
+@C: a #GtsVector.
+@A: another #GtsVector.
+@B: and another.
+
+
+<!-- ##### MACRO gts_vector_norm ##### -->
+<para>
+
+</para>
+
+@v: 
+
+
+<!-- ##### MACRO gts_vector_normalize ##### -->
+<para>
+
+</para>
+
+@v: 
+
+
+<!-- ##### FUNCTION gts_vector_print ##### -->
+<para>
+
+</para>
+
+@v: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_vector4_print ##### -->
+<para>
+
+</para>
+
+@v: 
+@fptr: 
+
+
+<!-- ##### TYPEDEF GtsMatrix ##### -->
+<para>
+A #GtsMatrix is a 3x3 matrix.
+</para>
+
+
+<!-- ##### FUNCTION gts_matrix_new ##### -->
+<para>
+
+</para>
+
+@a00: 
+@a01: 
+@a02: 
+@a03: 
+@a10: 
+@a11: 
+@a12: 
+@a13: 
+@a20: 
+@a21: 
+@a22: 
+@a23: 
+@a30: 
+@a31: 
+@a32: 
+@a33: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_assign ##### -->
+<para>
+
+</para>
+
+@m: 
+@a00: 
+@a01: 
+@a02: 
+@a03: 
+@a10: 
+@a11: 
+@a12: 
+@a13: 
+@a20: 
+@a21: 
+@a22: 
+@a23: 
+@a30: 
+@a31: 
+@a32: 
+@a33: 
+
+
+<!-- ##### FUNCTION gts_matrix_zero ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_identity ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_projection ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_scale ##### -->
+<para>
+
+</para>
+
+@m: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_translate ##### -->
+<para>
+
+</para>
+
+@m: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_rotate ##### -->
+<para>
+
+</para>
+
+@m: 
+@r: 
+@angle: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_transpose ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_determinant ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_inverse ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix3_inverse ##### -->
+<para>
+
+</para>
+
+@m: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_product ##### -->
+<para>
+
+</para>
+
+@m1: 
+@m2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_compatible_row ##### -->
+<para>
+
+</para>
+
+@A: 
+@b: 
+@n: 
+@A1: 
+@b1: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_quadratic_optimization ##### -->
+<para>
+
+</para>
+
+@A: 
+@b: 
+@n: 
+@H: 
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_matrix_print ##### -->
+<para>
+
+</para>
+
+@m: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_matrix_destroy ##### -->
+<para>
+
+</para>
+
+@m: 
+
+

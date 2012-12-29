@@ -1,0 +1,134 @@
+<!-- ##### SECTION Title ##### -->
+Boolean operations
+
+<!-- ##### SECTION Short_Description ##### -->
+set operations between surfaces: union, intersection, difference.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The three-dimensional curve intersection of two surfaces is described by a #GtsSurfaceInter object. This object contains additional information which allows to compute all the set operations between the two surfaces.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_SURFACE_INTER_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_SURFACE_INTER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_SURFACE_INTER ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsSurfaceInterClass ##### -->
+<para>
+The surface intersection class.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsSurfaceInter ##### -->
+<para>
+The surface intersection object.
+</para>
+
+@object: Parent object.
+@s1: Local triangulation of the intersecting faces of the first surface.
+@s2: Local triangulation of the intersecting faces of the second surface.
+@edges: List of #GtsEdge defining the 3D curve intersection of the two surfaces.
+
+<!-- ##### FUNCTION gts_surface_intersection ##### -->
+<para>
+
+</para>
+
+@s1: 
+@s2: 
+@faces_tree1: 
+@faces_tree2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_inter_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_inter_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@s1: 
+@s2: 
+@faces_tree1: 
+@faces_tree2: 
+@is_open1: 
+@is_open2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_inter_check ##### -->
+<para>
+
+</para>
+
+@si: 
+@closed: 
+@Returns: 
+
+
+<!-- ##### ENUM GtsBooleanOperation ##### -->
+<para>
+
+</para>
+
+@GTS_1_OUT_2: 
+@GTS_1_IN_2: 
+@GTS_2_OUT_1: 
+@GTS_2_IN_1: 
+
+<!-- ##### FUNCTION gts_surface_inter_boolean ##### -->
+<para>
+
+</para>
+
+@si: 
+@surface: 
+@op: 
+
+
+<!-- ##### FUNCTION gts_surface_is_self_intersecting ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+

@@ -1,0 +1,301 @@
+<!-- ##### SECTION Title ##### -->
+Points
+
+<!-- ##### SECTION Short_Description ##### -->
+point object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Three-dimensional points and a few geometrical functions.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_POINT_CLASS ##### -->
+<para>
+Casts @klass to #GtsPointClass.
+</para>
+
+@klass: a descendant of the #GtsPointClass.
+
+
+<!-- ##### MACRO GTS_POINT ##### -->
+<para>
+Casts @obj to #GtsPoint.
+</para>
+
+@obj: a descendant of the #GtsPoint.
+
+
+<!-- ##### MACRO GTS_IS_POINT ##### -->
+<para>
+Evaluates to %TRUE if @obj is a descendant of a #GtsPoint, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsPointClass ##### -->
+<para>
+The class for #GtsPoint. No virtual functions are associated.
+</para>
+
+@parent_class: 
+@binary: 
+
+<!-- ##### STRUCT GtsPoint ##### -->
+<para>
+The point object.
+</para>
+
+@object: The parent object.
+@x: x coordinate.
+@y: y coordinate.
+@z: z coordinate.
+
+<!-- ##### FUNCTION gts_point_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@x: 
+@y: 
+@z: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_set ##### -->
+<para>
+
+</para>
+
+@p: 
+@x: 
+@y: 
+@z: 
+
+
+<!-- ##### MACRO gts_point_is_in_rectangle ##### -->
+<para>
+Evaluates to %TRUE if @p is contained in the box (boundary included) defined by its two corners @p1 and @p2, %FALSE otherwise.
+</para>
+
+@p: a #GtsPoint.
+@p1: the lower-left front corner of the box.
+@p2: the upper-right back corner of the box.
+
+
+<!-- ##### FUNCTION gts_segment_triangle_intersection ##### -->
+<para>
+
+</para>
+
+@s: 
+@t: 
+@boundary: 
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_transform ##### -->
+<para>
+
+</para>
+
+@p: 
+@m: 
+
+
+<!-- ##### FUNCTION gts_point_distance ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_distance2 ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_orientation_3d ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@p3: 
+@p4: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_orientation_3d_sos ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@p3: 
+@p4: 
+@Returns: 
+
+
+<!-- ##### ENUM GtsIntersect ##### -->
+<para>
+
+</para>
+
+@GTS_OUT: 
+@GTS_ON: 
+@GTS_IN: 
+
+<!-- ##### FUNCTION gts_point_in_circle ##### -->
+<para>
+
+</para>
+
+@p: 
+@p1: 
+@p2: 
+@p3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_in_triangle_circle ##### -->
+<para>
+
+</para>
+
+@p: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_is_in_triangle ##### -->
+<para>
+
+</para>
+
+@p: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_orientation ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@p3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_orientation_sos ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@p3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_segment_distance2 ##### -->
+<para>
+
+</para>
+
+@p: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_segment_distance ##### -->
+<para>
+
+</para>
+
+@p: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_segment_closest ##### -->
+<para>
+
+</para>
+
+@p: 
+@s: 
+@closest: 
+
+
+<!-- ##### FUNCTION gts_point_triangle_distance ##### -->
+<para>
+
+</para>
+
+@p: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_triangle_closest ##### -->
+<para>
+
+</para>
+
+@p: 
+@t: 
+@closest: 
+
+
+<!-- ##### FUNCTION gts_point_triangle_distance2 ##### -->
+<para>
+
+</para>
+
+@p: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_point_is_inside_surface ##### -->
+<para>
+
+</para>
+
+@p: 
+@tree: 
+@is_open: 
+@Returns: 
+
+

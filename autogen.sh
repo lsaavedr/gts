@@ -6,23 +6,26 @@ test -z "$srcdir" && srcdir=.
 
 DIE=0
 
-# a fix for Mac OS X (Darwin)
-
-system=`uname -s`
-libtoolize=libtoolize
-libtool=libtool
-case $system in
+case `uname -s` in
+    # fixes for Mac OSX
     Darwin)
 	libtoolize=glibtoolize
 	libtool=glibtool
-    ;;
+	touch=gtouch
+	# On Mac OS fink uses /sw and Macport uses /opt
+	if [ -d "/sw/share/aclocal" ]; then
+	    ACLOCAL_FLAGS="-I /sw/share/aclocal $ACLOCAL_FLAGS"
+	fi
+	if [ -d "/opt/local/share/aclocal" ]; then
+	    ACLOCAL_FLAGS="-I /opt/local/share/aclocal $ACLOCAL_FLAGS"
+	fi
+	;;
+    # default for other unices
+    *)
+	libtoolize=libtoolize
+	libtool=libtool
+	;;
 esac
-
-# On Mac OS fink is often used and installs stuff in /sw, so we search there
-if [ -d "/sw" ]; then
-	ACLOCAL_FLAGS="-I /sw/share/aclocal $ACLOCAL_FLAGS"
-fi
-# end of Mac OS X (Darwin) fix
 
 if [ -n "$GNOME2_DIR" ]; then
 	ACLOCAL_FLAGS="-I $GNOME2_DIR/share/aclocal $ACLOCAL_FLAGS"
@@ -32,7 +35,7 @@ if [ -n "$GNOME2_DIR" ]; then
 	export LD_LIBRARY_PATH
 fi
 
-(test -f $srcdir/configure.in) || {
+(test -f $srcdir/configure.ac) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level package directory"
     exit 1
@@ -46,9 +49,9 @@ fi
   DIE=1
 }
 
-(grep "^AC_PROG_INTLTOOL" $srcdir/configure.in >/dev/null) && {
+(grep "^AC_PROG_INTLTOOL" $srcdir/configure.ac >/dev/null) && {
   (intltoolize --version) < /dev/null > /dev/null 2>&1 || {
-    echo
+    echo 
     echo "**Error**: You must have \`intltool' installed."
     echo "You can get it from:"
     echo "  ftp://ftp.gnome.org/pub/GNOME/"
@@ -56,7 +59,7 @@ fi
   }
 }
 
-(grep "^AM_PROG_XML_I18N_TOOLS" $srcdir/configure.in >/dev/null) && {
+(grep "^AM_PROG_XML_I18N_TOOLS" $srcdir/configure.ac >/dev/null) && {
   (xml-i18n-toolize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`xml-i18n-toolize' installed."
@@ -66,7 +69,7 @@ fi
   }
 }
 
-(grep "^AM_PROG_LIBTOOL" $srcdir/configure.in >/dev/null) && {
+(grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   ($libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed."
@@ -75,8 +78,8 @@ fi
   }
 }
 
-(grep "^AM_GLIB_GNU_GETTEXT" $srcdir/configure.in >/dev/null) && {
-  (grep "sed.*POTFILES" $srcdir/configure.in) > /dev/null || \
+(grep "^AM_GLIB_GNU_GETTEXT" $srcdir/configure.ac >/dev/null) && {
+  (grep "sed.*POTFILES" $srcdir/configure.ac) > /dev/null || \
   (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`glib' installed."
@@ -93,6 +96,7 @@ fi
   NO_AUTOMAKE=yes
 }
 
+
 # if no automake, don't bother testing for aclocal
 test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
   echo
@@ -104,18 +108,6 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
 
 if test "$DIE" -eq 1; then
   exit 1
-fi
-
-(gtkdocize --version) < /dev/null > /dev/null 2>&1 || {
-  echo "**Warning**: You must have \`gtkdocize' to generate API documentation."
-  echo "You can get it from: http://www.gtk.org/gtk-doc/download.html"
-  NO_GTK_DOC=no
-  touch gtk-doc.make
-}
-
-if test x$NO_GTK_DOC = x; then
-  echo "Running gtkdocize..."
-  gtkdocize --flavour no-tmpl
 fi
 
 if test -z "$*"; then
@@ -130,8 +122,8 @@ xlc )
   am_opt=--include-deps;;
 esac
 
-for coin in `find $srcdir -path $srcdir/_darcs -prune -o -name configure.in -print`
-do
+for coin in `find $srcdir -path $srcdir/_darcs -prune -o -name configure.ac -print`
+do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
     echo skipping $dr -- flagged as no auto-gen
@@ -141,35 +133,35 @@ do
 
       aclocalinclude="$ACLOCAL_FLAGS"
 
-      if grep "^AM_GLIB_GNU_GETTEXT" configure.in >/dev/null; then
+      if grep "^AM_GLIB_GNU_GETTEXT" configure.ac >/dev/null; then
 	echo "Creating $dr/aclocal.m4 ..."
 	test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
-	echo "Running glib-gettextize --force --copy (Ignore non-fatal messages)"
+	echo "Running glib-gettextize...  Ignore non-fatal messages."
 	echo "no" | glib-gettextize --force --copy
 	echo "Making $dr/aclocal.m4 writable ..."
 	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
       fi
-      if grep "^AC_PROG_INTLTOOL" configure.in >/dev/null; then
-        echo "Running intltoolize --copy --force --automake"
+      if grep "^AC_PROG_INTLTOOL" configure.ac >/dev/null; then
+        echo "Running intltoolize..."
 	intltoolize --copy --force --automake
       fi
-      if grep "^AM_PROG_XML_I18N_TOOLS" configure.in >/dev/null; then
-        echo "Running xml-i18n-toolize --copy --force --automake"
+      if grep "^AM_PROG_XML_I18N_TOOLS" configure.ac >/dev/null; then
+        echo "Running xml-i18n-toolize..."
 	xml-i18n-toolize --copy --force --automake
       fi
-      if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
+      if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
 	if test -z "$NO_LIBTOOLIZE" ; then 
-	  echo "Running libtoolize --force --copy"
+	  echo "Running libtoolize..."
 	  $libtoolize --force --copy
 	fi
       fi
-      echo "Running aclocal $aclocalinclude"
+      echo "Running aclocal $aclocalinclude ..."
       aclocal $aclocalinclude
-      if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
+      if grep "^AM_CONFIG_HEADER" configure.ac >/dev/null; then
 	echo "Running autoheader..."
 	autoheader
       fi
-      echo "Running automake --add-missing --copy --gnu $am_opt ..."
+      echo "Running automake --gnu $am_opt ..."
       automake --add-missing --copy --gnu $am_opt
       echo "Running autoconf ..."
       autoconf

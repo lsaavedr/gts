@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -57,7 +57,7 @@ static GPtrArray * stl_read (FILE * fp)
 		   f->line, f->pos);
 	  exit (1);
 	}
-	x = strtod (f->token->str, NULL);
+	x = atof (f->token->str);
 
 	gts_file_next_token (f);
 	if (f->type != GTS_INT && f->type != GTS_FLOAT) {
@@ -67,7 +67,7 @@ static GPtrArray * stl_read (FILE * fp)
 		   f->line, f->pos);
 	  exit (1);
 	}
-	y = strtod (f->token->str, NULL);
+	y = atof (f->token->str);
 
 	gts_file_next_token (f);
 	if (f->type != GTS_INT && f->type != GTS_FLOAT) {
@@ -77,7 +77,7 @@ static GPtrArray * stl_read (FILE * fp)
 		   f->line, f->pos);
 	  exit (1);
 	}
-	z = strtod (f->token->str, NULL);
+	z = atof (f->token->str);
 
 	g_ptr_array_add (a, gts_vertex_new (gts_vertex_class (), x, y, z));
       }

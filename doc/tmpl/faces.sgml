@@ -1,0 +1,139 @@
+<!-- ##### SECTION Title ##### -->
+Faces
+
+<!-- ##### SECTION Short_Description ##### -->
+face object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Faces are derived from #GtsTriangle. A collection of faces defined a #GtsSurface.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_FACE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_FACE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_FACE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsFaceClass ##### -->
+<para>
+The face class derived from #GtsTriangleClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsFace ##### -->
+<para>
+The face object.
+</para>
+
+@triangle: The parent object.
+@surfaces: A list of #GtsSurface using this face.
+
+<!-- ##### FUNCTION gts_face_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_face_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@e1: 
+@e2: 
+@e3: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_face_has_parent_surface ##### -->
+<para>
+
+</para>
+
+@f: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_face_neighbor_number ##### -->
+<para>
+
+</para>
+
+@f: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_face_neighbors ##### -->
+<para>
+
+</para>
+
+@f: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_face_foreach_neighbor ##### -->
+<para>
+
+</para>
+
+@f: 
+@s: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_face_is_compatible ##### -->
+<para>
+
+</para>
+
+@f: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_faces_from_edges ##### -->
+<para>
+
+</para>
+
+@edges: 
+@s: 
+@Returns: 
+
+

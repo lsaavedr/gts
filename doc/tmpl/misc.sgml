@@ -1,0 +1,199 @@
+<!-- ##### SECTION Title ##### -->
+Miscellaneous macros and functions
+
+<!-- ##### SECTION Short_Description ##### -->
+Various utilities.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The gts_get_token() and gts_get_newline() functions are used for parsing GTS geometric files.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_COMMENTS ##### -->
+<para>
+Set of characters used as comments identifiers in GTS geometric files.
+</para>
+
+
+
+<!-- ##### STRUCT GtsFile ##### -->
+<para>
+
+</para>
+
+@fp: 
+@s: 
+@s1: 
+@line: 
+@pos: 
+@token: 
+@type: 
+@error: 
+@curline: 
+@curpos: 
+@scope: 
+@scope_max: 
+@next_token: 
+@delimiters: 
+@comments: 
+@tokens: 
+
+<!-- ##### ENUM GtsTokenType ##### -->
+<para>
+
+</para>
+
+@GTS_NONE: 
+@GTS_INT: 
+@GTS_UINT: 
+@GTS_FLOAT: 
+@GTS_DOUBLE: 
+@GTS_STRING: 
+@GTS_FILE: 
+@GTS_ERROR: 
+
+<!-- ##### STRUCT GtsFileVariable ##### -->
+<para>
+
+</para>
+
+@type: 
+@name: 
+@unique: 
+@data: 
+@set: 
+@line: 
+@pos: 
+
+<!-- ##### FUNCTION gts_file_new ##### -->
+<para>
+
+</para>
+
+@fp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_file_next_token ##### -->
+<para>
+
+</para>
+
+@f: 
+
+
+<!-- ##### FUNCTION gts_file_first_token_after ##### -->
+<para>
+
+</para>
+
+@f: 
+@type: 
+
+
+<!-- ##### FUNCTION gts_file_assign_start ##### -->
+<para>
+
+</para>
+
+@f: 
+@vars: 
+
+
+<!-- ##### FUNCTION gts_file_assign_next ##### -->
+<para>
+
+</para>
+
+@f: 
+@vars: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_file_assign_variables ##### -->
+<para>
+
+</para>
+
+@f: 
+@vars: 
+
+
+<!-- ##### FUNCTION gts_file_getc ##### -->
+<para>
+
+</para>
+
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_file_getc_scope ##### -->
+<para>
+
+</para>
+
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_file_read ##### -->
+<para>
+
+</para>
+
+@f: 
+@ptr: 
+@size: 
+@nmemb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_file_variable_error ##### -->
+<para>
+
+</para>
+
+@f: 
+@vars: 
+@name: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gts_file_verror ##### -->
+<para>
+
+</para>
+
+@f: 
+@format: 
+@args: 
+
+
+<!-- ##### FUNCTION gts_file_error ##### -->
+<para>
+
+</para>
+
+@f: 
+@format: 
+@Varargs: 
+
+
+<!-- ##### FUNCTION gts_file_destroy ##### -->
+<para>
+
+</para>
+
+@f: 
+
+

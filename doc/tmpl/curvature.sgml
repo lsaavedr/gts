@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+Differential geometry operators
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gts_vertex_gaussian_curvature ##### -->
+<para>
+
+</para>
+
+@v: 
+@s: 
+@Kg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_mean_curvature_normal ##### -->
+<para>
+
+</para>
+
+@v: 
+@s: 
+@Kh: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_principal_curvatures ##### -->
+<para>
+
+</para>
+
+@Kh: 
+@Kg: 
+@K1: 
+@K2: 
+
+
+<!-- ##### FUNCTION gts_vertex_principal_directions ##### -->
+<para>
+
+</para>
+
+@v: 
+@s: 
+@Kh: 
+@Kg: 
+@e1: 
+@e2: 
+
+

@@ -1,0 +1,104 @@
+<!-- ##### SECTION Title ##### -->
+Binary heaps
+
+<!-- ##### SECTION Short_Description ##### -->
+efficient data structure for priority heaps.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The basic operations gts_heap_insert() and gts_heap_remove_top() are performed in O(log n) time. Calling gts_heap_freeze(), inserting elements using gts_heap_insert() and calling gts_heap_thaw() allows to build the binary heap in O(n) time.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GtsHeap ##### -->
+<para>
+An opaque data structure describing a binary heap.
+</para>
+
+
+<!-- ##### FUNCTION gts_heap_new ##### -->
+<para>
+
+</para>
+
+@compare_func: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_heap_insert ##### -->
+<para>
+
+</para>
+
+@heap: 
+@p: 
+
+
+<!-- ##### FUNCTION gts_heap_remove_top ##### -->
+<para>
+
+</para>
+
+@heap: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_heap_top ##### -->
+<para>
+
+</para>
+
+@heap: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_heap_freeze ##### -->
+<para>
+
+</para>
+
+@heap: 
+
+
+<!-- ##### FUNCTION gts_heap_thaw ##### -->
+<para>
+
+</para>
+
+@heap: 
+
+
+<!-- ##### FUNCTION gts_heap_foreach ##### -->
+<para>
+
+</para>
+
+@heap: 
+@func: 
+@user_data: 
+
+
+<!-- ##### FUNCTION gts_heap_size ##### -->
+<para>
+
+</para>
+
+@heap: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_heap_destroy ##### -->
+<para>
+
+</para>
+
+@heap: 
+
+

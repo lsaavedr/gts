@@ -1,0 +1,191 @@
+<!-- ##### SECTION Title ##### -->
+Weighted graph
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_WGEDGE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_WGEDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_WGEDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsWGEdgeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsWGEdge ##### -->
+<para>
+
+</para>
+
+@gedge: 
+@weight: 
+
+<!-- ##### FUNCTION gts_wgedge_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_wgedge_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@n1: 
+@n2: 
+@weight: 
+@Returns: 
+
+
+<!-- ##### MACRO GTS_WGNODE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_WGNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_WGNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsWGNodeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsWGNode ##### -->
+<para>
+
+</para>
+
+@node: 
+@weight: 
+
+<!-- ##### FUNCTION gts_wgnode_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_wgnode_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@weight: 
+@Returns: 
+
+
+<!-- ##### MACRO GTS_WGRAPH_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_WGRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_WGRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsWGraphClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsWGraph ##### -->
+<para>
+
+</para>
+
+@graph: 
+@weight: 
+
+<!-- ##### FUNCTION gts_wgraph_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_wgraph_weight_max ##### -->
+<para>
+
+</para>
+
+@wg: 
+@Returns: 
+
+

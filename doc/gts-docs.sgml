@@ -1,29 +1,53 @@
-<?xml version="1.0"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
-[
-  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+<!doctype book PUBLIC "-//OASIS//DTD DocBook V4.4//EN" [
+<!entity gts-Heaps SYSTEM "sgml/heaps.sgml">
+<!entity gts-Extended-Heaps SYSTEM "sgml/extended_heaps.sgml">
+<!entity gts-Fifo SYSTEM "sgml/fifo.sgml">
+<!entity gts-Vectors-and-matrices SYSTEM "sgml/matrices.sgml">
+<!entity gts-Points SYSTEM "sgml/points.sgml">
+<!entity gts-Vertices SYSTEM "sgml/vertices.sgml">
+<!entity gts-Kd-Trees SYSTEM "sgml/kd-Trees.sgml">
+<!entity gts-Segments SYSTEM "sgml/segments.sgml">
+<!entity gts-Edges SYSTEM "sgml/edges.sgml">
+<!entity gts-Bounding-boxes-trees SYSTEM "sgml/bb-trees.sgml">
+<!entity gts-Triangles SYSTEM "sgml/triangles.sgml">
+<!entity gts-Faces SYSTEM "sgml/faces.sgml">
+<!entity gts-Surfaces SYSTEM "sgml/surfaces.sgml">
+<!entity gts-Simplification SYSTEM "sgml/simplify.sgml">
+<!entity gts-Isosurfaces SYSTEM "sgml/iso.sgml">
+<!entity gts-Delaunay-and-constrained-Delaunay-triangulations SYSTEM "sgml/delaunay.sgml">
+<!entity gts-Boolean SYSTEM "sgml/boolean.sgml">
+<!entity gts-HSurface SYSTEM "sgml/hsurface.sgml">
+<!entity gts-PSurface SYSTEM "sgml/psurface.sgml">
+<!entity gts-Object SYSTEM "sgml/object.sgml">
+<!entity gts-misc SYSTEM "sgml/misc.sgml">
+<!entity gts-stats SYSTEM "sgml/stats.sgml">
+<!entity gts-Split SYSTEM "sgml/split.sgml">
+<!entity gts-HSplit SYSTEM "sgml/hsplit.sgml">
+<!entity gts-oocs SYSTEM "sgml/oocs.sgml">
+<!entity gts-Container SYSTEM "sgml/container.sgml">
+<!entity gts-Containee SYSTEM "sgml/containee.sgml">
+<!entity gts-Graph SYSTEM "sgml/graph.sgml">
+<!entity gts-WGraph SYSTEM "sgml/wgraph.sgml">
+<!entity gts-PGraph SYSTEM "sgml/pgraph.sgml">
+<!entity gts-Partition SYSTEM "sgml/partition.sgml">
+<!entity gts-Curvature SYSTEM "sgml/curvature.sgml">
 ]>
-<book id="index">
+
+<book>
   <bookinfo>
     <title>GTS Library Reference Manual</title>
-    <releaseinfo>
-      for gts 0.7.7.
-      The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://www.gnugts.org/gtkdoc">API Reference</ulink>.
-    </releaseinfo>
   </bookinfo>
 
-  <chapter id="BasicMacrosFunctionsAndDataStructures">
-    <title>Basic Macros, Functions and Data Structures</title>
-        <xi:include href="xml/heaps.xml"/>
-        <xi:include href="xml/eheaps.xml"/>
-        <xi:include href="xml/fifo.xml"/>
-        <xi:include href="xml/matrices.xml"/>
-        <xi:include href="xml/stats.xml"/>
-        <xi:include href="xml/misc.xml"/>
+  <chapter>
+    <title>Basic Macros, functions and data structures</title>
+      &gts-Heaps;
+      &gts-Extended-Heaps;
+      &gts-Fifo;
+      &gts-Vectors-and-matrices;
+      &gts-stats;
+      &gts-misc;
   </chapter>
-  <chapter id="GeometricalObjectHierarchy">
+  <chapter>
     <title>Geometrical Object Hierarchy</title>
     <para>
     GTS uses a simple object system implemented in C which allows all
@@ -57,58 +81,43 @@
     faces are floating. Destroying a segment, triangle or surface will
     cause the destruction of any new floating vertex, edge or face.
     </para>
-        <xi:include href="xml/object.xml"/>
-        <xi:include href="xml/container.xml"/>
-        <xi:include href="xml/containee.xml"/>
-        <xi:include href="xml/points.xml"/>
-        <xi:include href="xml/vertices.xml"/>
-        <xi:include href="xml/segments.xml"/>
-        <xi:include href="xml/edges.xml"/>
-        <xi:include href="xml/triangles.xml"/>
-        <xi:include href="xml/faces.xml"/>
-        <xi:include href="xml/surfaces.xml"/>
+      &gts-Object;
+      &gts-Container;
+      &gts-Containee;
+      &gts-Points;
+      &gts-Vertices;
+      &gts-Segments;
+      &gts-Edges;
+      &gts-Triangles;
+      &gts-Faces;
+      &gts-Surfaces;
   </chapter>
-  <chapter id="GeometricalDataStructures">
-    <title>Geometrical Data Structures</title>
-        <xi:include href="xml/kd-Trees.xml"/>
-        <xi:include href="xml/bb-trees.xml"/>
+  <chapter>
+    <title>Geometrical data structures</title>
+      &gts-Kd-Trees;
+      &gts-Bounding-boxes-trees;
   </chapter>
-  <chapter id="SurfaceOperations">
-    <title>Surface Operations</title>
-        <xi:include href="xml/boolean.xml"/>
-        <xi:include href="xml/simplify.xml"/>
-        <xi:include href="xml/oocs.xml"/>
-        <xi:include href="xml/iso.xml"/>
-        <xi:include href="xml/delaunay.xml"/>
-        <xi:include href="xml/curvature.xml"/>
+  <chapter>
+    <title>Surface operations</title>
+      &gts-Boolean;
+      &gts-Simplification;
+      &gts-oocs;
+      &gts-Isosurfaces;
+      &gts-Delaunay-and-constrained-Delaunay-triangulations;
+      &gts-Curvature;
   </chapter>
-  <chapter id="ProgressiveAndHierarchicalSurfaces">
-    <title>Progressive and Hierarchical Surfaces</title>
-        <xi:include href="xml/split.xml"/>
-        <xi:include href="xml/psurface.xml"/>
-        <xi:include href="xml/hsplit.xml"/>
-        <xi:include href="xml/hsurface.xml"/>
+  <chapter>
+    <title>Progressive and Hierarchical surfaces</title>
+      &gts-Split;
+      &gts-PSurface;
+      &gts-HSplit;
+      &gts-HSurface;
   </chapter>
-  <chapter id="GraphAndOperationsOnGraphs">
-    <title>Graph and Operations on Graphs</title>
-        <xi:include href="xml/graph.xml"/>
-        <xi:include href="xml/wgraph.xml"/>
-        <xi:include href="xml/pgraph.xml"/>
-        <xi:include href="xml/partition.xml"/>
+  <chapter>
+    <title>Graph and operations on graphs</title>
+      &gts-Graph;
+      &gts-WGraph;
+      &gts-PGraph;
+      &gts-Partition;
   </chapter>
-  <chapter id="ExceptionHandling">
-    <title>Exception Handling</title>
-        <xi:include href="xml/exception.xml"/>
-  </chapter>
-
-  <chapter id="object-tree">
-    <title>Object Hierarchy</title>
-     <xi:include href="xml/tree_index.sgml"/>
-  </chapter>
-  <index id="api-index-full">
-    <title>API Index</title>
-    <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
-  </index>
-
-  <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
 </book>

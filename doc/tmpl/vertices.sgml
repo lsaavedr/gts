@@ -1,0 +1,199 @@
+<!-- ##### SECTION Title ##### -->
+Vertices
+
+<!-- ##### SECTION Short_Description ##### -->
+vertex object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Vertices are points used as endpoints of #GtsSegment. They are derived from #GtsPoint.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_VERTEX_CLASS ##### -->
+<para>
+Casts @klass to #GtsVertexClass.
+</para>
+
+@klass: a descendant of #GtsVertexClass.
+
+
+<!-- ##### MACRO GTS_VERTEX ##### -->
+<para>
+Casts @obj to #GtsVertex.
+</para>
+
+@obj: a descendant of #GtsVertex.
+
+
+<!-- ##### MACRO GTS_IS_VERTEX ##### -->
+<para>
+Evaluates to %TRUE if @obj is a descendant of #GtsVertex, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsVertexClass ##### -->
+<para>
+The vertex class. No virtual functions are associated.
+</para>
+
+@parent_class: 
+@intersection_attributes: 
+
+<!-- ##### STRUCT GtsVertex ##### -->
+<para>
+The vertex object.
+</para>
+
+@p: The parent object.
+@segments: Contains all the #GtsSegment using this vertex as one of their endpoints.
+
+<!-- ##### FUNCTION gts_vertex_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@x: 
+@y: 
+@z: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_is_unattached ##### -->
+<para>
+
+</para>
+
+@v: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_is_boundary ##### -->
+<para>
+
+</para>
+
+@v: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_is_contact ##### -->
+<para>
+
+</para>
+
+@v: 
+@sever: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertices_are_connected ##### -->
+<para>
+
+</para>
+
+@v1: 
+@v2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_replace ##### -->
+<para>
+
+</para>
+
+@v: 
+@with: 
+
+
+<!-- ##### FUNCTION gts_vertex_neighbors ##### -->
+<para>
+
+</para>
+
+@v: 
+@list: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_triangles ##### -->
+<para>
+
+</para>
+
+@v: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_faces ##### -->
+<para>
+
+</para>
+
+@v: 
+@surface: 
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_fan_oriented ##### -->
+<para>
+
+</para>
+
+@v: 
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertex_encroaches_edge ##### -->
+<para>
+
+</para>
+
+@v: 
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertices_from_segments ##### -->
+<para>
+
+</para>
+
+@segments: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_vertices_merge ##### -->
+<para>
+
+</para>
+
+@vertices: 
+@epsilon: 
+@check: 
+@Returns: 
+
+

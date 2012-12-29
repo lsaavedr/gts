@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,29 +15,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION: iso
- * @short_description: computing triangulated isosurfaces of a given
- * function f(x,y,z).
- * @title: Isosurfaces from 3D functions
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Using the gts_isosurface_cartesian() function, it is possible to
- * build a triangulated isosurface of a given user-defined function.
- * As its name indicates this function assumes that the values of the
- * user-defined function are defined for points located on a regular
- * cartesian grid described by the #GtsCartesianGrid parameter. The
- * triangles describing the isosurface are computed for each pair of
- * successive planes z and z+dz in a pipelined manner. Consequently
- * only two planes need to be stored in memory at any time. This
- * allows to construct isosurfaces for datasets too large to fit in
- * main memory.
  */
 
 #include "gts.h"

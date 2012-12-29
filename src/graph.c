@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -1237,14 +1237,14 @@ guint gts_graph_read_jostle (GtsGraph * g, GtsFile * fp)
     gts_file_error (fp, "expecting an integer (number of nodes)");
     return fp->line;
   }
-  nn = strtol (fp->token->str, NULL, 0);
+  nn = atoi (fp->token->str);
   gts_file_next_token (fp);
 
   if (fp->type != GTS_INT) {
     gts_file_error (fp, "expecting an integer (number of edges)");
     return fp->line;
   }
-  ne = strtol (fp->token->str, NULL, 0);
+  ne = atoi (fp->token->str);
 
   gts_file_first_token_after (fp, '\n');
   nodes = g_malloc (sizeof (GtsGNode *)*(nn + 1));
@@ -1259,7 +1259,7 @@ guint gts_graph_read_jostle (GtsGraph * g, GtsFile * fp)
       if (fp->type != GTS_INT)
 	gts_file_error (fp, "expecting an integer (node index)");
       else {
-	guint in = strtol (fp->token->str, NULL, 0);
+	guint in = atoi (fp->token->str);
 	
 	if (in == 0 || in > nn)
 	  gts_file_error (fp, "node index `%d' is out of range `[1,%d]'",
@@ -1383,14 +1383,14 @@ GtsGraph * gts_graph_read (GtsFile * fp)
     gts_file_error (fp, "expecting an integer (number of nodes)");
     return NULL;
   }
-  nn = strtol (fp->token->str, NULL, 0);
+  nn = atoi (fp->token->str);
   gts_file_next_token (fp);
 
   if (fp->type != GTS_INT) {
     gts_file_error (fp, "expecting an integer (number of edges)");
     return NULL;
   }
-  ne = strtol (fp->token->str, NULL, 0);
+  ne = atoi (fp->token->str);
 
   gts_file_next_token (fp);
   if (fp->type != '\n') {
@@ -1451,7 +1451,7 @@ GtsGraph * gts_graph_read (GtsFile * fp)
     if (fp->type != GTS_INT)
       gts_file_error (fp, "expecting an integer (first node index)");
     else {
-      n1 = strtol (fp->token->str, NULL, 0);
+      n1 = atoi (fp->token->str);
       if (n1 == 0 || n1 > nn)
 	gts_file_error (fp, "node index `%d' is out of range `[1,%d]'",
 			n1, nn);
@@ -1460,7 +1460,7 @@ GtsGraph * gts_graph_read (GtsFile * fp)
 	if (fp->type != GTS_INT)
 	  gts_file_error (fp, "expecting an integer (second node index)");
 	else {
-	  n2 = strtol (fp->token->str, NULL, 0);
+	  n2 = atoi (fp->token->str);
 	  if (n2 == 0 || n2 > nn)
 	    gts_file_error (fp, "node index `%d' is out of range `[1,%d]'",
 			    n2, nn);

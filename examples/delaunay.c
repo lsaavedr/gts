@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -189,7 +189,11 @@ static void gts_constraint_split (GtsConstraint * c,
 
 static void add_constraint (GtsConstraint * c, GtsSurface * s)
 {
-  g_assert (gts_delaunay_add_constraint (s, c) == NULL);
+  GSList * list = gts_delaunay_add_constraint (s, c);
+  if (list) {
+    g_warning ("constraint conflicted with %d other constraints", g_slist_length (list));
+    g_slist_free (list);
+  }
 }
 
 static void split_constraint (GtsConstraint * c, gpointer * data)
@@ -218,6 +222,94 @@ static void shuffle_array (GPtrArray * a)
   }
 }
 
+static double slope (GtsVertex * v1, GtsVertex * v2, GtsVertex * v3)
+{
+  GtsPoint * p1 = GTS_POINT (v1);
+  GtsPoint * p2 = GTS_POINT (v2);
+  GtsPoint * p3 = GTS_POINT (v3);
+
+  double x1 = p2->x - p1->x;
+  double y1 = p2->y - p1->y;
+  double z1 = p2->z - p1->z;
+
+  double x2 = p3->x - p1->x;
+  double y2 = p3->y - p1->y;
+  double z2 = p3->z - p1->z;
+
+  double nx = y1*z2 - z1*y2;
+  double ny = z1*x2 - x1*z2;
+  double nz = x1*y2 - y1*x2;
+
+  return 1. - nz*nz/(nx*nx + ny*ny + nz*nz);
+}
+
+/* swap edge if it maximises the minimum slope */
+static gboolean edge_slope_swap (GtsEdge * e, GtsSurface * s)
+{
+  if (!GTS_IS_CONSTRAINT (e)) {
+    GtsTriangle * t1 = NULL, * t2 = NULL;
+    GSList * i = e->triangles;
+    while (i) {
+      if (GTS_IS_FACE (i->data) && gts_face_has_parent_surface (i->data, s)) {
+	if (!t1)
+	  t1 = i->data;
+	else if (!t2)
+	  t2 = i->data;
+	else
+	  g_return_val_if_fail (gts_edge_face_number (e, s) == 2, FALSE);
+      }
+      i = i->next;
+    }
+    if (!t1 || !t2)
+      return FALSE;
+    GtsVertex * v1, * v2, * v3, * v4, * v5, * v6;
+    GtsEdge * e1, * e2, * e3, * e4;
+    gts_triangle_vertices_edges (t1, e, &v1, &v2, &v3, &e, &e1, &e2);
+    gts_triangle_vertices_edges (t2, e, &v4, &v5, &v6, &e, &e3, &e4);
+    g_assert (v2 == v4 && v1 == v5);
+    if (gts_point_orientation (GTS_POINT (v3), GTS_POINT (v6), GTS_POINT (v2)) > 0. &&
+	gts_point_orientation (GTS_POINT (v6), GTS_POINT (v3), GTS_POINT (v1)) > 0.) {
+      /* edge swap is possible */
+      double slope1 = slope (v1, v2, v3), slope2 = slope (v4, v5, v6);
+      double slopemin1 = MIN (slope1, slope2);
+      slope1 = slope (v3, v6, v2); slope2 = slope (v6, v3, v1);
+      double slopemin2 = MIN (slope1, slope2);
+      if (slopemin2 > slopemin1) {
+	/* edge swap */
+	GtsSegment * v3v6 = gts_vertices_are_connected (v3, v6);
+	if (!GTS_IS_EDGE (v3v6))
+	  v3v6 = GTS_SEGMENT (gts_edge_new (s->edge_class, v3, v6));
+	GtsFace * f = gts_face_new (s->face_class, e1, GTS_EDGE (v3v6), e4);
+	GtsTriangle * t;
+	if ((t = gts_triangle_is_duplicate (GTS_TRIANGLE (f))) &&
+	    GTS_IS_FACE (t)) {
+	  gts_object_destroy (GTS_OBJECT (f));
+	  f = GTS_FACE (t);
+	}
+	gts_surface_add_face (s, f);
+	
+	f = gts_face_new (s->face_class, GTS_EDGE (v3v6), e2, e3);
+	if ((t = gts_triangle_is_duplicate (GTS_TRIANGLE (f))) &&
+	    GTS_IS_FACE (t)) {
+	  gts_object_destroy (GTS_OBJECT (f));
+	  f = GTS_FACE (t);
+	}
+	gts_surface_add_face (s, f);
+
+	gts_surface_remove_face (s, GTS_FACE (t1));
+	gts_surface_remove_face (s, GTS_FACE (t2));
+	return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+static void add_edge (GtsEdge * e, GtsFifo * fifo)
+{
+  gts_fifo_push (fifo, e);
+}
+
 int main (int argc, char * argv[])
 {
   GPtrArray * vertices;
@@ -236,6 +328,7 @@ int main (int argc, char * argv[])
   gboolean split_constraints = FALSE;
   gboolean randomize = FALSE;
   gboolean remove_duplicates = FALSE;
+  gboolean slope = FALSE;
   gint steiner_max = -1;
   gdouble quality = 0., area = G_MAXDOUBLE;
   int c = 0, status = 0;
@@ -258,6 +351,7 @@ int main (int argc, char * argv[])
       {"holes", no_argument, NULL, 'H'},
       {"split", no_argument, NULL, 'S'},
       {"check", no_argument, NULL, 'c'},
+      {"slope", no_argument, NULL, 't'},
       {"files", required_argument, NULL, 'f'},
       {"conform", no_argument, NULL, 'o'},
       {"steiner", required_argument, NULL, 's'},
@@ -266,10 +360,10 @@ int main (int argc, char * argv[])
       { NULL }
     };
     int option_index = 0;
-    switch ((c = getopt_long (argc, argv, "hvbecf:os:q:a:HSrd",
+    switch ((c = getopt_long (argc, argv, "hvbecf:os:q:a:HSrdt",
 			      long_options, &option_index))) {
 #else /* not HAVE_GETOPT_LONG */
-    switch ((c = getopt (argc, argv, "hvbecf:os:q:a:HSrd"))) {
+    switch ((c = getopt (argc, argv, "hvbecf:os:q:a:HSrdt"))) {
 #endif /* not HAVE_GETOPT_LONG */
     case 'd': /* duplicates */
       remove_duplicates = TRUE;
@@ -289,6 +383,9 @@ int main (int argc, char * argv[])
     case 'r': /* randomize */
       randomize = TRUE;
       break;
+    case 't': /* slope optimisation */
+      slope = TRUE;
+      break;
     case 'c': /* check Delaunay property */
       check_delaunay = TRUE;
       break;
@@ -302,17 +399,17 @@ int main (int argc, char * argv[])
       conform = TRUE;
       break;
     case 's': /* steiner */
-      steiner_max = strtol (optarg, NULL, 0);
+      steiner_max = atoi (optarg);
       break;
     case 'q': /* quality */
       conform = TRUE;
       refine = TRUE;
-      quality = strtod (optarg, NULL);
+      quality = atof (optarg);
       break;
     case 'a': /* area */
       conform = TRUE;
       refine = TRUE;
-      area = strtod (optarg, NULL);
+      area = atof (optarg);
       break;
     case 'h': /* help */
       fprintf (stderr,
@@ -330,6 +427,7 @@ int main (int argc, char * argv[])
 	     "  -o       --conform      generate conforming triangulation\n"
 	     "  -s N     --steiner=N    maximum number of Steiner points for\n"
 	     "                          conforming triangulation (default is no limit)\n"
+             "  -t       --slope        maximisation of minimum slope\n"
 	     "  -q Q     --quality=Q    Set the minimum acceptable face quality\n"
 	     "  -a A     --area=A       Set the maximum acceptable face area\n"
 	     "  -v       --verbose      print statistics about the triangulation\n"
@@ -476,6 +574,23 @@ int main (int argc, char * argv[])
 	       "Delaunay triangulation: %d encroached constraints left\n",
 	       steiner_max, encroached_number);
   }
+
+  if (slope) {
+    guint swapped;
+    do {
+      swapped = 0;
+      GtsFifo * fifo = gts_fifo_new ();
+      gts_surface_foreach_edge (surface, (GtsFunc) add_edge, fifo);
+      GtsEdge * e;
+      while ((e = gts_fifo_pop (fifo)))
+	if (edge_slope_swap (e, surface))
+	  swapped++;
+      gts_fifo_destroy (fifo);
+      if (verbose)
+	fprintf (stderr, "swapped %d\n", swapped);
+    } while (swapped > 0);
+  }
+
   g_timer_stop (timer);
 
   if (verbose) {

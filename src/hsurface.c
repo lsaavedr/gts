@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,33 +15,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION: hsurface
- * @short_description: extension of progressive surfaces allowing
- * arbitrary sequences of vertex split or collapse.
- * @title: Hierarchical surfaces
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Hierarchical surfaces are used to manage sequences of vertex
- * splits or collapses which can be different from the initial
- * sequence described by the progressive surface. In this way
- * different branches of the vertex split tree can be collapsed or
- * expanded resulting in a level of detail varying across different
- * parts of the surface. This is the fundamental mechanism of
- * view-dependent level of detail.
- *
- * Hierarchical surfaces maintain two priority heaps one containing
- * the next vertices (#GtsHSplit) ready to be expanded, the other the
- * next vertices ready to be collapsed. By updating the priorities
- * for these vertices as the view point changes and collapsing or
- * expanding the top ones until a given criterium is verified, the
- * level of detail can be dynamically adapted.
  */
 
 #include <stdlib.h>

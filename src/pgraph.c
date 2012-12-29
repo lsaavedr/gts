@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -30,8 +30,8 @@ static void gnode_split_destroy (GtsObject * object)
     gts_object_destroy (GTS_OBJECT (ns->n));
   }
   else {
-    //GtsGNode * n1 = GTS_GNODE_SPLIT_N1 (ns);
-    //GtsGNode * n2 = GTS_GNODE_SPLIT_N2 (ns);
+    GtsGNode * n1 = GTS_GNODE_SPLIT_N1 (ns);
+    GtsGNode * n2 = GTS_GNODE_SPLIT_N2 (ns);
 
     g_warning ("Memory deallocation for GtsGNodeSplit not fully implemented yet: memory leak!");
   }

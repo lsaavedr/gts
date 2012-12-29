@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -82,7 +82,7 @@ GtsSegmentClass * gts_segment_class (void)
  *
  * Returns: a new #GtsSegment linking @v1 and @v2.
  */
-GtsSegment * gts_segment_new (GtsSegmentClass * klass,
+GtsSegment * gts_segment_new (GtsSegmentClass * klass, 
 			      GtsVertex * v1, GtsVertex * v2)
 {
   GtsSegment * s;
@@ -96,34 +96,8 @@ GtsSegment * gts_segment_new (GtsSegmentClass * klass,
   s->v2 = v2;
   v1->segments = g_slist_prepend (v1->segments, s);
   v2->segments = g_slist_prepend (v2->segments, s);
-
+  
   return s;
-}
-
-/**
- * gts_segment_length2:
- * @s: a #GtsSegment.
- *
- * Returns: the square of the Euclidean length of @s.
- */
-gdouble gts_segment_length2 (GtsSegment * s)
-{
-  g_return_val_if_fail (s != NULL, -1);
-
-  return gts_point_distance2 (GTS_POINT (s->v1), GTS_POINT (s->v2));
-}
-
-/**
- * gts_segment_length:
- * @s: a #GtsSegment.
- *
- * Returns: the Euclidean length of @s.
- */
-gdouble gts_segment_length (GtsSegment * s)
-{
-  g_return_val_if_fail (s != NULL, -1);
-
-  return gts_point_distance (GTS_POINT (s->v1), GTS_POINT (s->v2));
 }
 
 /**
@@ -172,7 +146,7 @@ GtsIntersect gts_segments_are_intersecting (GtsSegment * s1, GtsSegment * s2)
   GtsPoint * p1, * p2, * p3, * p4;
   gdouble d1, d2, d3, d4;
 
-  g_return_val_if_fail (s1 != NULL && s2 != NULL, GTS_OUT);
+  g_return_val_if_fail (s1 != NULL && s2 != NULL, FALSE);
 
   p1 = GTS_POINT (s1->v1); p2 = GTS_POINT (s1->v2);
   p3 = GTS_POINT (s2->v1); p4 = GTS_POINT (s2->v2);
@@ -186,110 +160,9 @@ GtsIntersect gts_segments_are_intersecting (GtsSegment * s1, GtsSegment * s2)
   if ((d3 > 0.0 && d4 > 0.0) ||
       (d3 < 0.0 && d4 < 0.0))
     return GTS_OUT;
-  if (d1 == 0.0 || d2 == 0.0 || d3 == 0.0 || d4 == 0.0) {
-    if ((d1 == 0.0 && d2 == 0.0) ||
-        (d3 == 0.0 && d4 == 0.0)) { /* s1 and s2 are colinear: special treatment */
-      d1 = p1->x*(p2->x - p1->x) + p1->y*(p2->y - p1->y);
-      d2 = p2->x*(p2->x - p1->x) + p2->y*(p2->y - p1->y);
-      d3 = p3->x*(p2->x - p1->x) + p3->y*(p2->y - p1->y);
-      d4 = p4->x*(p2->x - p1->x) + p4->y*(p2->y - p1->y);
-      if ((d1 <= d3 && d3 <= d2) ||
-          (d1 <= d4 && d4 <= d2) ||
-          (d3 <= d4 && d3 <= d1 && d2 <= d4) ||
-          (d4 <= d3 && d4 <= d1 && d2 <= d3))
+  if (d1 == 0.0 || d2 == 0.0 || d3 == 0.0 || d4 == 0.0)
     return GTS_ON;
-      return GTS_OUT;
-    }
-    return GTS_ON;
-  }
   return GTS_IN;
-}
-
-/**
- * gts_segment_triangle_intersection:
- * @s: a #GtsSegment.
- * @t: a #GtsTriangle.
- * @boundary: if %TRUE, the boundary of @t is taken into account.
- * @klass: a #GtsPointClass to be used for the new point.
- *
- * Checks if @s intersects @t. If this is the case, creates a new
- * point pi intersection of @s with @t.
- *
- * This function is geometrically robust in the sense that it will not
- * return a point if @s and @t do not intersect and will return a
- * point if @s and @t do intersect. However, the point coordinates are
- * subject to round-off errors.
- *
- * Note that this function will not return any point if @s is contained in
- * the plane defined by @t.
- *
- * Returns: a summit of @t (if @boundary is set to %TRUE), one of the endpoints
- * of @s or a new #GtsPoint, intersection of @s with @t or %NULL if @s
- * and @t don't intersect.
- */
-GtsPoint * gts_segment_triangle_intersection (GtsSegment * s,
-                                              GtsTriangle * t,
-                                              gboolean boundary,
-                                              GtsPointClass * klass)
-{
-  GtsPoint * A, * B, * C, * D, * E, * I;
-  gdouble ABCE, ABCD, ADCE, ABDE, BCDE;
-  gdouble c;
-
-  g_return_val_if_fail (s != NULL, NULL);
-  g_return_val_if_fail (t != NULL, NULL);
-  g_return_val_if_fail (klass != NULL, NULL);
-
-  A = GTS_POINT (GTS_SEGMENT (t->e1)->v1);
-  B = GTS_POINT (GTS_SEGMENT (t->e1)->v2);
-  C = GTS_POINT (gts_triangle_vertex (t));
-  D = GTS_POINT (s->v1);
-  E = GTS_POINT (s->v2);
-
-  ABCE = gts_point_orientation_3d (A, B, C, E);
-  ABCD = gts_point_orientation_3d (A, B, C, D);
-  if (ABCE < 0.0 || ABCD > 0.0) {
-    GtsPoint * tmpp;
-    gdouble tmp;
-    tmpp = E; E = D; D = tmpp;
-    tmp = ABCE; ABCE = ABCD; ABCD = tmp;
-  }
-  if (ABCE < 0.0 || ABCD > 0.0)
-    return NULL;
-  ADCE = gts_point_orientation_3d (A, D, C, E);
-  if ((boundary && ADCE < 0.) || (!boundary && ADCE <= 0.))
-    return NULL;
-  ABDE = gts_point_orientation_3d (A, B, D, E);
-  if ((boundary && ABDE < 0.) || (!boundary && ABDE <= 0.))
-    return NULL;
-  BCDE = gts_point_orientation_3d (B, C, D, E);
-  if ((boundary && BCDE < 0.) || (!boundary && BCDE <= 0.))
-    return NULL;
-  if (ABCE == 0.0) {
-    if (ABCD == 0.0)
-      /* s is contained in the plane defined by t*/
-      return NULL;
-    return E;
-  }
-  if (ABCD == 0.0)
-    return D;
-  if (boundary) { /* corners of @t */
-    if (ABDE == 0.) {
-      if (ADCE == 0.)
-        return A;
-      if (BCDE == 0.)
-        return B;
-    }
-    else if (BCDE == 0. && ADCE == 0.)
-      return C;
-  }
-  c = ABCE/(ABCE - ABCD);
-  I = GTS_POINT (gts_object_new (GTS_OBJECT_CLASS (klass)));
-  gts_point_set (I,
-                 E->x + c*(D->x - E->x),
-                 E->y + c*(D->y - E->y),
-                 E->z + c*(D->z - E->z));
-  return I;
 }
 
 /**

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -118,7 +118,7 @@ int main (int argc, char * argv[])
 #endif /* not HAVE_GETOPT_LONG */
     case 'f': /* fold */
       fold = TRUE;
-      maxcosine2 = cos (strtod (optarg, NULL)*M_PI/180.);
+      maxcosine2 = cos (atof (optarg)*3.14159265359/180.);
       maxcosine2 *= maxcosine2;
       break;
     case 'v': /* verbose */
@@ -150,7 +150,7 @@ int main (int argc, char * argv[])
 	     "Try `smooth --help' for more information.\n");
     return 1; /* failure */
   }
-  lambda = strtod (argv[optind++], NULL);
+  lambda = atof (argv[optind++]);
 
   if (optind >= argc) { /* missing niter */
     fprintf (stderr, 
@@ -158,7 +158,7 @@ int main (int argc, char * argv[])
 	     "Try `smooth --help' for more information.\n");
     return 1; /* failure */
   }
-  niter = strtol (argv[optind++], NULL, 0);
+  niter = atoi (argv[optind++]);
 
   s = gts_surface_new (gts_surface_class (),
 		       gts_face_class (),

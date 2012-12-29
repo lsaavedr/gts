@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,28 +15,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION: eheaps
- * @short_description: efficient data structure for priority heaps
- * allowing removal of elements.
- * @title: Extended binary heaps
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * This data structure is similar to the binary heap implementation
- * but adds the two operations gts_eheap_decrease_key() and
- * gts_eheap_remove(). Contrary to the binary heap implementation,
- * keys are stored in a #GtsEHeapPair structure and comparisons
- * between keys are performed directly (thus saving a call to a
- * comparison function). This structure consequently provides
- * generally faster operations at the expense of memory use. If your
- * comparison function is simple and you don't need the extra
- * functionalities, it is usually better to use a #GtsHeap.
  */
 
 #include <stdlib.h>

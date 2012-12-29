@@ -32,8 +32,9 @@ GTS uses the glib library which is part of gtk (http://www.gtk.org). If you
 use linux there is a good chance that this library is already on your
 system, otherwise, you'll need to install it.
 
-A WIN32 glib port is available at http://www.gtk.org/download.html, however
-it is recommended to use GTS within the Cygwin environment under windows.
+A WIN32 glib port is available at
+http://www.gimp.org/~tml/gimp/win32/downloads.html, however it is
+recommended to use GTS within the Cygwin environment under windows.
 
 Unix users (including cygwin users):
 
@@ -69,7 +70,7 @@ Using GTS
 
 From version 0.5.0 you can use the `gts-config' script in order to
 obtain the compile flags and link flags necessary to use the GTS
-library.
+library (à la Glib).
 
 - To compile add `gts-config --cflags` to your compiler flags.
 - To link add `gts-config --libs` to your linker flags.
@@ -85,3 +86,4 @@ perform illegal casts between GtsObjects.
 
 You can also to do that using the `--check' option of gts-config,
 i.e. by adding `gts-config --cflags --check' to your compiler flags.
+

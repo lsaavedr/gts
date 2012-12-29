@@ -21,7 +21,6 @@ libgts_la_DEPENDENCIES = \
 libgts_la_SOURCES = \
 	predicates_init.h \
 	object.c \
-	exception.c \
 	point.c \
 	vertex.c \
 	segment.c \
@@ -33,7 +32,6 @@ libgts_la_SOURCES = \
 	misc.c \
 	gts.h \
 	gts-private.h \
-	cexcept.h \
 	predicates.c \
 	predicates.h \
 	rounding.h \
@@ -62,7 +60,7 @@ libgts_la_SOURCES = \
 	tribox3.c
 
 include_HEADERS = \
-	gts.h gtsconfig.h cexcept.h
+	gts.h gtsconfig.h
 
 predicates.o: predicates.c predicates_init.h predicates.h
 	$(COMPILE) -c $(srcdir)/predicates.c

@@ -1,12 +1,10 @@
 #! /bin/sh
 
-make boole@EXEEXT@ cubes@EXEEXT@ set@EXEEXT@
-
 rm -f errors
 if awk '{
     if (NF >= 2 && NF <= 3 && substr ($1, 1, 1) != "#") {
 	summary = $1 " " $2;
-	command = "./set@EXEEXT@ surfaces/" $1 " surfaces/" $2;
+	command = "./set surfaces/" $1 " surfaces/" $2;
 	if (NF == 3 && $3 == "XFAIL")
 	    xfailed = 1;
 	else
@@ -43,11 +41,11 @@ if awk '{
 	}
 	total++;
 	if (!setfailed &&
-	    !system ("../../tools/gtscheck@EXEEXT@ -v 2> log < surfaces/" $1) &&
+	    !system ("../../tools/gtscheck -v 2> log < surfaces/" $1) &&
 	    !system ("grep \"boundary edges: 0\" log > /dev/null") &&
-	    !system ("../../tools/gtscheck@EXEEXT@ -v 2> log < surfaces/" $2) &&
+	    !system ("../../tools/gtscheck -v 2> log < surfaces/" $2) &&
 	    !system ("grep \"boundary edges: 0\" log > /dev/null")) {
-	    command = "./boole@EXEEXT@ surfaces/" $1 " surfaces/" $2;
+	    command = "./boole surfaces/" $1 " surfaces/" $2;
 	    if (system (command " > /dev/null 2> log")) {
 		system ("echo \"======== boole " summary " ========\" >> errors; cat log >> errors");
 		if (xfailed)

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -358,10 +358,9 @@ gdouble gts_triangle_quality (GtsTriangle * t)
  * @z: the z coordinate of the normal.
  *
  * Computes the coordinates of the oriented normal of @t as the
- * cross-product of two edges, using the right-handed in the
- * "right-handed" coordinate system. The normal is not normalized.
- * If this triangle is part of a closed and oriented surface, the
- * normal points to the outside of the surface.
+ * cross-product of two edges, using the left-hand rule. The normal is
+ * not normalized.  If this triangle is part of a closed and oriented
+ * surface, the normal points to the outside of the surface.  
  */
 void gts_triangle_normal (GtsTriangle * t, 
 			  gdouble * x, 
@@ -813,31 +812,33 @@ gboolean gts_triangle_is_ok (GtsTriangle * t)
 void gts_triangle_vertices (GtsTriangle * t,
 			    GtsVertex ** v1, GtsVertex ** v2, GtsVertex ** v3)
 {
+  GtsSegment * e1, * e2;
+
   g_return_if_fail (t != NULL);
   g_return_if_fail (v1 != NULL && v2 != NULL && v3 != NULL);
 
-  GtsSegment * s1 = GTS_SEGMENT (t->e1);
-  GtsSegment * s2 = GTS_SEGMENT (t->e2);
+  e1 = GTS_SEGMENT (t->e1);
+  e2 = GTS_SEGMENT (t->e2);
 
-  if (s1->v2 == s2->v1) {
-    *v1 = s1->v1;
-    *v2 = s1->v2;
-    *v3 = s2->v2;
+  if (GTS_SEGMENT (e1)->v2 == GTS_SEGMENT (e2)->v1) {
+    *v1 = GTS_SEGMENT (e1)->v1; 
+    *v2 = GTS_SEGMENT (e1)->v2; 
+    *v3 = GTS_SEGMENT (e2)->v2;
   }
-  else if (s1->v2 == s2->v2) {
-    *v1 = s1->v1;
-    *v2 = s1->v2;
-    *v3 = s2->v1;
+  else if (GTS_SEGMENT (e1)->v2 == GTS_SEGMENT (e2)->v2) {
+    *v1 = GTS_SEGMENT (e1)->v1; 
+    *v2 = GTS_SEGMENT (e1)->v2; 
+    *v3 = GTS_SEGMENT (e2)->v1;
   }
-  else if (s1->v1 == s2->v1) {
-    *v1 = s1->v2;
-    *v2 = s1->v1;
-    *v3 = s2->v2;
+  else if (GTS_SEGMENT (e1)->v1 == GTS_SEGMENT (e2)->v1) {
+    *v1 = GTS_SEGMENT (e1)->v2; 
+    *v2 = GTS_SEGMENT (e1)->v1; 
+    *v3 = GTS_SEGMENT (e2)->v2;
   }
   else {
-    *v1 = s1->v2;
-    *v2 = s1->v1;
-    *v3 = s2->v1;
+    *v1 = GTS_SEGMENT (e1)->v2; 
+    *v2 = GTS_SEGMENT (e1)->v1; 
+    *v3 = GTS_SEGMENT (e2)->v1;
   }
 }
 

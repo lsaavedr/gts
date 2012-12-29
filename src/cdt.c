@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,39 +15,6 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- */
-
-/**
- * SECTION: delaunay
- * @short_description: implementation of a dynamic Delaunay
- * triangulation algorithm
- * @title: Delaunay and constrained Delaunay triangulations
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * The functions described in this section are useful to build
- * two-dimensional Delaunay and constrained Delaunay triangulations.
- * Only the @x and @y coordinates of the points are taken into
- * account.
- *
- * The algorithm is fully dynamic (insertion and deletion) for
- * Delaunay triangulation and semi-dynamic (insertion only of
- * vertices and constraints) for constrained Delaunay triangulation.
- * The functions described in this section are useful to build
- * two-dimensional Delaunay and constrained Delaunay triangulations.
- * Only the @x and @y coordinates of the points are taken into
- * account.
- *
- * The insertion part uses a very simple jump-and-walk location
- * algorithm which can be used on any (even non-Delaunay) 2D
- * triangulation as long as its boundary is convex.
- *
- * The functions gts_delaunay_conform() and gts_delaunay_refine() can
- * be used to build Delaunay conforming constrained triangulations
- * and to refine them.
  */
 
 #ifdef HAVE_CONFIG_H

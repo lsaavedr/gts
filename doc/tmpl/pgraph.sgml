@@ -1,0 +1,258 @@
+<!-- ##### SECTION Title ##### -->
+Progressive graph
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_GNODE_SPLIT_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_GNODE_SPLIT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_GNODE_SPLIT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_GNODE_SPLIT_N1 ##### -->
+<para>
+
+</para>
+
+@ns: 
+
+
+<!-- ##### MACRO GTS_GNODE_SPLIT_N2 ##### -->
+<para>
+
+</para>
+
+@ns: 
+
+
+<!-- ##### STRUCT GtsGNodeSplitClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsGNodeSplit ##### -->
+<para>
+
+</para>
+
+@object: 
+@n: 
+@n1: 
+@n2: 
+
+<!-- ##### FUNCTION gts_gnode_split_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_split_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@n: 
+@n1: 
+@n2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_split_collapse ##### -->
+<para>
+
+</para>
+
+@ns: 
+@g: 
+@klass: 
+
+
+<!-- ##### FUNCTION gts_gnode_split_expand ##### -->
+<para>
+
+</para>
+
+@ns: 
+@g: 
+
+
+<!-- ##### MACRO GTS_PGRAPH_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_PGRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_PGRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsPGraphClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsPGraph ##### -->
+<para>
+
+</para>
+
+@object: 
+@g: 
+@split: 
+@levels: 
+@split_class: 
+@edge_class: 
+@pos: 
+@min: 
+@level: 
+
+<!-- ##### FUNCTION gts_pgraph_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@g: 
+@split_class: 
+@node_class: 
+@edge_class: 
+@min: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_add_node ##### -->
+<para>
+
+</para>
+
+@pg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_remove_node ##### -->
+<para>
+
+</para>
+
+@pg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_down ##### -->
+<para>
+
+</para>
+
+@pg: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_set_node_number ##### -->
+<para>
+
+</para>
+
+@pg: 
+@n: 
+
+
+<!-- ##### FUNCTION gts_pgraph_get_node_number ##### -->
+<para>
+
+</para>
+
+@pg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_max_node_number ##### -->
+<para>
+
+</para>
+
+@pg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_min_node_number ##### -->
+<para>
+
+</para>
+
+@pg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_pgraph_foreach_node ##### -->
+<para>
+
+</para>
+
+@pg: 
+@func: 
+@data: 
+
+

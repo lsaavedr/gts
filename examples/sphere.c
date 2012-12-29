@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -85,7 +85,7 @@ int main (int argc, char * argv[])
   
   /* read level */
   if (optind < argc)
-    level = strtol (argv[optind], NULL, 0);
+    level = atoi(argv[optind]);
 
   /* generate triangulated sphere */	
   s = gts_surface_new (gts_surface_class (),

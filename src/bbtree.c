@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -16,25 +16,6 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
-/**
- * SECTION: bbtree
- * @short_description: implementation of axis-aligned bounding-box trees
- * @title: Bounding boxes trees
- * @section_id:
- * @see_also:
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Axis-aligned bounding box trees can be used for
- * intersection/collision detection using
- * gts_bb_tree_traverse_overlapping(), or to compute the minimum
- * distance between an object and a collection of others using
- * gts_bb_tree_point_distance(), gts_bb_tree_segment_distance(),
- * gts_bb_tree_triangle_distance() or gts_bb_tree_surface_distance()
- */
-
 
 #include <math.h>
 #include "gts.h"

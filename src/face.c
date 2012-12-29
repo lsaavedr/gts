@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,20 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/**
- * SECTION: faces
- * @short_description: face object and related functions.
- * @title: Faces
- * @section_id:
- * @see_also: #GtsTriangle, #GtsSurface
- * @stability: Stable
- * @include:
- * @Image:
- *
- * Faces are derived from #GtsTriangle. A collection of faces defined
- * a #GtsSurface.
- */
-
 #include "gts.h"
 
 gboolean gts_allow_floating_faces = FALSE;
@@ -38,12 +24,15 @@ gboolean gts_allow_floating_faces = FALSE;
 static void face_destroy (GtsObject * object)
 {
   GtsFace * face = GTS_FACE (object);
+  GSList * i;
 
-  GSList * i = face->surfaces;
+  i = face->surfaces;
   while (i) {
+    GSList * next = i->next;
     gts_surface_remove_face (i->data, face);
-    i = face->surfaces;
+    i = next;
   }
+  g_assert (face->surfaces == NULL);
 
   (* GTS_OBJECT_CLASS (gts_face_class ())->parent_class->destroy) (object);
 }
@@ -274,7 +263,7 @@ void gts_face_foreach_neighbor (GtsFace * f,
   }
 }
 
-static gboolean triangle_isnt_incompatible (GtsTriangle * t, GtsEdge * e, GtsSurface * s)
+static gboolean triangle_is_incompatible (GtsTriangle * t, GtsEdge * e, GtsSurface * s)
 {
   GSList * i = e->triangles;
 
@@ -302,7 +291,7 @@ gboolean gts_face_is_compatible (GtsFace * f, GtsSurface * s)
   g_return_val_if_fail (f != NULL, FALSE);
   g_return_val_if_fail (s != NULL, FALSE);
 
-  return !(triangle_isnt_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e1, s) ||
-	   triangle_isnt_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e2, s) ||
-	   triangle_isnt_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e3, s));
+  return !(triangle_is_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e1, s) ||
+	   triangle_is_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e2, s) ||
+	   triangle_is_incompatible (GTS_TRIANGLE (f), GTS_TRIANGLE (f)->e3, s));
 }

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -49,7 +49,7 @@ int main (int argc, char * argv[])
   scanf ("%u", &nt);
   scanf ("%lf %lf %lf", &bbox->x1, &bbox->y1, &bbox->z1);
   scanf ("%lf %lf %lf", &bbox->x2, &bbox->y2, &bbox->z2);
-  delta = strtod (argv[1], NULL)*sqrt (gts_bbox_diagonal2 (bbox));
+  delta = atof (argv[1])*sqrt (gts_bbox_diagonal2 (bbox));
 
   cluster_grid = gts_cluster_grid_new (gts_cluster_grid_class (), 
 				       gts_cluster_class (), 

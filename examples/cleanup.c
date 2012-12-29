@@ -231,7 +231,7 @@ int main (int argc, char * argv[])
     return 1; /* failure */
   }
 
-  threshold = strtod (argv[optind], NULL);
+  threshold = atof (argv[optind]);
 
   if (threshold < 0.0) { /* threshold must be positive */
      fprintf (stderr, 

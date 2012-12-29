@@ -1,0 +1,113 @@
+<!-- ##### SECTION Title ##### -->
+First In First Out heaps
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT GtsFifo ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gts_fifo_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fifo_push ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_fifo_pop ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fifo_top ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fifo_size ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fifo_foreach ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_fifo_is_empty ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fifo_reverse ##### -->
+<para>
+
+</para>
+
+@fifo: 
+
+
+<!-- ##### FUNCTION gts_fifo_write ##### -->
+<para>
+
+</para>
+
+@fifo: 
+@fp: 
+
+
+<!-- ##### FUNCTION gts_fifo_destroy ##### -->
+<para>
+
+</para>
+
+@fifo: 
+
+

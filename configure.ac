@@ -1,13 +1,6 @@
 AC_INIT
 AC_CONFIG_SRCDIR([src/gts.h])
 
-# check for gtk-doc
-m4_ifdef([GTK_DOC_CHECK], [
-GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
-],[
-AM_CONDITIONAL([ENABLE_GTK_DOC], false)
-])
-
 dnl we to AC_DIVERT_PUSH/AC_DIVERT_POP these variable definitions so they
 dnl are available for $ac_help expansion (don't we all *love* autoconf?)
 #AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
@@ -21,9 +14,9 @@ dnl are available for $ac_help expansion (don't we all *love* autoconf?)
 #
 GTS_MAJOR_VERSION=0
 GTS_MINOR_VERSION=7
-GTS_MICRO_VERSION=7
-GTS_INTERFACE_AGE=0
-GTS_BINARY_AGE=0
+GTS_MICRO_VERSION=6
+GTS_INTERFACE_AGE=1
+GTS_BINARY_AGE=1
 GTS_VERSION=$GTS_MAJOR_VERSION.$GTS_MINOR_VERSION.$GTS_MICRO_VERSION
 dnl
 #AC_DIVERT_POP()dnl
@@ -184,7 +177,7 @@ AC_CONFIG_COMMANDS([default-1],[[
 	cat >src/gtsconfig.h <<\__EOF
 /* gtsconfig.h
  * 
- * This is a generated file.  Please modify `configure.in'
+ * This is a generated file.  Please modify `configure.ac'
  */
 
 #ifndef GTSCONFIG_H
@@ -276,7 +269,6 @@ doc/manpages/Makefile
 examples/Makefile
 test/Makefile
 test/boolean/Makefile
-test/boolean/test.sh
 test/delaunay/Makefile
 test/coarsen/Makefile
 debian/Makefile

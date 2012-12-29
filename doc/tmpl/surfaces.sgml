@@ -1,0 +1,472 @@
+<!-- ##### SECTION Title ##### -->
+Surfaces
+
+<!-- ##### SECTION Short_Description ##### -->
+surface object and related functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A #GtsSurface is defined as a collection of #GtsFace. No topological constraint is imposed: the surface may or may not be manifold, closed or orientable.
+</para>
+<para>
+When destroying a #GtsSurface, all the faces not used by another surface are also destroyed. This default behaviour can be changed punctually by setting the global variable gts_allow_floating_faces to %TRUE. You must not forget to set this variable back to %FALSE as all the algorithms of GTS assume the default behaviour.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_SURFACE_CLASS ##### -->
+<para>
+Casts @klass to #GtsSurfaceClass.
+</para>
+
+@klass: a descendant of #GtsSurfaceClass.
+
+
+<!-- ##### MACRO GTS_SURFACE ##### -->
+<para>
+Casts @obj to #GtsSurface.
+</para>
+
+@obj: a descendant of #GtsSurface.
+
+
+<!-- ##### MACRO GTS_IS_SURFACE ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsSurface, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsSurfaceClass ##### -->
+<para>
+The surface class. No virtual function is defined.
+</para>
+
+@parent_class: 
+@add_face: 
+@remove_face: 
+
+<!-- ##### STRUCT GtsSurface ##### -->
+<para>
+The surface structure derived from #GtsObject.
+This structure should only be accessed through the following functions.
+</para>
+
+@object: 
+@faces: 
+@faces: 
+@face_class: 
+@edge_class: 
+@vertex_class: 
+@keep_faces: 
+
+<!-- ##### FUNCTION gts_surface_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@face_class: 
+@edge_class: 
+@vertex_class: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_add_face ##### -->
+<para>
+
+</para>
+
+@s: 
+@f: 
+
+
+<!-- ##### FUNCTION gts_surface_remove_face ##### -->
+<para>
+
+</para>
+
+@s: 
+@f: 
+
+
+<!-- ##### FUNCTION gts_surface_copy ##### -->
+<para>
+
+</para>
+
+@s1: 
+@s2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_merge ##### -->
+<para>
+
+</para>
+
+@s: 
+@with: 
+
+
+<!-- ##### FUNCTION gts_surface_read ##### -->
+<para>
+
+</para>
+
+@surface: 
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_is_manifold ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_is_orientable ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_is_closed ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_vertex_number ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_edge_number ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_face_number ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_boundary ##### -->
+<para>
+
+</para>
+
+@surface: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_area ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_volume ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_center_of_mass ##### -->
+<para>
+
+</para>
+
+@s: 
+@cm: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_center_of_area ##### -->
+<para>
+
+</para>
+
+@s: 
+@cm: 
+@Returns: 
+
+
+<!-- ##### STRUCT GtsSurfaceStats ##### -->
+<para>
+Connectivity statistics.
+</para>
+
+@n_faces: Number of faces.
+@n_incompatible_faces: Number of incompatible faces (see gts_triangles_are_compatible() for details).
+@n_duplicate_faces: Number of duplicate faces (see gts_triangle_is_duplicate() for details).
+@n_duplicate_edges: Number of duplicate edges (see gts_segment_is_duplicate() for details).
+@n_boundary_edges: Number of boundary edges.
+@n_non_manifold_edges: Number of non-manifold edges.
+@edges_per_vertex: Statistics on the number of edges per vertex.
+@faces_per_edge: Statistics on the number of faces per vertex.
+@parent: Surface from which these statistics have been obtained.
+
+<!-- ##### STRUCT GtsSurfaceQualityStats ##### -->
+<para>
+Quality and geometry statistics.
+</para>
+
+@face_quality: Statistics for face quality (see gts_triangle_quality() for details).
+@face_area: Statistics for the face area.
+@edge_length: Statistics for the edge length.
+@edge_angle: Statistics for the edge angles.
+@parent: Surface from which these statistics have been obtained.
+
+<!-- ##### FUNCTION gts_surface_stats ##### -->
+<para>
+
+</para>
+
+@s: 
+@stats: 
+
+
+<!-- ##### FUNCTION gts_surface_quality_stats ##### -->
+<para>
+
+</para>
+
+@s: 
+@stats: 
+
+
+<!-- ##### FUNCTION gts_surface_print_stats ##### -->
+<para>
+
+</para>
+
+@s: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_surface_write ##### -->
+<para>
+
+</para>
+
+@s: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_surface_write_oogl ##### -->
+<para>
+
+</para>
+
+@s: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_surface_write_oogl_boundary ##### -->
+<para>
+
+</para>
+
+@s: 
+@fptr: 
+
+
+<!-- ##### FUNCTION gts_surface_write_vtk ##### -->
+<para>
+
+</para>
+
+@s: 
+@fptr: 
+
+
+<!-- ##### USER_FUNCTION GtsFunc ##### -->
+<para>
+A user function called for each item of a collection.
+</para>
+
+@item: a pointer this function is called for.
+@data: user data passed to the function.
+@Returns: if 0 the calling sequence continues, otherwise it stops.
+
+
+<!-- ##### FUNCTION gts_surface_foreach_vertex ##### -->
+<para>
+
+</para>
+
+@s: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_surface_foreach_edge ##### -->
+<para>
+
+</para>
+
+@s: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_surface_foreach_face ##### -->
+<para>
+
+</para>
+
+@s: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_surface_foreach_face_remove ##### -->
+<para>
+
+</para>
+
+@s: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_foreach_intersecting_face ##### -->
+<para>
+
+</para>
+
+@s: 
+@func: 
+@data: 
+@Returns: 
+
+
+<!-- ##### STRUCT GtsSurfaceTraverse ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION gts_surface_traverse_new ##### -->
+<para>
+
+</para>
+
+@s: 
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_traverse_next ##### -->
+<para>
+
+</para>
+
+@t: 
+@level: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_traverse_destroy ##### -->
+<para>
+
+</para>
+
+@t: 
+
+
+<!-- ##### FUNCTION gts_surface_distance ##### -->
+<para>
+
+</para>
+
+@s1: 
+@s2: 
+@delta: 
+@face_range: 
+@boundary_range: 
+
+
+<!-- ##### FUNCTION gts_surface_strip ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_tessellate ##### -->
+<para>
+
+</para>
+
+@s: 
+@refine_func: 
+@refine_data: 
+
+
+<!-- ##### FUNCTION gts_surface_generate_sphere ##### -->
+<para>
+
+</para>
+
+@s: 
+@geodesation_order: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_split ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+

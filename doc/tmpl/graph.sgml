@@ -1,0 +1,521 @@
+<!-- ##### SECTION Title ##### -->
+Graph class
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_GNODE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_GNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_GNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_GNODE_NEIGHBOR ##### -->
+<para>
+
+</para>
+
+@n: 
+@e: 
+
+
+<!-- ##### STRUCT GtsGNodeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@weight: 
+@write: 
+
+<!-- ##### STRUCT GtsGNode ##### -->
+<para>
+
+</para>
+
+@container: 
+@level: 
+
+<!-- ##### FUNCTION gts_gnode_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_degree ##### -->
+<para>
+
+</para>
+
+@n: 
+@g: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_foreach_edge ##### -->
+<para>
+
+</para>
+
+@n: 
+@g: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_gnode_foreach_neighbor ##### -->
+<para>
+
+</para>
+
+@n: 
+@g: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_gnode_weight ##### -->
+<para>
+
+</para>
+
+@n: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gnode_move_cost ##### -->
+<para>
+
+</para>
+
+@n: 
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### MACRO GTS_GEDGE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_GEDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_GEDGE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsGEdgeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@link: 
+@weight: 
+@write: 
+
+<!-- ##### STRUCT GtsGEdge ##### -->
+<para>
+
+</para>
+
+@containee: 
+@n1: 
+@n2: 
+
+<!-- ##### FUNCTION gts_gedge_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gedge_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@n1: 
+@n2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_gedge_weight ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### MACRO gts_gedge_connects ##### -->
+<para>
+
+</para>
+
+@e: 
+@a1: 
+@a2: 
+
+
+<!-- ##### MACRO GTS_GRAPH_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_GRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_GRAPH ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsGraphClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+@weight: 
+
+<!-- ##### STRUCT GtsGraph ##### -->
+<para>
+
+</para>
+
+@object: 
+@graph_class: 
+@node_class: 
+@edge_class: 
+
+<!-- ##### FUNCTION gts_graph_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@node_class: 
+@edge_class: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_read ##### -->
+<para>
+
+</para>
+
+@fp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_read_jostle ##### -->
+<para>
+
+</para>
+
+@g: 
+@fp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_write ##### -->
+<para>
+
+</para>
+
+@g: 
+@fp: 
+
+
+<!-- ##### FUNCTION gts_graph_write_dot ##### -->
+<para>
+
+</para>
+
+@g: 
+@fp: 
+
+
+<!-- ##### FUNCTION gts_graph_print_stats ##### -->
+<para>
+
+</para>
+
+@g: 
+@fp: 
+
+
+<!-- ##### FUNCTION gts_graph_foreach_edge ##### -->
+<para>
+
+</para>
+
+@g: 
+@func: 
+@data: 
+
+
+<!-- ##### STRUCT GtsGraphTraverse ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM GtsTraverseType ##### -->
+<para>
+
+</para>
+
+@GTS_BREADTH_FIRST: 
+
+<!-- ##### FUNCTION gts_graph_traverse_new ##### -->
+<para>
+
+</para>
+
+@g: 
+@n: 
+@type: 
+@reinit: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_traverse_next ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_traverse_what_next ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_traverse_destroy ##### -->
+<para>
+
+</para>
+
+@t: 
+
+
+<!-- ##### FUNCTION gts_graph_edges_cut ##### -->
+<para>
+
+</para>
+
+@g: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_edges_cut_weight ##### -->
+<para>
+
+</para>
+
+@g: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_distance_sum ##### -->
+<para>
+
+</para>
+
+@g: 
+@center: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_farthest ##### -->
+<para>
+
+</para>
+
+@g: 
+@gnodes: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_graph_weight ##### -->
+<para>
+
+</para>
+
+@g: 
+@Returns: 
+
+
+<!-- ##### MACRO GTS_FNODE_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO GTS_FNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO GTS_IS_FNODE ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT GtsFNode ##### -->
+<para>
+
+</para>
+
+@node: 
+@f: 
+
+<!-- ##### STRUCT GtsFNodeClass ##### -->
+<para>
+
+</para>
+
+@parent_class: 
+
+<!-- ##### FUNCTION gts_fnode_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_fnode_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_graph_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_surface_graph_surface ##### -->
+<para>
+
+</para>
+
+@surface_graph: 
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_segments_graph_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@segments: 
+@Returns: 
+
+

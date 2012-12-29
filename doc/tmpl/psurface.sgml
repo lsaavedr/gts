@@ -1,0 +1,207 @@
+<!-- ##### SECTION Title ##### -->
+Progressive surfaces
+
+<!-- ##### SECTION Short_Description ##### -->
+continuous level-of-detail for surfaces.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Progressive surfaces allow you to control precisely and continuously the level of detail of a #GtsSurface. They are built off-line by storing the sequence of edge collapses performed during surface simplification (see gts_psurface_new()). Fast traversal of the pre-built sequence allow on-line selection of the required level of detail.
+</para>
+<para>
+Using the gts_psurface_write() function a text representation of a progressive surface can be written to a file, pipe or socket. This text representation allows the progressive transmission of a surface, starting with the coarsest representation and progressively refining it as data is read or received (see gts_psurface_open(), gts_psurface_read_vertex() and gts_psurface_close() for details).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_PSURFACE_CLASS ##### -->
+<para>
+Casts @klass to #GtsPSurfaceClass.
+</para>
+
+@klass: a descendant of #GtsPSurfaceClass.
+
+
+<!-- ##### MACRO GTS_PSURFACE ##### -->
+<para>
+Casts @obj to #GtsPSurface.
+</para>
+
+@obj: a descendant of #GtsPSurface.
+
+
+<!-- ##### MACRO GTS_IS_PSURFACE ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsPSurface, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### MACRO GTS_PSURFACE_IS_CLOSED ##### -->
+<para>
+Evaluates to %TRUE if @ps has not been created with gts_psurface_open() or if
+it has been closed using gts_psurface_close().
+</para>
+
+@ps: a #GtsPSurface.
+
+
+<!-- ##### STRUCT GtsPSurfaceClass ##### -->
+<para>
+The progressive surface class derived from #GtsObjectClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsPSurface ##### -->
+<para>
+The progressive surface object.
+
+ derived from #GtsObject. The field @s is the #GtsSurface being refined or coarsened by operations on the progressive surface. All the other fields must be considered private and accessed only through the following functions.
+</para>
+
+@object: The parent object.
+@s: The #GtsSurface being refined or coarsened by operations on the progressive surface.
+@split: 
+@split_class: 
+@pos: 
+@min: 
+@vertices: 
+@faces: 
+
+<!-- ##### FUNCTION gts_psurface_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@surface: 
+@split_class: 
+@cost_func: 
+@cost_data: 
+@coarsen_func: 
+@coarsen_data: 
+@stop_func: 
+@stop_data: 
+@minangle: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_add_vertex ##### -->
+<para>
+
+</para>
+
+@ps: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_remove_vertex ##### -->
+<para>
+
+</para>
+
+@ps: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_set_vertex_number ##### -->
+<para>
+
+</para>
+
+@ps: 
+@n: 
+
+
+<!-- ##### FUNCTION gts_psurface_get_vertex_number ##### -->
+<para>
+
+</para>
+
+@ps: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_min_vertex_number ##### -->
+<para>
+
+</para>
+
+@ps: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_max_vertex_number ##### -->
+<para>
+
+</para>
+
+@ps: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_foreach_vertex ##### -->
+<para>
+
+</para>
+
+@ps: 
+@func: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_psurface_open ##### -->
+<para>
+
+</para>
+
+@klass: 
+@s: 
+@split_class: 
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_read_vertex ##### -->
+<para>
+
+</para>
+
+@ps: 
+@fp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_psurface_close ##### -->
+<para>
+
+</para>
+
+@ps: 
+
+
+<!-- ##### FUNCTION gts_psurface_write ##### -->
+<para>
+
+</para>
+
+@ps: 
+@fptr: 
+
+

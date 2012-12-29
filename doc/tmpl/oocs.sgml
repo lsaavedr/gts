@@ -1,0 +1,199 @@
+<!-- ##### SECTION Title ##### -->
+Out-of-core simplification
+
+<!-- ##### SECTION Short_Description ##### -->
+objects for simplification based on vertex clustering.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Using vertex clusters and vertex cluster grids it is easy to design out-of-core algorithms for surface simplification. This approach has been detailed in a recent paper by Lindstrom and Turk ("Out-of-core simplification of large polygonal models", 2000).
+</para>
+<para>
+Vertex clusters are just groups of vertices collapsed into a single vertex. The position of this single representative vertex can be derived with different techniques. The default GTS implementation #GtsCluster just takes the average of the positions of the vertices in a given cluster as the representative position. Clusters are created using gts_cluster_new(). The cluster is initially empty and the position of the representative vertex is set to the origin. Vertices are added using gts_cluster_add() which calls the add() virtual method of #GtsClusterClass. Once all the vertices have been added gts_cluster_update() computes the position of the representative vertex.
+</para>
+<para>
+Clusters are grouped using the #GtsClusterGrid object which is just an implementation of the hash-table based regular grid of Lindstrom and Turk. This regular grid is created using gts_cluster_grid_new(). Once created triangles of the surface to be simplified can be added using gts_cluster_grid_add_triangle() which adds the vertices of the triangle to the #GtsCluster they belong to and adds the corresponding faces to the simplified surface. After all the triangles of the original surface have been added the position of the representative vertex of all the vertex clusters is computed using gts_cluster_grid_update(). The simplified surface is then complete and the cluster grid can be destroyed using gts_object_destroy().
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO GTS_CLUSTER_CLASS ##### -->
+<para>
+Casts @klass to #GtsClusterClass.
+</para>
+
+@klass: a descendant of #GtsClusterClass.
+
+
+<!-- ##### MACRO GTS_CLUSTER ##### -->
+<para>
+Casts @obj to #GtsCluster.
+</para>
+
+@obj: a descendant of #GtsCluster.
+
+
+<!-- ##### MACRO GTS_IS_CLUSTER ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsCluster, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsClusterClass ##### -->
+<para>
+The cluster class derived from #GtsClusterClass. Virtual function @add adds point @p to the cluster while passing user-data @data. Virtual function @update computes the position of the representative vertex.
+</para>
+
+@parent_class: 
+@add: 
+@update: 
+
+<!-- ##### STRUCT GtsCluster ##### -->
+<para>
+The cluster object.
+</para>
+
+@parent: The parent object.
+@id: Unique identifier.
+@v: #GtsVertex representative of all the vertices in the cluster.
+@n: Number of vertices added to the cluster.
+
+<!-- ##### STRUCT GtsClusterId ##### -->
+<para>
+
+</para>
+
+@x: 
+@y: 
+@z: 
+
+<!-- ##### FUNCTION gts_cluster_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_cluster_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@id: 
+@vklass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_cluster_add ##### -->
+<para>
+
+</para>
+
+@c: 
+@p: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_cluster_update ##### -->
+<para>
+
+</para>
+
+@c: 
+
+
+<!-- ##### MACRO GTS_CLUSTER_GRID_CLASS ##### -->
+<para>
+Casts @klass to #GtsClusterGridClass.
+</para>
+
+@klass: a descendant of #GtsClusterGridClass.
+
+
+<!-- ##### MACRO GTS_CLUSTER_GRID ##### -->
+<para>
+Casts @obj to #GtsCluster.
+</para>
+
+@obj: a descendant of #GtsCluster.
+
+
+<!-- ##### MACRO GTS_IS_CLUSTER_GRID ##### -->
+<para>
+Evaluates to %TRUE if @obj is a #GtsCluster, %FALSE otherwise.
+</para>
+
+@obj: a pointer to test.
+
+
+<!-- ##### STRUCT GtsClusterGridClass ##### -->
+<para>
+The cluster grid class derived from #GtsObjectClass.
+</para>
+
+@parent_class: 
+
+<!-- ##### STRUCT GtsClusterGrid ##### -->
+<para>
+The cluster grid object. 
+</para>
+
+@parent: The parent object.
+@surface: Surface being simplified.
+@bbox: Bounding box of the original surface.
+@size: Size of the simplification grid.
+@cluster_class: Private.
+@clusters: Private.
+
+<!-- ##### FUNCTION gts_cluster_grid_class ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_cluster_grid_new ##### -->
+<para>
+
+</para>
+
+@klass: 
+@cluster_class: 
+@s: 
+@bbox: 
+@delta: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_cluster_grid_add_triangle ##### -->
+<para>
+
+</para>
+
+@cluster_grid: 
+@p1: 
+@p2: 
+@p3: 
+@data: 
+
+
+<!-- ##### FUNCTION gts_cluster_grid_update ##### -->
+<para>
+
+</para>
+
+@cluster_grid: 
+@Returns: 
+
+

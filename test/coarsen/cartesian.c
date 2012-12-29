@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -35,11 +35,11 @@ int main (int argc, char * argv[])
     return 1;
   }
 
-  nx = strtol (argv[1], NULL, 0);
-  ny = strtol (argv[2], NULL, 0);
-  cosa = cos (strtod (argv[3], NULL));
-  sina = sin (strtod (argv[3], NULL));
-  noise = strtod (argv[4], NULL);
+  nx = atoi (argv[1]);
+  ny = atoi (argv[2]);
+  cosa = cos (atof (argv[3]));
+  sina = sin (atof (argv[3]));
+  noise = atof (argv[4]);
   
   for (i = 0; i < nx; i++) {
     gdouble x = (gdouble) i/(gdouble) (nx - 1); 

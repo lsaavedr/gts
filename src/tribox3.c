@@ -1,11 +1,11 @@
-/*
+/**
  * History:
  * 2004-10-27 Stephane Popinet: changed float to double
  */
 
 /********************************************************/
 /* AABB-triangle overlap test code                      */
-/* by Tomas Akenine-MÃ¶ller                              */
+/* by Tomas Akenine-Möller                              */
 /* Function: int triBoxOverlap(float boxcenter[3],      */
 /*          float boxhalfsize[3],float triverts[3][3]); */
 /* History:                                             */
@@ -42,7 +42,7 @@
   if(x2<min) min=x2;\
   if(x2>max) max=x2;
 
-static int planeBoxOverlap(double normal[3], double vert[3], double maxbox[3])	// -NJMP-
+int planeBoxOverlap(double normal[3], double vert[3], double maxbox[3])	// -NJMP-
 {
   int q;
   double vmin[3],vmax[3],v;

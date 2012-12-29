@@ -1,0 +1,162 @@
+<!-- ##### SECTION Title ##### -->
+Surface simplification and refinement
+
+<!-- ##### SECTION Short_Description ##### -->
+reducing or increasing the number of edges of a triangulated surface.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The gts_surface_coarsen() function allows to reduce the number of edges (and of course faces and vertices) of a given surface. Each edge is collapsed according to an order described by a user-defined cost function. It is then replaced by a single vertex given by another user-defined function. Two sets of cost and replacement functions are provided with the library. The default uses the squared length of the segment as cost and replaces the segment with its midpoint.
+</para>
+<para>
+The functions gts_volume_optimized_cost() and gts_volume_optimized_vertex() are an implementation of an algorithm proposed by Lindstrom and Turk called "memoryless simplification". This algorithm has been shown to be both computationally efficient and very accurate in terms of error between the simplified surface and the original one. It also preserves the volume enclosed by the surface both globally and locally.
+</para>
+<para>
+Surface refinement is obtained by splitting the edges in two equal parts according to an order described by a user-defined cost function. The default is to use the squared length of the segments as cost.
+</para>
+<para>
+The coarsening or refinement processes are stopped using a user-defined stop function. Two functions are provided stopping either when the cost of collapsing an edge is too large (gts_coarsen_stop_cost()) or when the number of edges is too small (gts_coarsen_stop_number()).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gts_surface_refine ##### -->
+<para>
+
+</para>
+
+@surface: 
+@cost_func: 
+@cost_data: 
+@refine_func: 
+@refine_data: 
+@stop_func: 
+@stop_data: 
+
+
+<!-- ##### USER_FUNCTION GtsCoarsenFunc ##### -->
+<para>
+User-defined function taking an edge @e and returning a replacement vertex of class @klass.
+</para>
+
+@e: a #GtsEdge.
+@klass: the #GtsVertexClass of the replacement vertex.
+@data: user data passed to the function.
+@Returns: a replacement vertex of class @klass.
+
+
+<!-- ##### USER_FUNCTION GtsRefineFunc ##### -->
+<para>
+
+</para>
+
+@e: 
+@klass: 
+@data: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION GtsStopFunc ##### -->
+<para>
+User-defined function used to stop the coarsening process.
+</para>
+
+@cost: the cost of collapse of the current edge.
+@nedge: the number of edges of the surface after collapse of the current edge.
+@data: user data passed to the function.
+@Returns: %TRUE if the collapse of the current edge is not to take place, %FALSE otherwise.
+
+
+<!-- ##### FUNCTION gts_surface_coarsen ##### -->
+<para>
+
+</para>
+
+@surface: 
+@cost_func: 
+@cost_data: 
+@coarsen_func: 
+@coarsen_data: 
+@stop_func: 
+@stop_data: 
+@minangle: 
+
+
+<!-- ##### FUNCTION gts_coarsen_stop_number ##### -->
+<para>
+
+</para>
+
+@cost: 
+@nedge: 
+@min_number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_coarsen_stop_cost ##### -->
+<para>
+
+</para>
+
+@cost: 
+@nedge: 
+@max_cost: 
+@Returns: 
+
+
+<!-- ##### STRUCT GtsVolumeOptimizedParams ##### -->
+<para>
+The parameters for the volume optimization algorithm of Lindstrom and Turk. THey define the relative weight of the volume, boundary and shape optimization part of the algorithm. Lindstrom and Turk advice is to set them to 0.5, 0.5 and 0. You may want to experiment depending on your problem. Setting @shape_weight to a very small value (1e-10) for example might help improve the quality of the resulting triangulation.
+</para>
+
+@volume_weight: Weight of the volume optimization.
+@boundary_weight: Weight of the boundary optimization.
+@shape_weight: Weight of the shape optimization.
+
+<!-- ##### FUNCTION gts_volume_optimized_vertex ##### -->
+<para>
+
+</para>
+
+@edge: 
+@klass: 
+@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_volume_optimized_cost ##### -->
+<para>
+
+</para>
+
+@e: 
+@params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_collapse_is_valid ##### -->
+<para>
+
+</para>
+
+@e: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_edge_collapse_creates_fold ##### -->
+<para>
+
+</para>
+
+@e: 
+@v: 
+@max: 
+@Returns: 
+
+

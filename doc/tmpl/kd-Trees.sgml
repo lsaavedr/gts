@@ -1,0 +1,48 @@
+<!-- ##### SECTION Title ##### -->
+Kd-Trees
+
+<!-- ##### SECTION Short_Description ##### -->
+an efficient way of doing point location queries.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Kd-Trees (in this case 3D-Trees) are a relatively efficient way of doing point location queries.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION gts_kdtree_new ##### -->
+<para>
+
+</para>
+
+@points: 
+@compare: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gts_kdtree_range ##### -->
+<para>
+
+</para>
+
+@tree: 
+@bbox: 
+@compare: 
+@Returns: 
+
+
+<!-- ##### MACRO gts_kdtree_destroy ##### -->
+<para>
+
+</para>
+
+@tree: 
+
+

@@ -1,5 +1,5 @@
 /* GTS - Library for the manipulation of triangulated surfaces
- * Copyright (C) 1999 StÃ©phane Popinet
+ * Copyright (C) 1999 Stéphane Popinet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -28,6 +28,10 @@
 #  include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include "gts.h"
+
+#ifndef PI
+#define PI 3.14159265359
+#endif
 
 typedef enum { NUMBER, COST } StopOptions;
 
@@ -158,11 +162,11 @@ int main (int argc, char * argv[])
       break;
     case 'n': /* stop by number */
       stop = NUMBER;
-      number = strtol (optarg, NULL, 0);
+      number = atoi (optarg);
       break;
     case 'c': /* stop by cost */
       stop = COST;
-      cmin = strtod (optarg, NULL);
+      cmin = atof (optarg);
       break;
     case 'v': /* verbose */
       verbose = TRUE;
