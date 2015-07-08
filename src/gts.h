@@ -61,7 +61,14 @@ GTS_C_VAR const guint gts_binary_age;
     (gts_major_version == (major) && gts_minor_version == (minor) && \
      gts_micro_version >= (micro)))
 
-#define GTS_COMMENTS  "#!"
+#define GTS_DELIMITERS " \t"
+#define GTS_COMMENTS   "#!"
+#define GTS_TOKENS     "\n{}()="
+
+#define GTS_OBJ_DELIMITERS " \t\n\\"
+#define GTS_OBJ_COMMENTS   "#g"
+#define GTS_OBJ_TOKENS     ""
+
 #define GTS_MAINTAINER "luis94855510@gmail.com"
 
 /* Class declarations for base types */
@@ -179,6 +186,11 @@ typedef enum {
   GTS_ERROR  = 1 << 15
 } GtsTokenType;
 
+typedef enum {
+  GTS_FILE_GTS = 1 << 0,
+  GTS_FILE_OBJ = 1 << 1,
+} GtsFileType;
+
 struct _GtsFile {
   FILE * fp;
   gchar * s, * s1;
@@ -193,6 +205,8 @@ struct _GtsFile {
   gchar * delimiters;
   gchar * comments;
   gchar * tokens;
+
+  GtsFileType ftype;
 };
 
 typedef struct _GtsFileVariable GtsFileVariable;
@@ -207,35 +221,39 @@ struct _GtsFileVariable {
 };
 
 
-GtsFile *      gts_file_new               (FILE * fp);
-GtsFile *      gts_file_new_from_string   (const gchar * s);
-void           gts_file_verror            (GtsFile * f,
-                                           const gchar * format,
-                                           va_list args);
-void           gts_file_error             (GtsFile * f,
-                                           const gchar * format,
-                                           ...);
-gint           gts_file_getc              (GtsFile * f);
-guint          gts_file_read              (GtsFile * f,
-                                           gpointer ptr,
-                                           guint size,
-                                           guint nmemb);
-gint           gts_file_getc_scope        (GtsFile * f);
-void           gts_file_next_token        (GtsFile * f);
-void           gts_file_first_token_after (GtsFile * f,
-                                           GtsTokenType type);
-void           gts_file_assign_start      (GtsFile * f,
-                                           GtsFileVariable * vars);
-GtsFileVariable * gts_file_assign_next    (GtsFile * f,
-                                           GtsFileVariable * vars);
-void           gts_file_assign_variables  (GtsFile * f,
-                                           GtsFileVariable * vars);
-void           gts_file_variable_error    (GtsFile * f,
-                                           GtsFileVariable * vars,
-                                           const gchar * name,
-                                           const gchar * format,
-                                           ...);
-void           gts_file_destroy           (GtsFile * f);
+GtsFile *      gts_file_new                 (FILE * fp);
+GtsFile *      gts_file_new_obj             (FILE * fp);
+GtsFile *      gts_file_new_from_string     (const gchar * s);
+GtsFile *      gts_file_new_from_string_obj (const gchar * s);
+void           gts_file_verror              (GtsFile * f,
+                                             const gchar * format,
+                                             va_list args);
+void           gts_file_error               (GtsFile * f,
+                                             const gchar * format,
+                                             ...);
+gint           gts_file_getc                (GtsFile * f);
+guint          gts_file_read                (GtsFile * f,
+                                             gpointer ptr,
+                                             guint size,
+                                             guint nmemb);
+gint           gts_file_getc_scope          (GtsFile * f);
+void           gts_file_next_token          (GtsFile * f);
+void           gts_file_first_token_after   (GtsFile * f,
+                                             GtsTokenType type);
+void           gts_file_set_type            (GtsFile * f,
+                                             GtsFileType ftype);
+void           gts_file_assign_start        (GtsFile * f,
+                                             GtsFileVariable * vars);
+GtsFileVariable * gts_file_assign_next      (GtsFile * f,
+                                             GtsFileVariable * vars);
+void           gts_file_assign_variables    (GtsFile * f,
+                                             GtsFileVariable * vars);
+void           gts_file_variable_error      (GtsFile * f,
+                                             GtsFileVariable * vars,
+                                             const gchar * name,
+                                             const gchar * format,
+                                             ...);
+void           gts_file_destroy             (GtsFile * f);
 
 /* Objects: object.c */
 
@@ -1686,6 +1704,8 @@ void         gts_surface_remove_face       (GtsSurface * s,
                                             GtsFace * f);
 guint        gts_surface_read              (GtsSurface * surface,
                                             GtsFile * f);
+guint        gts_surface_read_obj          (GtsSurface * surface,
+                                            GtsFile * f);
 gdouble      gts_surface_area              (GtsSurface * s);
 void         gts_surface_stats             (GtsSurface * s,
                                             GtsSurfaceStats * stats);
@@ -1694,6 +1714,8 @@ void         gts_surface_quality_stats     (GtsSurface * s,
 void         gts_surface_print_stats       (GtsSurface * s,
                                             FILE * fptr);
 void         gts_surface_write             (GtsSurface * s,
+                                            FILE * fptr);
+void         gts_surface_write_obj         (GtsSurface * s,
                                             FILE * fptr);
 void         gts_surface_write_oogl        (GtsSurface * s,
                                             FILE * fptr);

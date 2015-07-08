@@ -8,7 +8,7 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.         See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
@@ -35,7 +35,7 @@ static void destroy_foreach_face (GtsFace * f, GtsSurface * s)
 static void surface_destroy (GtsObject * object)
 {
   GtsSurface * surface = GTS_SURFACE (object);
-  
+
   gts_surface_foreach_face (surface, (GtsFunc) destroy_foreach_face, surface);
 #ifdef USE_SURFACE_BTREE
   g_tree_destroy (surface->faces);
@@ -48,13 +48,13 @@ static void surface_destroy (GtsObject * object)
 
 static void surface_write (GtsObject * object, FILE * fptr)
 {
-  fprintf (fptr, " %s %s %s %s", 
-	   object->klass->info.name,
-	   GTS_OBJECT_CLASS (GTS_SURFACE (object)->face_class)->info.name,
-	   GTS_OBJECT_CLASS (GTS_SURFACE (object)->edge_class)->info.name,
-	   GTS_POINT_CLASS (GTS_SURFACE (object)->vertex_class)->binary ?
-	   "GtsVertexBinary" :
-	   GTS_OBJECT_CLASS (GTS_SURFACE (object)->vertex_class)->info.name);
+  fprintf (fptr, " %s %s %s %s",
+           object->klass->info.name,
+           GTS_OBJECT_CLASS (GTS_SURFACE (object)->face_class)->info.name,
+           GTS_OBJECT_CLASS (GTS_SURFACE (object)->edge_class)->info.name,
+           GTS_POINT_CLASS (GTS_SURFACE (object)->vertex_class)->binary ?
+           "GtsVertexBinary" :
+           GTS_OBJECT_CLASS (GTS_SURFACE (object)->vertex_class)->info.name);
 }
 
 static void surface_class_init (GtsSurfaceClass * klass)
@@ -124,9 +124,9 @@ GtsSurfaceClass * gts_surface_class (void)
  * Returns: a new empty #GtsSurface.
  */
 GtsSurface * gts_surface_new (GtsSurfaceClass * klass,
-			      GtsFaceClass * face_class,
-			      GtsEdgeClass * edge_class,
-			      GtsVertexClass * vertex_class)
+                              GtsFaceClass * face_class,
+                              GtsEdgeClass * edge_class,
+                              GtsVertexClass * vertex_class)
 {
   GtsSurface * s;
 
@@ -175,8 +175,8 @@ void gts_surface_add_face (GtsSurface * s, GtsFace * f)
  *
  * Removes face @f from surface @s.
  */
-void gts_surface_remove_face (GtsSurface * s, 
-			      GtsFace * f)
+void gts_surface_remove_face (GtsSurface * s,
+                              GtsFace * f)
 {
   g_return_if_fail (s != NULL);
   g_return_if_fail (f != NULL);
@@ -195,9 +195,17 @@ void gts_surface_remove_face (GtsSurface * s,
     (* GTS_SURFACE_CLASS (GTS_OBJECT (s)->klass)->remove_face) (s, f);
 
   if (!GTS_OBJECT_DESTROYED (f) &&
-      !gts_allow_floating_faces && 
+      !gts_allow_floating_faces &&
       f->surfaces == NULL)
     gts_object_destroy (GTS_OBJECT (f));
+}
+
+static gboolean char_in_string (char c, const char * s)
+{
+  while (*s != '\0')
+    if (*(s++) == c)
+      return TRUE;
+  return FALSE;
 }
 
 /**
@@ -210,7 +218,7 @@ void gts_surface_remove_face (GtsSurface * s,
  *
  * Returns: 0 if successful or the line number at which the parsing
  * stopped in case of error (in which case the @error field of @f is
- * set to a description of the error which occured).  
+ * set to a description of the error which occured).
  */
 /* Update split.c/surface_read() if modifying this function */
 guint gts_surface_read (GtsSurface * surface, GtsFile * f)
@@ -221,7 +229,102 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
 
   g_return_val_if_fail (surface != NULL, 1);
   g_return_val_if_fail (f != NULL, 1);
+  if (f->ftype == GTS_FILE_OBJ) {
+    GList * vlist = NULL;
+    while (f->type == GTS_STRING && char_in_string('v', f->token->str)) {
+      gts_file_next_token (f);
+      GtsObject * new_vertex =
+        gts_object_new (GTS_OBJECT_CLASS (surface->vertex_class));
+      (* GTS_OBJECT_CLASS (surface->vertex_class)->read) (&new_vertex, f);
+      vlist = g_list_prepend (vlist, new_vertex);
+    }
+    if (f->type == GTS_ERROR) {
+      gts_allow_floating_vertices = TRUE;
+      g_list_free_full (vlist, (GFunc)gts_object_destroy);
+      gts_allow_floating_vertices = FALSE;
+      return f->line;
+    }
+    vlist = g_list_reverse (vlist);
+    nv = g_list_length (vlist);
 
+    while (f->type == GTS_STRING && char_in_string('f', f->token->str)) {
+      guint p1, p2, p3;
+
+      gts_file_next_token (f);
+      if (f->type != GTS_INT)
+        gts_file_error (f, "expecting an integer (first vertex index)");
+      else {
+        p1 = strtol (f->token->str, NULL, 0);
+        if (p1 == 0 || p1 > nv)
+          gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'",
+                          p1, nv);
+        else {
+          gts_file_next_token (f);
+          if (f->type != GTS_INT)
+            gts_file_error (f, "expecting an integer (second vertex index)");
+          else {
+            p2 = strtol (f->token->str, NULL, 0);
+            if (p2 == 0 || p2 > nv)
+              gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'",
+                              p2, nv);
+            else {
+              gts_file_next_token (f);
+              if (f->type != GTS_INT)
+                gts_file_error (f, "expecting an integer (third vertex index)");
+              else {
+                p3 = strtol (f->token->str, NULL, 0);
+                if (p3 == 0 || p3 > nv)
+                  gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'",
+                                  p3, nv);
+                else {
+                  GtsEdge * edge1 = NULL;
+                  GtsEdge * new_edge1 =
+                    gts_edge_new (surface->edge_class,
+                                  (GtsVertex *) g_list_nth_data (vlist, p1 -1),
+                                  (GtsVertex *) g_list_nth_data (vlist, p2 -1));
+                  if (edge1 = gts_edge_is_duplicate (new_edge1)) {
+                    gts_object_destroy (GTS_OBJECT (new_edge1));
+                    new_edge1 = edge1;
+                  }
+                  GtsEdge * edge2 = NULL;
+                  GtsEdge * new_edge2 =
+                    gts_edge_new (surface->edge_class,
+                                  (GtsVertex *) g_list_nth_data (vlist, p2 -1),
+                                  (GtsVertex *) g_list_nth_data (vlist, p3 -1));
+                  if (edge2 = gts_edge_is_duplicate (new_edge2)) {
+                    gts_object_destroy (GTS_OBJECT (new_edge2));
+                    new_edge2 = edge2;
+                  }
+                  GtsEdge * edge3 = NULL;
+                  GtsEdge * new_edge3 =
+                    gts_edge_new (surface->edge_class,
+                                  (GtsVertex *) g_list_nth_data (vlist, p3 -1),
+                                  (GtsVertex *) g_list_nth_data (vlist, p1 -1));
+                  if (edge3 = gts_edge_is_duplicate (new_edge3)) {
+                    gts_object_destroy (GTS_OBJECT (new_edge3));
+                    new_edge3 = edge3;
+                  }
+
+                  GtsFace * new_face = gts_face_new (surface->face_class,
+                                                     new_edge1, new_edge2, new_edge3);
+                  gts_surface_add_face (surface, new_face);
+                  gts_file_next_token (f);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if (f->type == GTS_ERROR) {
+      gts_allow_floating_vertices = TRUE;
+      g_list_free_full (vlist, (GFunc)gts_object_destroy);
+      gts_allow_floating_vertices = FALSE;
+      return f->line;
+    }
+
+    return 0;
+  }
   if (f->type != GTS_INT) {
     gts_file_error (f, "expecting an integer (number of vertices)");
     return f->line;
@@ -241,7 +344,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     return f->line;
   }
   nf = strtol (f->token->str, NULL, 0);
-  
+
   gts_file_next_token (f);
   if (f->type == GTS_STRING) {
     if (f->type != GTS_STRING) {
@@ -279,7 +382,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
   /* allocate nv + 1 just in case nv == 0 */
   vertices = g_malloc ((nv + 1)*sizeof (GtsVertex *));
   edges = g_malloc ((ne + 1)*sizeof (GtsEdge *));
-  
+
   n = 0;
   while (n < nv && f->type != GTS_ERROR) {
     GtsObject * new_vertex =
@@ -288,7 +391,7 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     (* GTS_OBJECT_CLASS (surface->vertex_class)->read) (&new_vertex, f);
     if (f->type != GTS_ERROR) {
       if (!GTS_POINT_CLASS (surface->vertex_class)->binary)
-	gts_file_first_token_after (f, '\n');
+        gts_file_first_token_after (f, '\n');
       vertices[n++] = GTS_VERTEX (new_vertex);
     }
     else
@@ -308,31 +411,31 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     else {
       p1 = strtol (f->token->str, NULL, 0);
       if (p1 == 0 || p1 > nv)
-	gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
-			p1, nv);
+        gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'",
+                        p1, nv);
       else {
-	gts_file_next_token (f);
-	if (f->type != GTS_INT)
-	  gts_file_error (f, "expecting an integer (second vertex index)");
-	else {
-	  p2 = strtol (f->token->str, NULL, 0);
-	  if (p2 == 0 || p2 > nv)
-	    gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'", 
-			    p2, nv);
-	  else {
-	    GtsEdge * new_edge =
-	      gts_edge_new (surface->edge_class,
-			    vertices[p1 - 1], vertices[p2 - 1]);
+        gts_file_next_token (f);
+        if (f->type != GTS_INT)
+          gts_file_error (f, "expecting an integer (second vertex index)");
+        else {
+          p2 = strtol (f->token->str, NULL, 0);
+          if (p2 == 0 || p2 > nv)
+            gts_file_error (f, "vertex index `%d' is out of range `[1,%d]'",
+                            p2, nv);
+          else {
+            GtsEdge * new_edge =
+              gts_edge_new (surface->edge_class,
+                            vertices[p1 - 1], vertices[p2 - 1]);
 
-	    gts_file_next_token (f);
-	    if (f->type != '\n')
-	      if (GTS_OBJECT_CLASS (surface->edge_class)->read)
-		(*GTS_OBJECT_CLASS (surface->edge_class)->read)
-		  ((GtsObject **) &new_edge, f);
-	    gts_file_first_token_after (f, '\n');
-	    edges[n++] = new_edge;
-	  }
-	}
+            gts_file_next_token (f);
+            if (f->type != '\n')
+              if (GTS_OBJECT_CLASS (surface->edge_class)->read)
+                (*GTS_OBJECT_CLASS (surface->edge_class)->read)
+                  ((GtsObject **) &new_edge, f);
+            gts_file_first_token_after (f, '\n');
+            edges[n++] = new_edge;
+          }
+        }
       }
     }
   }
@@ -348,44 +451,44 @@ guint gts_surface_read (GtsSurface * surface, GtsFile * f)
     else {
       s1 = strtol (f->token->str, NULL, 0);
       if (s1 == 0 || s1 > ne)
-	gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
-			s1, ne);
+        gts_file_error (f, "edge index `%d' is out of range `[1,%d]'",
+                        s1, ne);
       else {
-	gts_file_next_token (f);
-	if (f->type != GTS_INT)
-	  gts_file_error (f, "expecting an integer (second edge index)");
-	else {
-	  s2 = strtol (f->token->str, NULL, 0);
-	  if (s2 == 0 || s2 > ne)
-	    gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
-			    s2, ne);
-	  else {
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT)
-	      gts_file_error (f, "expecting an integer (third edge index)");
-	    else {
-	      s3 = strtol (f->token->str, NULL, 0);
-	      if (s3 == 0 || s3 > ne)
-		gts_file_error (f, "edge index `%d' is out of range `[1,%d]'", 
-				s3, ne);
-	      else {
-		GtsFace * new_face = gts_face_new (surface->face_class,
-						   edges[s1 - 1],
-						   edges[s2 - 1],
-						   edges[s3 - 1]);
+        gts_file_next_token (f);
+        if (f->type != GTS_INT)
+          gts_file_error (f, "expecting an integer (second edge index)");
+        else {
+          s2 = strtol (f->token->str, NULL, 0);
+          if (s2 == 0 || s2 > ne)
+            gts_file_error (f, "edge index `%d' is out of range `[1,%d]'",
+                            s2, ne);
+          else {
+            gts_file_next_token (f);
+            if (f->type != GTS_INT)
+              gts_file_error (f, "expecting an integer (third edge index)");
+            else {
+              s3 = strtol (f->token->str, NULL, 0);
+              if (s3 == 0 || s3 > ne)
+                gts_file_error (f, "edge index `%d' is out of range `[1,%d]'",
+                                s3, ne);
+              else {
+                GtsFace * new_face = gts_face_new (surface->face_class,
+                                                   edges[s1 - 1],
+                                                   edges[s2 - 1],
+                                                   edges[s3 - 1]);
 
-		gts_file_next_token (f);
-		if (f->type != '\n')
-		  if (GTS_OBJECT_CLASS (surface->face_class)->read)
-		    (*GTS_OBJECT_CLASS (surface->face_class)->read)
-		      ((GtsObject **) &new_face, f);
-		gts_file_first_token_after (f, '\n');
-		gts_surface_add_face (surface, new_face);
-		n++;
-	      }
-	    }
-	  }
-	}
+                gts_file_next_token (f);
+                if (f->type != '\n')
+                  if (GTS_OBJECT_CLASS (surface->face_class)->read)
+                    (*GTS_OBJECT_CLASS (surface->face_class)->read)
+                      ((GtsObject **) &new_face, f);
+                gts_file_first_token_after (f, '\n');
+                gts_surface_add_face (surface, new_face);
+                n++;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -417,7 +520,7 @@ static void sum_area (GtsFace * f, gdouble * area) {
  * faces.
  */
 gdouble gts_surface_area (GtsSurface * s)
-{  
+{
   gdouble area = 0.0;
   gts_surface_foreach_face (s, (GtsFunc)sum_area, &area);
   return area;
@@ -476,7 +579,7 @@ void gts_range_add_value (GtsRange * r, gdouble val)
 /**
  * gts_range_update:
  * @r: a #GtsRange.
- * 
+ *
  * Updates the fields of @r.
  */
 void gts_range_update (GtsRange * r)
@@ -486,12 +589,12 @@ void gts_range_update (GtsRange * r)
   if (r->n > 0) {
     if (r->sum2 - r->sum*r->sum/(gdouble) r->n >= 0.)
       r->stddev = sqrt ((r->sum2 - r->sum*r->sum/(gdouble) r->n)
-			/(gdouble) r->n);
+                        /(gdouble) r->n);
     else
       r->stddev = 0.;
     r->mean = r->sum/(gdouble) r->n;
   }
-  else 
+  else
     r->min = r->max = r->mean = r->stddev = 0.;
 }
 
@@ -499,32 +602,32 @@ void gts_range_update (GtsRange * r)
  * gts_range_print:
  * @r: a #GtsRange.
  * @fptr: a file pointer.
- * 
+ *
  * Writes a text representation of @r in @fptr.
  */
 void gts_range_print (GtsRange * r, FILE * fptr)
 {
   g_return_if_fail (r != NULL);
   g_return_if_fail (fptr != NULL);
-  fprintf (fptr, "min: %g mean: %g | %g max: %g", 
-	   r->min, r->mean, r->stddev, r->max);
+  fprintf (fptr, "min: %g mean: %g | %g max: %g",
+           r->min, r->mean, r->stddev, r->max);
 }
 
-static void stats_foreach_vertex (GtsVertex * v, GtsSurfaceStats * stats) 
+static void stats_foreach_vertex (GtsVertex * v, GtsSurfaceStats * stats)
 {
   GSList * i = v->segments;
   guint nedges = 0;
 
   while (i) {
-    if (GTS_IS_EDGE (i->data) && 
-	gts_edge_has_parent_surface (i->data, stats->parent))
+    if (GTS_IS_EDGE (i->data) &&
+        gts_edge_has_parent_surface (i->data, stats->parent))
       nedges++;
     i = i->next;
   }
   gts_range_add_value (&stats->edges_per_vertex, nedges);
 }
 
-static void stats_foreach_edge (GtsEdge * e, GtsSurfaceStats * stats) 
+static void stats_foreach_edge (GtsEdge * e, GtsSurfaceStats * stats)
 {
   guint nt = gts_edge_face_number (e, stats->parent);
 
@@ -577,18 +680,18 @@ void gts_surface_stats (GtsSurface * s, GtsSurfaceStats * stats)
 }
 
 static void quality_foreach_edge (GtsSegment * s,
-				  GtsSurfaceQualityStats * stats) 
+                                  GtsSurfaceQualityStats * stats)
 {
   GSList * i = GTS_EDGE (s)->triangles;
 
-  gts_range_add_value (&stats->edge_length, 
-		   gts_point_distance (GTS_POINT (s->v1), 
-				       GTS_POINT (s->v2)));
+  gts_range_add_value (&stats->edge_length,
+                   gts_point_distance (GTS_POINT (s->v1),
+                                       GTS_POINT (s->v2)));
   while (i) {
     GSList * j = i->next;
     while (j) {
       gts_range_add_value (&stats->edge_angle,
-			   fabs (gts_triangles_angle (i->data, j->data)));
+                           fabs (gts_triangles_angle (i->data, j->data)));
       j = j->next;
     }
     i = i->next;
@@ -596,7 +699,7 @@ static void quality_foreach_edge (GtsSegment * s,
 }
 
 static void quality_foreach_face (GtsTriangle * t,
-				  GtsSurfaceQualityStats * stats) 
+                                  GtsSurfaceQualityStats * stats)
 {
   gts_range_add_value (&stats->face_quality, gts_triangle_quality (t));
   gts_range_add_value (&stats->face_area, gts_triangle_area (t));
@@ -620,7 +723,7 @@ void gts_surface_quality_stats (GtsSurface * s, GtsSurfaceQualityStats * stats)
   gts_range_init (&stats->edge_length);
   gts_range_init (&stats->edge_angle);
 
-  gts_surface_foreach_edge (s, (GtsFunc) quality_foreach_edge, stats);  
+  gts_surface_foreach_edge (s, (GtsFunc) quality_foreach_edge, stats);
   gts_surface_foreach_face (s, (GtsFunc) quality_foreach_face, stats);
 
   gts_range_update (&stats->face_quality);
@@ -647,23 +750,23 @@ void gts_surface_print_stats (GtsSurface * s, FILE * fptr)
   gts_surface_stats (s, &stats);
   gts_surface_quality_stats (s, &qstats);
 
-  fprintf (fptr, 
-	   "# vertices: %u edges: %u faces: %u\n"
-	   "# Connectivity statistics\n"
-	   "#   incompatible faces: %u\n"
-	   "#   duplicate faces: %u\n"
-	   "#   boundary edges: %u\n"
-	   "#   duplicate edges: %u\n"
-	   "#   non-manifold edges: %u\n",
-	   stats.edges_per_vertex.n, 
-	   stats.faces_per_edge.n,
-	   stats.n_faces,
-	   stats.n_incompatible_faces,
-	   stats.n_duplicate_faces,
-	   stats.n_boundary_edges,
-	   stats.n_duplicate_edges,
-	   stats.n_non_manifold_edges);
-  fputs ("#   edges per vertex: ", fptr); 
+  fprintf (fptr,
+           "# vertices: %u edges: %u faces: %u\n"
+           "# Connectivity statistics\n"
+           "#   incompatible faces: %u\n"
+           "#   duplicate faces: %u\n"
+           "#   boundary edges: %u\n"
+           "#   duplicate edges: %u\n"
+           "#   non-manifold edges: %u\n",
+           stats.edges_per_vertex.n,
+           stats.faces_per_edge.n,
+           stats.n_faces,
+           stats.n_incompatible_faces,
+           stats.n_duplicate_faces,
+           stats.n_boundary_edges,
+           stats.n_duplicate_edges,
+           stats.n_non_manifold_edges);
+  fputs ("#   edges per vertex: ", fptr);
   gts_range_print (&stats.edges_per_vertex, fptr);
   fputs ("\n#   faces per edge: ", fptr);
   gts_range_print (&stats.faces_per_edge, fptr);
@@ -681,28 +784,28 @@ static void write_vertex (GtsPoint * p, gpointer * data)
   (*GTS_OBJECT (p)->klass->write) (GTS_OBJECT (p), (FILE *) data[0]);
   if (!GTS_POINT_CLASS (GTS_OBJECT (p)->klass)->binary)
     fputc ('\n', (FILE *) data[0]);
-  g_hash_table_insert (data[2], p, 
-		       GUINT_TO_POINTER (++(*((guint *) data[1]))));
+  g_hash_table_insert (data[2], p,
+                       GUINT_TO_POINTER (++(*((guint *) data[1]))));
 }
 
-static void write_edge (GtsSegment * s, gpointer * data) 
+static void write_edge (GtsSegment * s, gpointer * data)
 {
   fprintf ((FILE *) data[0], "%u %u",
-	   GPOINTER_TO_UINT (g_hash_table_lookup (data[2], s->v1)),
-	   GPOINTER_TO_UINT (g_hash_table_lookup (data[2], s->v2)));
+           GPOINTER_TO_UINT (g_hash_table_lookup (data[2], s->v1)),
+           GPOINTER_TO_UINT (g_hash_table_lookup (data[2], s->v2)));
   if (GTS_OBJECT (s)->klass->write)
     (*GTS_OBJECT (s)->klass->write) (GTS_OBJECT (s), (FILE *) data[0]);
   fputc ('\n', (FILE *) data[0]);
-  g_hash_table_insert (data[3], s, 
-		       GUINT_TO_POINTER (++(*((guint *) data[1]))));
+  g_hash_table_insert (data[3], s,
+                       GUINT_TO_POINTER (++(*((guint *) data[1]))));
 }
 
 static void write_face (GtsTriangle * t, gpointer * data)
 {
   fprintf (data[0], "%u %u %u",
-	   GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e1)),
-	   GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e2)),
-	   GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e3)));
+           GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e1)),
+           GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e2)),
+           GPOINTER_TO_UINT (g_hash_table_lookup (data[3], t->e3)));
   if (GTS_OBJECT (t)->klass->write)
     (*GTS_OBJECT (t)->klass->write) (GTS_OBJECT (t), data[0]);
   fputc ('\n', data[0]);
@@ -712,9 +815,9 @@ static void write_face (GtsTriangle * t, gpointer * data)
  * gts_surface_write:
  * @s: a #GtsSurface.
  * @fptr: a file pointer.
- * 
+ *
  * Writes in the file @fptr an ASCII representation of @s. The file
- * format is as follows. 
+ * format is as follows.
  *
  * All the lines beginning with #GTS_COMMENTS are ignored. The first line
  * contains three unsigned integers separated by spaces. The first
@@ -725,7 +828,7 @@ static void write_face (GtsTriangle * t, gpointer * data)
  * vertices.  Follows ne lines containing the two indices (starting
  * from one) of the vertices of each edge. Follows nf lines containing
  * the three ordered indices (also starting from one) of the edges of
- * each face.  
+ * each face.
  *
  * The format described above is the least common denominator to all
  * GTS files.  Consistent with an object-oriented approach, the GTS
@@ -733,7 +836,7 @@ static void write_face (GtsTriangle * t, gpointer * data)
  * extended with user-specific attributes accessible through the
  * read() and write() virtual methods of each of the objects written
  * (surface, vertices, edges or faces). When read with different
- * object classes, these extra attributes are just ignored.  
+ * object classes, these extra attributes are just ignored.
  */
 void gts_surface_write (GtsSurface * s, FILE * fptr)
 {
@@ -751,10 +854,10 @@ void gts_surface_write (GtsSurface * s, FILE * fptr)
   data[3] = eindex = g_hash_table_new (NULL, NULL);
 
   gts_surface_stats (s, &stats);
-  fprintf (fptr, "%u %u %u", 
-	   stats.edges_per_vertex.n, 
-	   stats.faces_per_edge.n, 
-	   stats.n_faces);
+  fprintf (fptr, "%u %u %u",
+           stats.edges_per_vertex.n,
+           stats.faces_per_edge.n,
+           stats.n_faces);
   if (GTS_OBJECT (s)->klass->write)
     (*GTS_OBJECT (s)->klass->write) (GTS_OBJECT (s), fptr);
   fputc ('\n', fptr);
@@ -767,6 +870,48 @@ void gts_surface_write (GtsSurface * s, FILE * fptr)
   gts_surface_foreach_face (s, (GtsFunc) write_face, data);
   g_hash_table_destroy (vindex);
   g_hash_table_destroy (eindex);
+}
+
+static void write_vertex_obj (GtsPoint * p, gpointer * data)
+{
+  FILE * fp = data[0];
+
+  fprintf (fp, "v %g %g %g\n", p->x, p->y, p->z);
+  GTS_OBJECT (p)->reserved = GUINT_TO_POINTER ((*((guint *) data[1]))++);
+}
+
+static void write_face_obj (GtsTriangle * t, FILE * fp)
+{
+  GtsVertex * v1, * v2, * v3;
+  gts_triangle_vertices (t, &v1, &v2, &v3);
+  fprintf (fp, "f %u %u %u\n",
+           GPOINTER_TO_UINT (GTS_OBJECT (v1)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v2)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v3)->reserved));
+}
+
+/**
+ * gts_surface_write_obj:
+ * @s: a #GtsSurface.
+ * @fptr: a file pointer.
+ *
+ * Writes in the file @fptr an OBJ (Wavefront) representation of @s.
+ */
+void gts_surface_write_obj (GtsSurface * s, FILE * fptr)
+{
+  guint n = 1;
+  gpointer data[2];
+
+  g_return_if_fail (s != NULL);
+  g_return_if_fail (fptr != NULL);
+
+  data[0] = fptr;
+  data[1] = &n;
+
+  gts_surface_foreach_vertex (s, (GtsFunc) write_vertex_obj, data);
+  gts_surface_foreach_face (s, (GtsFunc) write_face_obj, fptr);
+
+  gts_surface_foreach_vertex (s, (GtsFunc) gts_object_reset_reserved, NULL);
 }
 
 static void write_vertex_oogl (GtsPoint * p, gpointer * data)
@@ -788,9 +933,9 @@ static void write_face_oogl (GtsTriangle * t, FILE * fp)
   GtsVertex * v1, * v2, * v3;
   gts_triangle_vertices (t, &v1, &v2, &v3);
   fprintf (fp, "3 %u %u %u",
-	   GPOINTER_TO_UINT (GTS_OBJECT (v1)->reserved),
-	   GPOINTER_TO_UINT (GTS_OBJECT (v2)->reserved),
-	   GPOINTER_TO_UINT (GTS_OBJECT (v3)->reserved));
+           GPOINTER_TO_UINT (GTS_OBJECT (v1)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v2)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v3)->reserved));
   if (GTS_OBJECT (t)->klass->color) {
     GtsColor c = (* GTS_OBJECT (t)->klass->color) (GTS_OBJECT (t));
     fprintf (fp, " %g %g %g\n", c.r, c.g, c.b);
@@ -803,7 +948,7 @@ static void write_face_oogl (GtsTriangle * t, FILE * fp)
  * gts_surface_write_oogl:
  * @s: a #GtsSurface.
  * @fptr: a file pointer.
- * 
+ *
  * Writes in the file @fptr an OOGL (Geomview) representation of @s.
  */
 void gts_surface_write_oogl (GtsSurface * s, FILE * fptr)
@@ -823,10 +968,10 @@ void gts_surface_write_oogl (GtsSurface * s, FILE * fptr)
     fputs ("COFF ", fptr);
   else
     fputs ("OFF ", fptr);
-  fprintf (fptr, "%u %u %u\n", 
-	   stats.edges_per_vertex.n, 
-	   stats.n_faces,
-	   stats.faces_per_edge.n);
+  fprintf (fptr, "%u %u %u\n",
+           stats.edges_per_vertex.n,
+           stats.n_faces,
+           stats.faces_per_edge.n);
   gts_surface_foreach_vertex (s, (GtsFunc) write_vertex_oogl, data);
   gts_surface_foreach_face (s, (GtsFunc) write_face_oogl, fptr);
   gts_surface_foreach_vertex (s, (GtsFunc) gts_object_reset_reserved, NULL);
@@ -845,16 +990,16 @@ static void write_face_vtk (GtsTriangle * t, FILE * fp)
   GtsVertex * v1, * v2, * v3;
   gts_triangle_vertices (t, &v1, &v2, &v3);
   fprintf (fp, "3 %u %u %u\n",
-	   GPOINTER_TO_UINT (GTS_OBJECT (v1)->reserved),
-	   GPOINTER_TO_UINT (GTS_OBJECT (v2)->reserved),
-	   GPOINTER_TO_UINT (GTS_OBJECT (v3)->reserved));
+           GPOINTER_TO_UINT (GTS_OBJECT (v1)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v2)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (v3)->reserved));
 }
 
 /**
  * gts_surface_write_vtk:
  * @s: a #GtsSurface.
  * @fptr: a file pointer.
- * 
+ *
  * Writes in the file @fptr a VTK representation of @s.
  */
 void gts_surface_write_vtk (GtsSurface * s, FILE * fptr)
@@ -871,18 +1016,18 @@ void gts_surface_write_vtk (GtsSurface * s, FILE * fptr)
 
   gts_surface_stats (s, &stats);
   fprintf (fptr,
-	   "# vtk DataFile Version 2.0\n"
-	   "Generated by GTS\n"
+           "# vtk DataFile Version 2.0\n"
+           "Generated by GTS\n"
            "ASCII\n"
-	   "DATASET POLYDATA\n"
-	   "POINTS %u float\n",
-	   stats.edges_per_vertex.n);
+           "DATASET POLYDATA\n"
+           "POINTS %u float\n",
+           stats.edges_per_vertex.n);
   gts_surface_foreach_vertex (s, (GtsFunc) write_vertex_vtk, data);
   fprintf (fptr,
-	   "POLYGONS %u %u\n",
-	   stats.n_faces, stats.n_faces*4);
+           "POLYGONS %u %u\n",
+           stats.n_faces, stats.n_faces*4);
   gts_surface_foreach_face (s, (GtsFunc) write_face_vtk, fptr);
-  gts_surface_foreach_vertex (s, (GtsFunc) gts_object_reset_reserved, NULL);  
+  gts_surface_foreach_vertex (s, (GtsFunc) gts_object_reset_reserved, NULL);
 }
 
 static void write_edge_oogl_boundary (GtsSegment * s, gpointer * data)
@@ -893,23 +1038,23 @@ static void write_edge_oogl_boundary (GtsSegment * s, gpointer * data)
   if (GTS_OBJECT (s)->klass->color) {
     GtsColor c = (* GTS_OBJECT (s)->klass->color) (GTS_OBJECT (s));
     fprintf (data[0], "VECT 1 2 1 2 1 %g %g %g %g %g %g %g %g %g 1.\n",
-	     GTS_POINT (s->v1)->x, GTS_POINT (s->v1)->y, GTS_POINT (s->v1)->z,
-	     GTS_POINT (s->v2)->x, GTS_POINT (s->v2)->y, GTS_POINT (s->v2)->z,
-	     c.r, c.g, c.b);
+             GTS_POINT (s->v1)->x, GTS_POINT (s->v1)->y, GTS_POINT (s->v1)->z,
+             GTS_POINT (s->v2)->x, GTS_POINT (s->v2)->y, GTS_POINT (s->v2)->z,
+             c.r, c.g, c.b);
   }
   else
     fprintf (data[0], "VECT 1 2 0 2 0 %g %g %g %g %g %g\n",
-	     GTS_POINT (s->v1)->x, GTS_POINT (s->v1)->y, GTS_POINT (s->v1)->z,
-	     GTS_POINT (s->v2)->x, GTS_POINT (s->v2)->y, GTS_POINT (s->v2)->z);
+             GTS_POINT (s->v1)->x, GTS_POINT (s->v1)->y, GTS_POINT (s->v1)->z,
+             GTS_POINT (s->v2)->x, GTS_POINT (s->v2)->y, GTS_POINT (s->v2)->z);
 }
 
 /**
  * gts_surface_write_oogl_boundary:
  * @s: a #GtsSurface.
  * @fptr: a file pointer.
- * 
+ *
  * Writes in the file @fptr an OOGL (Geomview) representation of the
- * boundary of @s.  
+ * boundary of @s.
  */
 void gts_surface_write_oogl_boundary (GtsSurface * s, FILE * fptr)
 {
@@ -927,18 +1072,18 @@ void gts_surface_write_oogl_boundary (GtsSurface * s, FILE * fptr)
 
 #ifdef USE_SURFACE_BTREE
 static gint vertex_foreach_face (GtsTriangle * t,
-				 gpointer t_data,
-				 gpointer * info)
+                                 gpointer t_data,
+                                 gpointer * info)
 #else /* not USE_SURFACE_BTREE */
 static void vertex_foreach_face (GtsTriangle * t,
-				 gpointer t_data,
-				 gpointer * info)
+                                 gpointer t_data,
+                                 gpointer * info)
 #endif /* not USE_SURFACE_BTREE */
 {
   GHashTable * hash = info[0];
   gpointer data = info[1];
   GtsFunc func = (GtsFunc) info[2];
-  GtsSegment 
+  GtsSegment
     * s1 = GTS_SEGMENT (t->e1);
 
   if (!g_hash_table_lookup (hash, s1->v1)) {
@@ -951,8 +1096,8 @@ static void vertex_foreach_face (GtsTriangle * t,
   }
   if (!g_hash_table_lookup (hash, gts_triangle_vertex (t))) {
     (*func) (gts_triangle_vertex (t), data);
-    g_hash_table_insert (hash, gts_triangle_vertex (t), 
-			 GINT_TO_POINTER (-1));
+    g_hash_table_insert (hash, gts_triangle_vertex (t),
+                         GINT_TO_POINTER (-1));
   }
 #ifdef USE_SURFACE_BTREE
   return FALSE;
@@ -981,7 +1126,7 @@ void gts_surface_foreach_vertex (GtsSurface * s, GtsFunc func, gpointer data)
   info[2] = func;
 #ifdef USE_SURFACE_BTREE
   g_tree_traverse (s->faces, (GTraverseFunc) vertex_foreach_face, G_IN_ORDER,
-		   info);
+                   info);
 #else /* not USE_SURFACE_BTREE */
   g_hash_table_foreach (s->faces, (GHFunc) vertex_foreach_face, info);
 #endif /* not USE_SURFACE_BTREE */
@@ -992,12 +1137,12 @@ void gts_surface_foreach_vertex (GtsSurface * s, GtsFunc func, gpointer data)
 
 #ifdef USE_SURFACE_BTREE
 static gint edge_foreach_face (GtsTriangle * t,
-			       gpointer t_data, 
-			       gpointer * info)
+                               gpointer t_data,
+                               gpointer * info)
 #else /* not USE_SURFACE_BTREE */
 static void edge_foreach_face (GtsTriangle * t,
-			       gpointer t_data, 
-			       gpointer * info)
+                               gpointer t_data,
+                               gpointer * info)
 #endif /* not USE_SURFACE_BTREE */
 {
   GHashTable * hash = info[0];
@@ -1035,7 +1180,7 @@ void gts_surface_foreach_edge (GtsSurface * s, GtsFunc func, gpointer data)
 
   g_return_if_fail (s != NULL);
   g_return_if_fail (func != NULL);
-  
+
   /* forbid removal of faces */
   s->keep_faces = TRUE;
   info[0] = g_hash_table_new (NULL, NULL);
@@ -1043,7 +1188,7 @@ void gts_surface_foreach_edge (GtsSurface * s, GtsFunc func, gpointer data)
   info[2] = func;
 #ifdef USE_SURFACE_BTREE
   g_tree_traverse (s->faces, (GTraverseFunc) edge_foreach_face, G_IN_ORDER,
-		   info);
+                   info);
 #else /* not USE_SURFACE_BTREE */
   g_hash_table_foreach (s->faces, (GHFunc) edge_foreach_face, info);
 #endif /* not USE_SURFACE_BTREE */
@@ -1053,13 +1198,13 @@ void gts_surface_foreach_edge (GtsSurface * s, GtsFunc func, gpointer data)
 }
 
 #ifdef USE_SURFACE_BTREE
-static gint foreach_face (GtsFace * f, 
-			  gpointer t_data,
-			  gpointer * info)
+static gint foreach_face (GtsFace * f,
+                          gpointer t_data,
+                          gpointer * info)
 #else /* not USE_SURFACE_BTREE */
-static void foreach_face (GtsFace * f, 
-			  gpointer t_data,
-			  gpointer * info)
+static void foreach_face (GtsFace * f,
+                          gpointer t_data,
+                          gpointer * info)
 #endif /* not USE_SURFACE_BTREE */
 {
   (*((GtsFunc) info[0])) (f, info[1]);
@@ -1077,8 +1222,8 @@ static void foreach_face (GtsFace * f,
  * Calls @func once for each face of @s.
  */
 void gts_surface_foreach_face (GtsSurface * s,
-			       GtsFunc func, 
-			       gpointer data)
+                               GtsFunc func,
+                               gpointer data)
 {
   gpointer info[2];
 
@@ -1091,7 +1236,7 @@ void gts_surface_foreach_face (GtsSurface * s,
   info[1] = data;
 #ifdef USE_SURFACE_BTREE
   g_tree_traverse (s->faces, (GTraverseFunc) foreach_face, G_IN_ORDER,
-		   info);
+                   info);
 #else /* not USE_SURFACE_BTREE */
   g_hash_table_foreach (s->faces, (GHFunc) foreach_face, info);
 #endif /* not USE_SURFACE_BTREE */
@@ -1101,8 +1246,8 @@ void gts_surface_foreach_face (GtsSurface * s,
 
 #ifdef USE_SURFACE_BTREE
 static gint foreach_face_remove (GtsFace * f,
-				 gpointer t_data,
-				 gpointer * info)
+                                 gpointer t_data,
+                                 gpointer * info)
 {
   if ((*((GtsFunc) info[0])) (f, info[1])) {
     GtsSurface * s = info[2];
@@ -1110,10 +1255,10 @@ static gint foreach_face_remove (GtsFace * f,
 
     f->surfaces = g_slist_remove (f->surfaces, s);
     if (!GTS_OBJECT_DESTROYED (f) &&
-	!gts_allow_floating_faces && 
-	f->surfaces == NULL)
+        !gts_allow_floating_faces &&
+        f->surfaces == NULL)
       gts_object_destroy (GTS_OBJECT (f));
-    
+
     if (GTS_SURFACE_CLASS (GTS_OBJECT (s)->klass)->remove_face)
       (* GTS_SURFACE_CLASS (GTS_OBJECT (s)->klass)->remove_face) (s, f);
 
@@ -1124,18 +1269,18 @@ static gint foreach_face_remove (GtsFace * f,
 }
 #else /* not USE_SURFACE_BTREE */
 static gboolean foreach_face_remove (GtsFace * f,
-				     gpointer t_data,
-				     gpointer * info)
+                                     gpointer t_data,
+                                     gpointer * info)
 {
   if ((*((GtsFunc) info[0])) (f, info[1])) {
     GtsSurface * s = info[2];
 
     f->surfaces = g_slist_remove (f->surfaces, s);
     if (!GTS_OBJECT_DESTROYED (f) &&
-	!gts_allow_floating_faces && 
-	f->surfaces == NULL)
+        !gts_allow_floating_faces &&
+        f->surfaces == NULL)
       gts_object_destroy (GTS_OBJECT (f));
-    
+
     if (GTS_SURFACE_CLASS (GTS_OBJECT (s)->klass)->remove_face)
       (* GTS_SURFACE_CLASS (GTS_OBJECT (s)->klass)->remove_face) (s, f);
 
@@ -1156,11 +1301,11 @@ static gboolean foreach_face_remove (GtsFace * f,
  * belong to any other surface and #gts_allow_floating_faces is set to
  * %FALSE).
  *
- * Returns: the number of faces removed from @s.  
+ * Returns: the number of faces removed from @s.
  */
 guint gts_surface_foreach_face_remove (GtsSurface * s,
-				       GtsFunc func, 
-				       gpointer data)
+                                       GtsFunc func,
+                                       gpointer data)
 {
   gpointer info[4];
   guint n = 0;
@@ -1176,25 +1321,25 @@ guint gts_surface_foreach_face_remove (GtsSurface * s,
 #ifdef USE_SURFACE_BTREE
   info[3] = &n;
   g_tree_traverse (s->faces, (GTraverseFunc) foreach_face_remove, G_PRE_ORDER,
-		   info);
+                   info);
 #else /* not USE_SURFACE_BTREE */
-  n = g_hash_table_foreach_remove (s->faces, 
-				   (GHRFunc) foreach_face_remove, 
-				   info);
+  n = g_hash_table_foreach_remove (s->faces,
+                                   (GHRFunc) foreach_face_remove,
+                                   info);
 #endif /* not USE_SURFACE_BTREE */
   /* allow removal of faces */
   s->keep_faces = FALSE;
-  
+
   return n;
 }
 
 static void midvertex_insertion (GtsEdge * e,
-				 GtsSurface * surface,
-				 GtsEHeap * heap,
-				 GtsRefineFunc refine_func,
-				 gpointer refine_data,
-				 GtsVertexClass * vertex_class,
-				 GtsEdgeClass * edge_class)
+                                 GtsSurface * surface,
+                                 GtsEHeap * heap,
+                                 GtsRefineFunc refine_func,
+                                 gpointer refine_data,
+                                 GtsVertexClass * vertex_class,
+                                 GtsEdgeClass * edge_class)
 {
   GtsVertex * midvertex;
   GtsEdge * e1, * e2;
@@ -1205,7 +1350,7 @@ static void midvertex_insertion (GtsEdge * e,
   gts_eheap_insert (heap, e1);
   e2 = gts_edge_new (edge_class, GTS_SEGMENT (e)->v2, midvertex);
   gts_eheap_insert (heap, e2);
-  
+
   /* creates new faces and modifies old ones */
   i = e->triangles;
   while (i) {
@@ -1223,8 +1368,8 @@ static void midvertex_insertion (GtsEdge * e,
     ne->triangles = g_slist_prepend (ne->triangles, t);
     te2->triangles = g_slist_remove (te2->triangles, t);
     t->e1 = e1; t->e2 = ne; t->e3 = te3;
-    gts_surface_add_face (surface, 
-			  gts_face_new (surface->face_class, e2, te2, ne));
+    gts_surface_add_face (surface,
+                          gts_face_new (surface->face_class, e2, te2, ne));
     i = i->next;
   }
   /* destroys edge */
@@ -1258,19 +1403,19 @@ static void create_heap_refine (GtsEdge * e, GtsEHeap * heap)
  * are then processed in order until @stop_func returns %TRUE. Each
  * edge is split in two and new edges and faces are created.
  *
- * If @cost_func is set to %NULL, the edges are sorted according 
+ * If @cost_func is set to %NULL, the edges are sorted according
  * to their length squared (the longest is on top).
  *
  * If @refine_func is set to %NULL gts_segment_midvertex() is used.
- * 
+ *
  */
 void gts_surface_refine (GtsSurface * surface,
-			 GtsKeyFunc cost_func,
-			 gpointer cost_data,
-			 GtsRefineFunc refine_func,
-			 gpointer refine_data,
-			 GtsStopFunc stop_func,
-			 gpointer stop_data)
+                         GtsKeyFunc cost_func,
+                         gpointer cost_data,
+                         GtsRefineFunc refine_func,
+                         gpointer refine_data,
+                         GtsStopFunc stop_func,
+                         gpointer stop_data)
 {
   GtsEHeap * heap;
   GtsEdge * e;
@@ -1289,12 +1434,12 @@ void gts_surface_refine (GtsSurface * surface,
   gts_surface_foreach_edge (surface, (GtsFunc) create_heap_refine, heap);
   gts_eheap_thaw (heap);
   while ((e = gts_eheap_remove_top (heap, &top_cost)) &&
-	 !(*stop_func) (top_cost,
-			gts_eheap_size (heap) + 
-			gts_edge_face_number (e, surface) + 2,
-			stop_data))
+         !(*stop_func) (top_cost,
+                        gts_eheap_size (heap) +
+                        gts_edge_face_number (e, surface) + 2,
+                        stop_data))
     midvertex_insertion (e, surface, heap, refine_func, refine_data,
-			 surface->vertex_class, surface->edge_class);
+                         surface->vertex_class, surface->edge_class);
   gts_eheap_destroy (heap);
 }
 
@@ -1302,36 +1447,36 @@ static GSList * edge_triangles (GtsEdge * e1, GtsEdge * e)
 {
   GSList * i = e1->triangles;
   GSList * triangles = NULL;
-  
+
   while (i) {
     GtsTriangle * t = i->data;
     if (t->e1 == e || t->e2 == e || t->e3 == e) {
       GtsEdge * e2;
       GSList * j;
       if (t->e1 == e) {
-	if (t->e2 == e1)
-	  e2 = t->e3;
-	else
-	  e2 = t->e2;
+        if (t->e2 == e1)
+          e2 = t->e3;
+        else
+          e2 = t->e2;
       }
       else if (t->e2 == e) {
-	if (t->e3 == e1)
-	  e2 = t->e1;
-	else
-	  e2 = t->e3;
+        if (t->e3 == e1)
+          e2 = t->e1;
+        else
+          e2 = t->e3;
       }
       else {
-	if (t->e2 == e1)
-	  e2 = t->e1;
-	else
-	  e2 = t->e2;
+        if (t->e2 == e1)
+          e2 = t->e1;
+        else
+          e2 = t->e2;
       }
       j = e2->triangles;
       while (j) {
-	GtsTriangle * t = j->data;
-	if (t->e1 != e && t->e2 != e && t->e3 != e)
-	  triangles = g_slist_prepend (triangles, t);
-	j = j->next;
+        GtsTriangle * t = j->data;
+        if (t->e1 != e && t->e2 != e && t->e3 != e)
+          triangles = g_slist_prepend (triangles, t);
+        j = j->next;
       }
     }
     else
@@ -1362,11 +1507,11 @@ static void replace_vertex (GSList * i, GtsVertex * v1, GtsVertex * v)
  *
  * Returns: %TRUE if collapsing edge @e to vertex @v would create
  * faces making an angle the cosine squared of which would be larger than max,
- * %FALSE otherwise.  
+ * %FALSE otherwise.
  */
-gboolean gts_edge_collapse_creates_fold (GtsEdge * e, 
-					 GtsVertex * v,
-					 gdouble max)
+gboolean gts_edge_collapse_creates_fold (GtsEdge * e,
+                                         GtsVertex * v,
+                                         gdouble max)
 {
   GtsVertex * v1, * v2;
   GtsSegment * s;
@@ -1388,9 +1533,9 @@ gboolean gts_edge_collapse_creates_fold (GtsEdge * e,
     if (GTS_IS_EDGE (s)) {
       GtsEdge * e1 = GTS_EDGE (s);
       if (e1 != e) {
-	GSList * triangles = edge_triangles (e1, e);
-	folded = gts_triangles_are_folded (triangles, s->v1, s->v2, max);
-	g_slist_free (triangles);
+        GSList * triangles = edge_triangles (e1, e);
+        folded = gts_triangles_are_folded (triangles, s->v1, s->v2, max);
+        g_slist_free (triangles);
       }
     }
     i = i->next;
@@ -1402,9 +1547,9 @@ gboolean gts_edge_collapse_creates_fold (GtsEdge * e,
     if (GTS_IS_EDGE (s)) {
       GtsEdge * e1 = GTS_EDGE (s);
       if (e1 != e) {
-	GSList * triangles = edge_triangles (e1, e);
-	folded = gts_triangles_are_folded (triangles, s->v1, s->v2, max);
-	g_slist_free (triangles);
+        GSList * triangles = edge_triangles (e1, e);
+        folded = gts_triangles_are_folded (triangles, s->v1, s->v2, max);
+        g_slist_free (triangles);
       }
     }
     i = i->next;
@@ -1416,12 +1561,12 @@ gboolean gts_edge_collapse_creates_fold (GtsEdge * e,
     while (i && !folded) {
       GtsTriangle * t = i->data;
       if (t->e1 != e && t->e2 != e && t->e3 != e) {
-	GtsEdge * e1 = gts_triangle_edge_opposite (t, v);
-	g_assert (e1);
-	folded = gts_triangles_are_folded (e1->triangles, 
-					   GTS_SEGMENT (e1)->v1,
-					   GTS_SEGMENT (e1)->v2,
-					   max);
+        GtsEdge * e1 = gts_triangle_edge_opposite (t, v);
+        g_assert (e1);
+        folded = gts_triangles_are_folded (e1->triangles,
+                                           GTS_SEGMENT (e1)->v1,
+                                           GTS_SEGMENT (e1)->v2,
+                                           max);
       }
       i = i->next;
     }
@@ -1437,7 +1582,7 @@ gboolean gts_edge_collapse_creates_fold (GtsEdge * e,
  * gts_edge_collapse_is_valid:
  * @e: a #GtsEdge.
  *
- * An implementation of the topological constraints described in the 
+ * An implementation of the topological constraints described in the
  * "Mesh Optimization" article of Hoppe et al (1993).
  *
  * Returns: %TRUE if @e can be collapsed without violation of the topological
@@ -1454,18 +1599,18 @@ gboolean gts_edge_collapse_is_valid (GtsEdge * e)
     GtsEdge * e1 = i->data;
     if (e1 != e && GTS_IS_EDGE (e1)) {
       GtsEdge * e2 = NULL;
-      GSList * j = GTS_SEGMENT (e1)->v1 == GTS_SEGMENT (e)->v1 ? 
-	GTS_SEGMENT (e1)->v2->segments : GTS_SEGMENT (e1)->v1->segments;
+      GSList * j = GTS_SEGMENT (e1)->v1 == GTS_SEGMENT (e)->v1 ?
+        GTS_SEGMENT (e1)->v2->segments : GTS_SEGMENT (e1)->v1->segments;
       while (j && !e2) {
-	GtsEdge * e1 = j->data;
-	if (GTS_IS_EDGE (e1) && 
-	    (GTS_SEGMENT (e1)->v1 == GTS_SEGMENT (e)->v2 || 
-	     GTS_SEGMENT (e1)->v2 == GTS_SEGMENT (e)->v2))
-	  e2 = e1;
-	j = j->next;
+        GtsEdge * e1 = j->data;
+        if (GTS_IS_EDGE (e1) &&
+            (GTS_SEGMENT (e1)->v1 == GTS_SEGMENT (e)->v2 ||
+             GTS_SEGMENT (e1)->v2 == GTS_SEGMENT (e)->v2))
+          e2 = e1;
+        j = j->next;
       }
       if (e2 && !gts_triangle_use_edges (e, e1, e2))
-	return FALSE;
+        return FALSE;
     }
     i = i->next;
   }
@@ -1473,14 +1618,14 @@ gboolean gts_edge_collapse_is_valid (GtsEdge * e)
   if (gts_edge_is_boundary (e, NULL)) {
     GtsTriangle * t = e->triangles->data;
     if (gts_edge_is_boundary (t->e1, NULL) &&
-	gts_edge_is_boundary (t->e2, NULL) &&
-	gts_edge_is_boundary (t->e3, NULL))
+        gts_edge_is_boundary (t->e2, NULL) &&
+        gts_edge_is_boundary (t->e3, NULL))
       return FALSE;
   }
   else {
     if (gts_vertex_is_boundary (GTS_SEGMENT (e)->v1, NULL) &&
-	gts_vertex_is_boundary (GTS_SEGMENT (e)->v2, NULL))
-      return FALSE;    
+        gts_vertex_is_boundary (GTS_SEGMENT (e)->v2, NULL))
+      return FALSE;
     if (gts_edge_belongs_to_tetrahedron (e))
       return FALSE;
   }
@@ -1493,11 +1638,11 @@ gboolean gts_edge_collapse_is_valid (GtsEdge * e)
                                 GTS_OBJECT (e)->reserved = NULL)
 
 static GtsVertex * edge_collapse (GtsEdge * e,
-				  GtsEHeap * heap,
-				  GtsCoarsenFunc coarsen_func,
-				  gpointer coarsen_data,
-				  GtsVertexClass * klass,
-				  gdouble maxcosine2)
+                                  GtsEHeap * heap,
+                                  GtsCoarsenFunc coarsen_func,
+                                  gpointer coarsen_data,
+                                  GtsVertexClass * klass,
+                                  gdouble maxcosine2)
 {
   GSList * i;
   GtsVertex  * v1 = GTS_SEGMENT (e)->v1, * v2 = GTS_SEGMENT (e)->v2, * mid;
@@ -1509,7 +1654,7 @@ static GtsVertex * edge_collapse (GtsEdge * e,
   }
 
   if (!gts_edge_collapse_is_valid (e)) {
-    GTS_OBJECT (e)->reserved = 
+    GTS_OBJECT (e)->reserved =
       gts_eheap_insert_with_key (heap, e, G_MAXDOUBLE);
     return NULL;
   }
@@ -1517,7 +1662,7 @@ static GtsVertex * edge_collapse (GtsEdge * e,
   mid = (*coarsen_func) (e, klass, coarsen_data);
 
   if (gts_edge_collapse_creates_fold (e, mid, maxcosine2)) {
-    GTS_OBJECT (e)->reserved = 
+    GTS_OBJECT (e)->reserved =
       gts_eheap_insert_with_key (heap, e, G_MAXDOUBLE);
     gts_object_destroy (GTS_OBJECT (mid));
     return NULL;
@@ -1543,14 +1688,14 @@ static GtsVertex * edge_collapse (GtsEdge * e,
     i = i->next;
     if (!e1->triangles) {
       /* e1 is the result of the collapse of one edge of a pair of identical
-	 faces (it should not happen unless duplicate triangles are present in
-	 the initial surface) */
+         faces (it should not happen unless duplicate triangles are present in
+         the initial surface) */
       g_warning ("file %s: line %d (%s): probably duplicate triangle.",
-		 __FILE__, __LINE__, G_GNUC_PRETTY_FUNCTION);
+                 __FILE__, __LINE__, G_GNUC_PRETTY_FUNCTION);
       HEAP_REMOVE_EDGE (heap, e1);
       gts_object_destroy (GTS_OBJECT (e1));
       if (i == NULL) /* mid has been destroyed */
-	mid = NULL;
+        mid = NULL;
     }
   }
 
@@ -1561,7 +1706,7 @@ static GtsVertex * edge_collapse (GtsEdge * e,
 static void update_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
 {
   GSList * i = v->segments;
-  
+
   while (i) {
     GtsSegment * s = i->data;
     if (GTS_IS_EDGE (s)) {
@@ -1577,17 +1722,17 @@ static void update_2nd_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
 {
   GSList * i = v->segments;
   GSList * list = NULL;
-  
+
   while (i) {
     GtsSegment * s = i->data;
     if (GTS_IS_EDGE (s)) {
       GtsVertex * v1 = s->v1 == v ? s->v2 : s->v1;
       GSList * j = v1->segments;
       while (j) {
-	GtsSegment * s1 = j->data;
-	if (GTS_IS_EDGE (s1) && !g_slist_find (list, s1))
-	  list = g_slist_prepend (list, s1);
-	j = j->next;
+        GtsSegment * s1 = j->data;
+        if (GTS_IS_EDGE (s1) && !g_slist_find (list, s1))
+          list = g_slist_prepend (list, s1);
+        j = j->next;
       }
     }
     i = i->next;
@@ -1606,8 +1751,8 @@ static void update_2nd_closest_neighbors (GtsVertex * v, GtsEHeap * heap)
 
 static gdouble edge_length2 (GtsEdge * e)
 {
-  return gts_point_distance2 (GTS_POINT (GTS_SEGMENT (e)->v1), 
-			      GTS_POINT (GTS_SEGMENT (e)->v2));
+  return gts_point_distance2 (GTS_POINT (GTS_SEGMENT (e)->v1),
+                              GTS_POINT (GTS_SEGMENT (e)->v2));
 }
 
 static void create_heap_coarsen (GtsEdge * e, GtsEHeap * heap)
@@ -1626,13 +1771,13 @@ static void create_heap_coarsen (GtsEdge * e, GtsEHeap * heap)
  * @stop_data: user data to be passed to @stop_func.
  * @minangle: minimum angle between two neighboring triangles.
  *
- * The edges of @surface are sorted according to @cost_func to 
+ * The edges of @surface are sorted according to @cost_func to
  * create a priority heap (a #GtsEHeap). The edges are extracted in
  * turn from the top of the heap and collapsed (i.e. the vertices are
  * replaced by the vertex returned by the @coarsen_func function)
  * until the @stop_func functions returns %TRUE.
  *
- * If @cost_func is set to %NULL, the edges are sorted according 
+ * If @cost_func is set to %NULL, the edges are sorted according
  * to their length squared (the shortest is on top).
  *
  * If @coarsen_func is set to %NULL gts_segment_midvertex() is used.
@@ -1640,13 +1785,13 @@ static void create_heap_coarsen (GtsEdge * e, GtsEHeap * heap)
  * The minimum angle is used to avoid introducing faces which would be folded.
  */
 void gts_surface_coarsen (GtsSurface * surface,
-			  GtsKeyFunc cost_func,
-			  gpointer cost_data,
-			  GtsCoarsenFunc coarsen_func,
-			  gpointer coarsen_data,
-			  GtsStopFunc stop_func,
-			  gpointer stop_data,
-			  gdouble minangle)
+                          GtsKeyFunc cost_func,
+                          gpointer cost_data,
+                          GtsCoarsenFunc coarsen_func,
+                          gpointer coarsen_data,
+                          GtsStopFunc stop_func,
+                          gpointer stop_data,
+                          gdouble minangle)
 {
   GtsEHeap * heap;
   GtsEdge * e;
@@ -1670,14 +1815,14 @@ void gts_surface_coarsen (GtsSurface * surface,
   /* we want to control edge destruction manually */
   gts_allow_floating_edges = TRUE;
   while ((e = gts_eheap_remove_top (heap, &top_cost)) &&
-	 (top_cost < G_MAXDOUBLE) &&
-	 !(*stop_func) (top_cost, gts_eheap_size (heap) - 
-			gts_edge_face_number (e, surface), stop_data))
+         (top_cost < G_MAXDOUBLE) &&
+         !(*stop_func) (top_cost, gts_eheap_size (heap) -
+                        gts_edge_face_number (e, surface), stop_data))
     {
       GtsVertex * v = edge_collapse (e, heap, coarsen_func, coarsen_data,
-				     surface->vertex_class, maxcosine2);
+                                     surface->vertex_class, maxcosine2);
       if (v != NULL)
-	update_2nd_closest_neighbors (v, heap);
+        update_2nd_closest_neighbors (v, heap);
     }
   gts_allow_floating_edges = FALSE;
 
@@ -1692,18 +1837,18 @@ void gts_surface_coarsen (GtsSurface * surface,
  * gts_coarsen_stop_number:
  * @cost: the cost of the edge collapse considered.
  * @nedge: the current number of edges of the surface being simplified.
- * @min_number: a pointer to the minimum number of edges desired for the 
+ * @min_number: a pointer to the minimum number of edges desired for the
  * surface being simplified.
  *
- * This function is to be used as the @stop_func argument of 
+ * This function is to be used as the @stop_func argument of
  * gts_surface_coarsen() or gts_psurface_new().
  *
- * Returns: %TRUE if the edge collapse would create a surface with a smaller 
+ * Returns: %TRUE if the edge collapse would create a surface with a smaller
  * number of edges than given by @min_number, %FALSE otherwise.
  */
-gboolean gts_coarsen_stop_number (gdouble cost, 
-				  guint nedge, 
-				  guint * min_number)
+gboolean gts_coarsen_stop_number (gdouble cost,
+                                  guint nedge,
+                                  guint * min_number)
 {
   g_return_val_if_fail (min_number != NULL, TRUE);
 
@@ -1718,15 +1863,15 @@ gboolean gts_coarsen_stop_number (gdouble cost,
  * @nedge: the current number of edges of the surface being simplified.
  * @max_cost: a pointer to the maximum cost allowed for an edge collapse.
  *
- * This function is to be used as the @stop_func argument of 
+ * This function is to be used as the @stop_func argument of
  * gts_surface_coarsen() or gts_psurface_new().
  *
  * Returns: %TRUE if the cost of the edge collapse considered is larger than
  * given by @max_cost, %FALSE otherwise.
  */
-gboolean gts_coarsen_stop_cost (gdouble cost, 
-				guint nedge, 
-				gdouble * max_cost)
+gboolean gts_coarsen_stop_cost (gdouble cost,
+                                guint nedge,
+                                gdouble * max_cost)
 {
   g_return_val_if_fail (max_cost != NULL, TRUE);
 
@@ -1798,7 +1943,7 @@ static guint generate_icosahedron (GtsSurface * s)
   GtsEdge * e28 = gts_edge_new (s->edge_class, v10, v09);
   GtsEdge * e29 = gts_edge_new (s->edge_class, v12, v05);
   GtsEdge * e30 = gts_edge_new (s->edge_class, v01, v10);
-  
+
   gts_surface_add_face (s, gts_face_new (s->face_class, e01, e02, e03));
   gts_surface_add_face (s, gts_face_new (s->face_class, e04, e05, e06));
   gts_surface_add_face (s, gts_face_new (s->face_class, e07, e08, e09));
@@ -1823,8 +1968,8 @@ static guint generate_icosahedron (GtsSurface * s)
   return 0;
 }
 
-static GtsVertex * unit_sphere_arc_midvertex (GtsSegment * s, 
-					      GtsVertexClass * vertex_class)
+static GtsVertex * unit_sphere_arc_midvertex (GtsSegment * s,
+                                              GtsVertexClass * vertex_class)
 {
   GtsPoint * p1, * p2;
   gdouble x, y, z, norm;
@@ -1844,21 +1989,21 @@ static GtsVertex * unit_sphere_arc_midvertex (GtsSegment * s,
 }
 
 static void tessellate_face (GtsFace * f,
-			     GtsSurface * s,
-			     GtsRefineFunc refine_func,
-			     gpointer refine_data,
-			     GtsVertexClass * vertex_class,
-			     GtsEdgeClass * edge_class)
+                             GtsSurface * s,
+                             GtsRefineFunc refine_func,
+                             gpointer refine_data,
+                             GtsVertexClass * vertex_class,
+                             GtsEdgeClass * edge_class)
 {
   GtsTriangle * t;
   GtsEdge * e1, * e2, * e3;                          /* former edges     */
   GtsVertex * v1, * v2, * v3;                        /* initial vertices */
-  GtsVertex * v4, * v5, * v6;                        /* new vertices     */ 
+  GtsVertex * v4, * v5, * v6;                        /* new vertices     */
   GtsEdge * e56, * e64, * e45;                       /* new inside edges */
   GtsEdge * e24, * e34, * e35, * e15, * e16, * e26;  /* new border edges */
   GSList * dum;
   GtsEdge * edum;
-  
+
   t = GTS_TRIANGLE (f);
   e1 = t->e1; e2 = t->e2; e3 = t->e3;
 
@@ -1890,7 +2035,7 @@ static void tessellate_face (GtsFace * f,
   e1->triangles = g_slist_remove (e1->triangles, t);
   e2->triangles = g_slist_remove (e2->triangles, t);
   e3->triangles = g_slist_remove (e3->triangles, t);
-  
+
   if (GTS_OBJECT (e1)->reserved) {
     dum = (GTS_OBJECT (e1)->reserved);
     e24 = dum->data;
@@ -1942,7 +2087,7 @@ static void tessellate_face (GtsFace * f,
     dum = g_slist_append (dum,  e26);
     GTS_OBJECT (e3)->reserved = dum;
   }
-  
+
   if (e1->triangles == NULL) {
     g_slist_free (GTS_OBJECT (e1)->reserved);
     GTS_OBJECT (e1)->reserved = NULL;
@@ -1968,10 +2113,10 @@ static void tessellate_face (GtsFace * f,
   t->e1 = e56; e56->triangles = g_slist_prepend (e56->triangles, t);
   t->e2 = e64; e64->triangles = g_slist_prepend (e64->triangles, t);
   t->e3 = e45; e45->triangles = g_slist_prepend (e45->triangles, t);
-  
+
   gts_surface_add_face (s, gts_face_new (s->face_class, e16, e56, e15));
   gts_surface_add_face (s, gts_face_new (s->face_class, e26, e24, e64));
-  gts_surface_add_face (s, gts_face_new (s->face_class, e45, e34, e35)); 
+  gts_surface_add_face (s, gts_face_new (s->face_class, e45, e34, e35));
 }
 
 static void create_array_tessellate (GtsFace * f, GPtrArray * array)
@@ -1985,7 +2130,7 @@ static void create_array_tessellate (GtsFace * f, GPtrArray * array)
  * @refine_func: a #GtsRefineFunc.
  * @refine_data: user data to be passed to @refine_func.
  *
- * Tessellate each triangle of @s with 4 triangles:   
+ * Tessellate each triangle of @s with 4 triangles:
  * the number of triangles is increased by a factor of 4.
  * http://mathworld.wolfram.com/GeodesicDome.html
  *
@@ -1993,17 +2138,17 @@ static void create_array_tessellate (GtsFace * f, GPtrArray * array)
  * the surface is a polyhedron with the unit sphere as circum sphere,
  * then gts_surface_tessellate() corresponds to a geodesation step
  * (see gts_surface_generate_sphere()).
- * 
+ *
  */
 void gts_surface_tessellate (GtsSurface * s,
-			     GtsRefineFunc refine_func,
-			     gpointer refine_data)
+                             GtsRefineFunc refine_func,
+                             gpointer refine_data)
 {
   GPtrArray * array;
   guint i;
 
   g_return_if_fail (s != NULL);
-  
+
   if (refine_func == NULL) /* tessellate_surface == geodesate_surface */
     refine_func = (GtsRefineFunc) unit_sphere_arc_midvertex;
 
@@ -2011,8 +2156,8 @@ void gts_surface_tessellate (GtsSurface * s,
   gts_surface_foreach_face (s, (GtsFunc) create_array_tessellate, array);
   for(i = 0; i < array->len; i++)
     tessellate_face (g_ptr_array_index (array, i),
-		     s, refine_func, refine_data, 
-		     s->vertex_class, s->edge_class);
+                     s, refine_func, refine_data,
+                     s->vertex_class, s->edge_class);
   g_ptr_array_free (array, TRUE);
 }
 
@@ -2028,10 +2173,10 @@ void gts_surface_tessellate (GtsSurface * s,
  *
  * Returns: @s.
  */
-GtsSurface * gts_surface_generate_sphere (GtsSurface * s, 
-					  guint geodesation_order)
+GtsSurface * gts_surface_generate_sphere (GtsSurface * s,
+                                          guint geodesation_order)
 {
-  guint cgo; 
+  guint cgo;
 
   g_return_val_if_fail (s != NULL, NULL);
   g_return_val_if_fail (geodesation_order != 0, NULL);
@@ -2040,7 +2185,7 @@ GtsSurface * gts_surface_generate_sphere (GtsSurface * s,
 
   for (cgo = 1; cgo < geodesation_order; cgo++)
     gts_surface_tessellate (s, NULL, NULL);
-  
+
   return s;
 }
 
@@ -2052,17 +2197,17 @@ static void foreach_vertex_copy (GtsPoint * p, GtsVertexClass * klass)
 static void foreach_edge_copy (GtsSegment * s, GtsEdgeClass * klass)
 {
   GTS_OBJECT (s)->reserved = gts_edge_new (klass,
-					   GTS_OBJECT (s->v1)->reserved, 
-					   GTS_OBJECT (s->v2)->reserved);
+                                           GTS_OBJECT (s->v1)->reserved,
+                                           GTS_OBJECT (s->v2)->reserved);
 }
 
 static void foreach_face_copy (GtsTriangle * t,
-			       GtsSurface * s)
+                               GtsSurface * s)
 {
   gts_surface_add_face (s, gts_face_new (s->face_class,
-					 GTS_OBJECT (t->e1)->reserved,
-					 GTS_OBJECT (t->e2)->reserved,
-					 GTS_OBJECT (t->e3)->reserved));
+                                         GTS_OBJECT (t->e1)->reserved,
+                                         GTS_OBJECT (t->e2)->reserved,
+                                         GTS_OBJECT (t->e3)->reserved));
 }
 
 /**
@@ -2078,20 +2223,20 @@ GtsSurface * gts_surface_copy (GtsSurface * s1, GtsSurface * s2)
 {
   g_return_val_if_fail (s1 != NULL, NULL);
   g_return_val_if_fail (s2 != NULL, NULL);
-  
-  gts_surface_foreach_vertex (s2, (GtsFunc) foreach_vertex_copy, 
-			      s1->vertex_class);
+
+  gts_surface_foreach_vertex (s2, (GtsFunc) foreach_vertex_copy,
+                              s1->vertex_class);
   gts_surface_foreach_edge (s2, (GtsFunc) foreach_edge_copy, s1->edge_class);
   gts_surface_foreach_face (s2, (GtsFunc) foreach_face_copy, s1);
 
   gts_surface_foreach_vertex (s2, (GtsFunc) gts_object_reset_reserved, NULL);
   gts_surface_foreach_edge (s2, (GtsFunc) gts_object_reset_reserved, NULL);
-  
+
   return s1;
 }
 
-static void merge_foreach_face (GtsFace * f, 
-				GtsSurface * s)
+static void merge_foreach_face (GtsFace * f,
+                                GtsSurface * s)
 {
   gts_surface_add_face (s, f);
 }
@@ -2108,7 +2253,7 @@ void gts_surface_merge (GtsSurface * s, GtsSurface * with)
 {
   g_return_if_fail (s != NULL);
   g_return_if_fail (with != NULL);
-  
+
   gts_surface_foreach_face (with, (GtsFunc) merge_foreach_face, s);
 }
 
@@ -2182,14 +2327,14 @@ static void orientable_foreach_edge (GtsEdge * e, gpointer * data)
     while (i && *is_orientable) {
       GtsFace * f = i->data;
       if (GTS_IS_FACE (f) && gts_face_has_parent_surface (f, surface)) {
-	if (!f1) f1 = f;
-	else if (!f2) f2 = f;
-	else *is_orientable = FALSE;
+        if (!f1) f1 = f;
+        else if (!f2) f2 = f;
+        else *is_orientable = FALSE;
       }
       i = i->next;
     }
-    if (f1 && f2 && !gts_triangles_are_compatible (GTS_TRIANGLE (f1), 
-						   GTS_TRIANGLE (f2), e))
+    if (f1 && f2 && !gts_triangles_are_compatible (GTS_TRIANGLE (f1),
+                                                   GTS_TRIANGLE (f2), e))
       *is_orientable = FALSE;
   }
 }
@@ -2216,7 +2361,7 @@ gboolean gts_surface_is_orientable (GtsSurface * s)
 }
 
 static void volume_foreach_face (GtsTriangle * t,
-				 gdouble * volume)
+                                 gdouble * volume)
 {
   GtsVertex * va, * vb, * vc;
   GtsPoint * pa, * pb, * pc;
@@ -2225,10 +2370,10 @@ static void volume_foreach_face (GtsTriangle * t,
   pa = GTS_POINT (va);
   pb = GTS_POINT (vb);
   pc = GTS_POINT (vc);
-  
+
   *volume += (pa->x * (pb->y * pc->z - pb->z * pc->y) +
-	      pb->x * (pc->y * pa->z - pc->z * pa->y) +
-	      pc->x * (pa->y * pb->z - pa->z * pb->y));
+              pb->x * (pc->y * pa->z - pc->z * pa->y) +
+              pc->x * (pa->y * pb->z - pa->z * pb->y));
 }
 
 /**
@@ -2250,7 +2395,7 @@ gdouble gts_surface_volume (GtsSurface * s)
 }
 
 static void center_of_mass_foreach_face (GtsTriangle * t,
-					 gpointer * data)
+                                         gpointer * data)
 {
   GtsVertex * v1, * v2, * v3;
   GtsPoint * p1, * p2, * p3;
@@ -2270,17 +2415,17 @@ static void center_of_mass_foreach_face (GtsTriangle * t,
   x2 = p3->x - p1->x;
   y2 = p3->y - p1->y;
   z2 = p3->z - p1->z;
-  
+
   nx = y1*z2 - z1*y2;
   ny = z1*x2 - x1*z2;
   nz = x1*y2 - y1*x2;
 
-  cm[0] += nx*(p1->x*p1->x + p2->x*p2->x + p3->x*p3->x + 
-	       p1->x*p2->x + p1->x*p3->x + p2->x*p3->x);
-  cm[1] += ny*(p1->y*p1->y + p2->y*p2->y + p3->y*p3->y + 
-	       p1->y*p2->y + p1->y*p3->y + p2->y*p3->y);
-  cm[2] += nz*(p1->z*p1->z + p2->z*p2->z + p3->z*p3->z + 
-	       p1->z*p2->z + p1->z*p3->z + p2->z*p3->z);
+  cm[0] += nx*(p1->x*p1->x + p2->x*p2->x + p3->x*p3->x +
+               p1->x*p2->x + p1->x*p3->x + p2->x*p3->x);
+  cm[1] += ny*(p1->y*p1->y + p2->y*p2->y + p3->y*p3->y +
+               p1->y*p2->y + p1->y*p3->y + p2->y*p3->y);
+  cm[2] += nz*(p1->z*p1->z + p2->z*p2->z + p3->z*p3->z +
+               p1->z*p2->z + p1->z*p3->z + p2->z*p3->z);
 
   *volume += nx*(p1->x + p2->x + p3->x);
 }
@@ -2296,7 +2441,7 @@ static void center_of_mass_foreach_face (GtsTriangle * t,
  * Returns: the signed volume of the domain bounded by the surface @s.
  */
 gdouble gts_surface_center_of_mass (GtsSurface * s,
-				    GtsVector cm)
+                                    GtsVector cm)
 {
   gdouble volume = 0.;
   gpointer data[2];
@@ -2307,7 +2452,7 @@ gdouble gts_surface_center_of_mass (GtsSurface * s,
   data[1] = &(cm[0]);
   cm[0] = cm[1] = cm[2] = 0.;
   gts_surface_foreach_face (s, (GtsFunc) center_of_mass_foreach_face, data);
-  
+
   if (volume != 0.) {
     cm[0] /= 4.*volume;
     cm[1] /= 4.*volume;
@@ -2318,7 +2463,7 @@ gdouble gts_surface_center_of_mass (GtsSurface * s,
 }
 
 static void center_of_area_foreach_face (GtsTriangle * t,
-					 gpointer * data)
+                                         gpointer * data)
 {
   GtsVertex * v1, * v2, * v3;
   GtsPoint * p1, * p2, * p3;
@@ -2349,7 +2494,7 @@ static void center_of_area_foreach_face (GtsTriangle * t,
  * Returns: the area of surface @s.
  */
 gdouble gts_surface_center_of_area (GtsSurface * s,
-				    GtsVector cm)
+                                    GtsVector cm)
 {
   gdouble area = 0.;
   gpointer data[2];
@@ -2360,7 +2505,7 @@ gdouble gts_surface_center_of_area (GtsSurface * s,
   data[1] = &(cm[0]);
   cm[0] = cm[1] = cm[2] = 0.;
   gts_surface_foreach_face (s, (GtsFunc) center_of_area_foreach_face, data);
-  
+
   if (area != 0.) {
     cm[0] /= 3.*area;
     cm[1] /= 3.*area;
@@ -2435,7 +2580,7 @@ static void build_list_boundary (GtsEdge * e, GSList ** list)
 {
   if (gts_edge_is_boundary (e, NULL))
     *list = g_slist_prepend (*list, gts_bbox_segment (gts_bbox_class (),
-						      GTS_SEGMENT (e)));
+                                                      GTS_SEGMENT (e)));
 }
 
 /**
@@ -2451,10 +2596,10 @@ static void build_list_boundary (GtsEdge * e, GSList ** list)
  * gts_bb_tree_surface_boundary_distance() functions fills @face_range
  * and @boundary_range with the min, max and average Euclidean
  * (minimum) distances between the faces of @s1 and the faces of @s2
- * and between the boundary edges of @s1 and @s2.  
+ * and between the boundary edges of @s1 and @s2.
  */
 void gts_surface_distance (GtsSurface * s1, GtsSurface * s2, gdouble delta,
-			   GtsRange * face_range, GtsRange * boundary_range)
+                           GtsRange * face_range, GtsRange * boundary_range)
 {
   GNode * face_tree, * boundary_tree;
   GSList * bboxes;
@@ -2470,12 +2615,12 @@ void gts_surface_distance (GtsSurface * s1, GtsSurface * s2, gdouble delta,
   if (bboxes != NULL) {
     face_tree = gts_bb_tree_new (bboxes);
     g_slist_free (bboxes);
-    
-    gts_bb_tree_surface_distance (face_tree, s1, 
-			       (GtsBBoxDistFunc) gts_point_triangle_distance,
-				  delta, face_range);
+
+    gts_bb_tree_surface_distance (face_tree, s1,
+                               (GtsBBoxDistFunc) gts_point_triangle_distance,
+                                  delta, face_range);
     gts_bb_tree_destroy (face_tree, TRUE);
-    
+
     bboxes = NULL;
     gts_surface_foreach_edge (s2, (GtsFunc) build_list_boundary, &bboxes);
     if (bboxes != NULL) {
@@ -2483,9 +2628,9 @@ void gts_surface_distance (GtsSurface * s1, GtsSurface * s2, gdouble delta,
       g_slist_free (bboxes);
 
       gts_bb_tree_surface_boundary_distance (boundary_tree,
-	       s1, 
-	       (GtsBBoxDistFunc) gts_point_segment_distance,
-	       delta, boundary_range);
+               s1,
+               (GtsBBoxDistFunc) gts_point_segment_distance,
+               delta, boundary_range);
       gts_bb_tree_destroy (boundary_tree, TRUE);
     }
     else
@@ -2521,7 +2666,7 @@ GSList * gts_surface_boundary (GtsSurface * surface)
   data[0] = &list;
   data[1] = surface;
   gts_surface_foreach_edge (surface, (GtsFunc) surface_boundary, data);
-  
+
   return list;
 }
 
@@ -2536,17 +2681,17 @@ struct _GtsSurfaceTraverse {
  * @f: a #GtsFace belonging to @s.
  *
  * Returns: a new #GtsSurfaceTraverse, initialized to start traversing
- * from face @f of surface @s.  
+ * from face @f of surface @s.
  */
 GtsSurfaceTraverse * gts_surface_traverse_new (GtsSurface * s,
-					       GtsFace * f)
+                                               GtsFace * f)
 {
   GtsSurfaceTraverse * t;
 
   g_return_val_if_fail (s != NULL, NULL);
   g_return_val_if_fail (f != NULL, NULL);
   g_return_val_if_fail (gts_face_has_parent_surface (f, s), NULL);
-  
+
   t = g_malloc (sizeof (GtsSurfaceTraverse));
   t->q = gts_fifo_new ();
   t->s = s;
@@ -2558,7 +2703,7 @@ GtsSurfaceTraverse * gts_surface_traverse_new (GtsSurface * s,
 static void push_neighbor (GtsFace * v, gpointer * data)
 {
   if (!GTS_OBJECT (v)->reserved) {
-    GTS_OBJECT (v)->reserved = 
+    GTS_OBJECT (v)->reserved =
       GUINT_TO_POINTER (GPOINTER_TO_UINT (GTS_OBJECT (data[1])->reserved) + 1);
     gts_fifo_push (data[0], v);
   }
@@ -2572,10 +2717,10 @@ static void push_neighbor (GtsFace * v, gpointer * data)
  * Returns: the next face of the traversal in breadth-first order or
  * %NULL if no faces are left. If @level if not %NULL, it is filled
  * with the level of the returned face (0 for the initial face, 1 for
- * its neighbors and so on).  
+ * its neighbors and so on).
  */
 GtsFace * gts_surface_traverse_next (GtsSurfaceTraverse * t,
-				     guint * level)
+                                     guint * level)
 {
   GtsFace * u;
 
@@ -2645,8 +2790,8 @@ static void non_manifold_edges (GtsEdge * e, gpointer * data)
 
     while (i) {
       if (gts_face_has_parent_surface (i->data, s) &&
-	  !g_slist_find (*non_manifold, i->data))
-	*non_manifold = g_slist_prepend (*non_manifold, i->data);
+          !g_slist_find (*non_manifold, i->data))
+        *non_manifold = g_slist_prepend (*non_manifold, i->data);
       i = i->next;
     }
   }
@@ -2659,11 +2804,11 @@ static void traverse_boundary (GtsEdge * e, gpointer * data)
   GtsFace * f = gts_edge_is_boundary (e, orig);
 
   if (f != NULL && g_slist_length (f->surfaces) == 1) {
-    GtsSurface * s = 
+    GtsSurface * s =
       gts_surface_new (GTS_SURFACE_CLASS (GTS_OBJECT (orig)->klass),
-		       orig->face_class,
-		       orig->edge_class,
-		       orig->vertex_class);
+                       orig->face_class,
+                       orig->edge_class,
+                       orig->vertex_class);
     GSList * non_manifold = NULL, * i;
     gpointer data[2];
 
@@ -2688,11 +2833,11 @@ static void traverse_remaining (GtsFace * f, gpointer * data)
   GSList ** components = data[1];
 
   if (g_slist_length (f->surfaces) == 1) {
-    GtsSurface * s = 
+    GtsSurface * s =
       gts_surface_new (GTS_SURFACE_CLASS (GTS_OBJECT (orig)->klass),
-		       orig->face_class,
-		       orig->edge_class,
-		       orig->vertex_class);
+                       orig->face_class,
+                       orig->edge_class,
+                       orig->vertex_class);
     GSList * non_manifold = NULL, * i;
     gpointer data[2];
 
@@ -2716,7 +2861,7 @@ static void traverse_remaining (GtsFace * f, gpointer * data)
  * @s: a #GtsSurface.
  *
  * Splits a surface into connected and manifold components.
- * 
+ *
  * Returns: a list of new #GtsSurface.
  */
 GSList * gts_surface_split (GtsSurface * s)

@@ -8,7 +8,7 @@
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.         See the GNU
  * Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
@@ -53,9 +53,11 @@ static GtsFile * file_new (void)
   f->next_token = '\0';
 
   f->scope = f->scope_max = 0;
-  f->delimiters = g_strdup (" \t");
+  f->delimiters = g_strdup (GTS_DELIMITERS);
   f->comments = g_strdup (GTS_COMMENTS);
-  f->tokens = g_strdup ("\n{}()=");
+  f->tokens = g_strdup (GTS_TOKENS);
+
+  f->ftype = GTS_FILE_GTS;
 
   return f;
 }
@@ -80,6 +82,26 @@ GtsFile * gts_file_new (FILE * fp)
 }
 
 /**
+ * gts_file_new_obj:
+ * @fp: a file pointer.
+ *
+ * Returns: a new #GtsFile.
+ */
+GtsFile * gts_file_new_obj (FILE * fp)
+{
+  GtsFile * f;
+
+  g_return_val_if_fail (fp != NULL, NULL);
+
+  f = file_new ();
+  f->fp = fp;
+  gts_file_set_type(f, GTS_FILE_OBJ);
+  gts_file_next_token (f);
+
+  return f;
+}
+
+/**
  * gts_file_new_from_string:
  * @s: a string.
  *
@@ -93,6 +115,26 @@ GtsFile * gts_file_new_from_string (const gchar * s)
 
   f = file_new ();
   f->s1 = f->s = g_strdup (s);
+  gts_file_next_token (f);
+
+  return f;
+}
+
+/**
+ * gts_file_new_from_string_obj:
+ * @s: a string.
+ *
+ * Returns: a new #GtsFile.
+ */
+GtsFile * gts_file_new_from_string_obj (const gchar * s)
+{
+  GtsFile * f;
+
+  g_return_val_if_fail (s != NULL, NULL);
+
+  f = file_new ();
+  f->s1 = f->s = g_strdup (s);
+  gts_file_set_type(f, GTS_FILE_OBJ);
   gts_file_next_token (f);
 
   return f;
@@ -131,8 +173,8 @@ void gts_file_destroy (GtsFile * f)
  * operation on @f (gts_file_close() excepted).
  */
 void gts_file_verror (GtsFile * f,
-		      const gchar * format,
-		      va_list args)
+                      const gchar * format,
+                      va_list args)
 {
   g_return_if_fail (f != NULL);
   g_return_if_fail (format != NULL);
@@ -154,15 +196,15 @@ void gts_file_verror (GtsFile * f,
  * operation on @f (gts_file_close() excepted).
  */
 void gts_file_error (GtsFile * f,
-		     const gchar * format,
-		     ...)
+                     const gchar * format,
+                     ...)
 {
   va_list args;
 
   g_return_if_fail (f != NULL);
   g_return_if_fail (format != NULL);
 
-  va_start (args, format);  
+  va_start (args, format);
   gts_file_verror (f, format, args);
   va_end (args);
 }
@@ -185,33 +227,46 @@ static gint next_char (GtsFile * f)
  */
 gint gts_file_getc (GtsFile * f)
 {
-  gint c;
+  gint c, c_old;
 
   g_return_val_if_fail (f != NULL, EOF);
+  g_return_val_if_fail (f->type != GTS_ERROR, EOF);
 
-  if (f->type == GTS_ERROR)
-    return EOF;
-
+  c_old = '\0';
   c = next_char (f);
   f->curpos++;
   while (char_in_string (c, f->comments)) {
-    while (c != EOF && c != '\n')
-      c = next_char (f);
+    switch (f->ftype) {
+    case GTS_FILE_GTS: {
+      while (c != EOF && c != '\n')
+        c = next_char (f);
+    } break;
+    case GTS_FILE_OBJ: {
+      while (c != EOF && (c != '\n' || c_old=='\\')) {
+        c_old = c;
+        c = next_char (f);
+      }
+    } break;
+    }
     if (c == '\n') {
       f->curline++;
       f->curpos = 1;
+      c_old = c;
       c = next_char (f);
     }
   }
+
   switch (c) {
-  case '\n': 
+  case '\n':
     f->curline++;
-    f->curpos = 1; 
+    f->curpos = 1;
     break;
   case '{':
-    f->scope++; 
+    if (f->ftype == GTS_FILE_OBJ) break;
+    f->scope++;
     break;
   case '}':
+    if (f->ftype == GTS_FILE_OBJ) break;
     if (f->scope == 0) {
       f->line = f->curline;
       f->pos = f->curpos - 1;
@@ -275,13 +330,13 @@ gint gts_file_getc_scope (GtsFile * f)
 
   if (f->type == GTS_ERROR)
     return EOF;
-  
+
   if (f->scope <= f->scope_max)
     c = gts_file_getc (f);
   else {
     c = gts_file_getc (f);
     while (c != EOF && f->scope > f->scope_max)
-      c = gts_file_getc (f);    
+      c = gts_file_getc (f);
   }
   return c;
 }
@@ -298,12 +353,11 @@ void gts_file_next_token (GtsFile * f)
   gboolean in_string = FALSE;
 
   g_return_if_fail (f != NULL);
+  g_return_if_fail (f->type != GTS_ERROR);
 
-  if (f->type == GTS_ERROR)
-    return;
   f->token->str[0] = '\0';
   f->token->len = 0;
-  if (f->next_token != '\0') {
+  if (f->next_token != '\0' && f->ftype == GTS_FILE_GTS) {
     if (char_in_string (f->next_token, f->tokens)) {
       f->line = f->curline;
       f->pos = f->curpos - 1;
@@ -322,9 +376,9 @@ void gts_file_next_token (GtsFile * f)
   f->type = GTS_NONE;
   while (c != EOF && (!in_string || !char_in_string (c, f->delimiters))) {
     if (in_string) {
-      if (char_in_string (c, f->tokens)) {
-	f->next_token = c;
-	break;
+      if (f->ftype == GTS_FILE_GTS && char_in_string (c, f->tokens)) {
+        f->next_token = c;
+        break;
       }
       g_string_append_c (f->token, c);
     }
@@ -333,9 +387,9 @@ void gts_file_next_token (GtsFile * f)
       f->line = f->curline;
       f->pos = f->curpos - 1;
       g_string_append_c (f->token, c);
-      if (char_in_string (c, f->tokens)) {
-	f->type = c;
-	break;
+      if (f->ftype == GTS_FILE_GTS && char_in_string (c, f->tokens)) {
+        f->type = c;
+        break;
       }
     }
     c = gts_file_getc_scope (f);
@@ -368,19 +422,19 @@ void gts_file_next_token (GtsFile * f)
       return;
     }
     a = f->token->str;
-    if (!strncmp (a, "0x", 2) || 
-	!strncmp (a, "-0x", 3) || 
-	!strncmp (a, "+0x", 3)) {
+    if (!strncmp (a, "0x", 2) ||
+        !strncmp (a, "-0x", 3) ||
+        !strncmp (a, "+0x", 3)) {
       while (*a != '\0' && char_in_string (*a, "+-0123456789abcdefx")) a++;
       if (*a == '\0') {
-	f->type = GTS_INT;
-	return;
+        f->type = GTS_INT;
+        return;
       }
       a = f->token->str;
       while (*a != '\0' && char_in_string (*a, "+-0123456789abcdefx.p")) a++;
       if (*a == '\0') {
-	f->type = GTS_FLOAT;
-	return;
+        f->type = GTS_FLOAT;
+        return;
       }
     }
     f->type = GTS_STRING;
@@ -392,19 +446,49 @@ void gts_file_next_token (GtsFile * f)
  * @f: a #GtsFile.
  * @type: a #GtsTokenType.
  *
- * Finds and sets the first token of a type different from @type 
+ * Finds and sets the first token of a type different from @type
  * occuring after a token of type @type.
  */
 void gts_file_first_token_after (GtsFile * f, GtsTokenType type)
 {
   g_return_if_fail (f != NULL);
 
-  while (f->type != GTS_ERROR && 
-	 f->type != GTS_NONE &&
-	 f->type != type)
+  while (f->type != GTS_ERROR &&
+         f->type != GTS_NONE &&
+         f->type != type)
     gts_file_next_token (f);
   while (f->type == type)
     gts_file_next_token (f);
+}
+
+/**
+ * gts_file_set_type:
+ * @f: a #GtsFile.
+ * @ftype: a #GtsFileType.
+ *
+ * Set the type of the file.
+ *
+ */
+void gts_file_set_type (GtsFile * f, GtsFileType ftype)
+{
+  g_return_if_fail (f != NULL);
+
+  switch (ftype) {
+    case GTS_FILE_GTS: {
+      if (f->ftype == GTS_FILE_GTS) return;
+      f->ftype = ftype;
+      g_free(f->delimiters); f->delimiters = g_strdup (GTS_DELIMITERS);
+      g_free(f->comments); f->comments = g_strdup (GTS_COMMENTS);
+      g_free(f->tokens); f->tokens = g_strdup (GTS_TOKENS);
+    } break;
+    case GTS_FILE_OBJ: {
+      if (f->ftype == GTS_FILE_OBJ) return;
+      f->ftype = ftype;
+      g_free(f->delimiters); f->delimiters = g_strdup (GTS_OBJ_DELIMITERS);
+      g_free(f->comments); f->comments = g_strdup (GTS_OBJ_COMMENTS);
+      g_free(f->tokens); f->tokens = g_strdup (GTS_OBJ_TOKENS);
+    } break;
+  }
 }
 
 /**
@@ -413,7 +497,7 @@ void gts_file_first_token_after (GtsFile * f, GtsTokenType type)
  * @vars: a %GTS_NONE terminated array of #GtsFileVariable.
  *
  * Opens a block delimited by braces to read a list of optional
- * arguments specified by @vars.  
+ * arguments specified by @vars.
  *
  * If an error is encountered the @error field of @f is set.
  */
@@ -446,7 +530,7 @@ void gts_file_assign_start (GtsFile * f, GtsFileVariable * vars)
  *
  * Returns: the variable of @vars which has been assigned or %NULL if
  * no variable has been assigned (if an error has been encountered the
- * @error field of @f is set).  
+ * @error field of @f is set).
  */
 GtsFileVariable * gts_file_assign_next (GtsFile * f, GtsFileVariable * vars)
 {
@@ -471,98 +555,98 @@ GtsFileVariable * gts_file_assign_next (GtsFile * f, GtsFileVariable * vars)
     if (!strcmp (var->name, f->token->str)) {
       found = TRUE;
       if (var->unique && var->set)
-	gts_file_error (f, "variable `%s' was already set at line %d:%d", 
-			var->name, var->line, var->pos);
+        gts_file_error (f, "variable `%s' was already set at line %d:%d",
+                        var->name, var->line, var->pos);
       else {
-	var->line = f->line;
-	var->pos = f->pos;
-	gts_file_next_token (f);
-	if (f->type != '=')
-	  gts_file_error (f, "expecting `='");
-	else {
-	  var->set = TRUE;
-	  switch (var->type) {
-	  case GTS_FILE:
-	    break;
-	  case GTS_INT:
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT) {
-	      gts_file_error (f, "expecting an integer");
-	      var->set = FALSE;
-	    }
-	    else if (var->data)
-	      *((gint *) var->data) = strtol (f->token->str, NULL, 0); 
-	    break;
-	  case GTS_UINT:
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT) {
-	      gts_file_error (f, "expecting an integer");
-	      var->set = FALSE;
-	    }
-	    else if (var->data)
-	      *((guint *) var->data) = strtol (f->token->str, NULL, 0); 
-	    break;
-	  case GTS_FLOAT:
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT && f->type != GTS_FLOAT) {
-	      gts_file_error (f, "expecting a number");
-	      var->set = FALSE;
-	    }
-	    else if (var->data)
-	      *((gfloat *) var->data) = strtod (f->token->str, NULL); 
-	    break;
-	  case GTS_DOUBLE:
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT && f->type != GTS_FLOAT) {
-	      gts_file_error (f, "expecting a number");
-	      var->set = FALSE;
-	    }
-	    else if (var->data)
-	      *((gdouble *) var->data) = strtod (f->token->str, NULL); 
-	    break;
-	  case GTS_STRING:
-	    gts_file_next_token (f);
-	    if (f->type != GTS_INT && 
-		f->type != GTS_FLOAT && 
-		f->type != GTS_STRING) {
-	      gts_file_error (f, "expecting a string");
-	      var->set = FALSE;
-	    }
-	    else {
-	      if (f->token->str[0] != '"') { /* simple string */
-		if (var->data)
-		  *((gchar **) var->data) = g_strdup (f->token->str); 
-	      }
-	      else { 
-		/* quoted string */
-		gint len = strlen (f->token->str);
-		if (f->token->str[len - 1] == '"') { 
-		  /* simple quoted string */
-		  f->token->str[len - 1] = '\0';
-		  if (var->data)
-		    *((gchar **) var->data) = g_strdup (&(f->token->str[1]));
-		  f->token->str[len - 1] = '"';
-		}
-		else { 
-		  /* multiple parts */
-		  GString * s = g_string_new (&(f->token->str[1]));
-		  g_string_append_c (s, ' ');
-		  int c = gts_file_getc (f);
-		  while (c != '"' && c != EOF) {
-		    g_string_append_c (s, c);
-		    c = gts_file_getc (f);
-		  }
-		  if (var->data)
-		    *((gchar **) var->data) = g_strdup (s->str);
-		  g_string_free (s, TRUE);
-		}
-	      }
-	    }
-	    break;
-	  default:
-	    g_assert_not_reached ();
-	  }
-	}
+        var->line = f->line;
+        var->pos = f->pos;
+        gts_file_next_token (f);
+        if (f->type != '=')
+          gts_file_error (f, "expecting `='");
+        else {
+          var->set = TRUE;
+          switch (var->type) {
+          case GTS_FILE:
+            break;
+          case GTS_INT:
+            gts_file_next_token (f);
+            if (f->type != GTS_INT) {
+              gts_file_error (f, "expecting an integer");
+              var->set = FALSE;
+            }
+            else if (var->data)
+              *((gint *) var->data) = strtol (f->token->str, NULL, 0);
+            break;
+          case GTS_UINT:
+            gts_file_next_token (f);
+            if (f->type != GTS_INT) {
+              gts_file_error (f, "expecting an integer");
+              var->set = FALSE;
+            }
+            else if (var->data)
+              *((guint *) var->data) = strtol (f->token->str, NULL, 0);
+            break;
+          case GTS_FLOAT:
+            gts_file_next_token (f);
+            if (f->type != GTS_INT && f->type != GTS_FLOAT) {
+              gts_file_error (f, "expecting a number");
+              var->set = FALSE;
+            }
+            else if (var->data)
+              *((gfloat *) var->data) = strtod (f->token->str, NULL);
+            break;
+          case GTS_DOUBLE:
+            gts_file_next_token (f);
+            if (f->type != GTS_INT && f->type != GTS_FLOAT) {
+              gts_file_error (f, "expecting a number");
+              var->set = FALSE;
+            }
+            else if (var->data)
+              *((gdouble *) var->data) = strtod (f->token->str, NULL);
+            break;
+          case GTS_STRING:
+            gts_file_next_token (f);
+            if (f->type != GTS_INT &&
+                f->type != GTS_FLOAT &&
+                f->type != GTS_STRING) {
+              gts_file_error (f, "expecting a string");
+              var->set = FALSE;
+            }
+            else {
+              if (f->token->str[0] != '"') { /* simple string */
+                if (var->data)
+                  *((gchar **) var->data) = g_strdup (f->token->str);
+              }
+              else {
+                /* quoted string */
+                gint len = strlen (f->token->str);
+                if (f->token->str[len - 1] == '"') {
+                  /* simple quoted string */
+                  f->token->str[len - 1] = '\0';
+                  if (var->data)
+                    *((gchar **) var->data) = g_strdup (&(f->token->str[1]));
+                  f->token->str[len - 1] = '"';
+                }
+                else {
+                  /* multiple parts */
+                  GString * s = g_string_new (&(f->token->str[1]));
+                  g_string_append_c (s, ' ');
+                  int c = gts_file_getc (f);
+                  while (c != '"' && c != EOF) {
+                    g_string_append_c (s, c);
+                    c = gts_file_getc (f);
+                  }
+                  if (var->data)
+                    *((gchar **) var->data) = g_strdup (s->str);
+                  g_string_free (s, TRUE);
+                }
+              }
+            }
+            break;
+          default:
+            g_assert_not_reached ();
+          }
+        }
       }
     }
     else
@@ -613,11 +697,11 @@ void gts_file_assign_variables (GtsFile * f, GtsFileVariable * vars)
  * sets the @line and @pos fields of @f to the line and position where
  * it has been assigned.
  */
-void gts_file_variable_error (GtsFile * f, 
-			      GtsFileVariable * vars,
-			      const gchar * name,
-			      const gchar * format,
-			      ...)
+void gts_file_variable_error (GtsFile * f,
+                              GtsFileVariable * vars,
+                              const gchar * name,
+                              const gchar * format,
+                              ...)
 {
   va_list args;
   GtsFileVariable * var;
@@ -638,7 +722,7 @@ void gts_file_variable_error (GtsFile * f,
     f->pos = var->pos;
   }
 
-  va_start (args, format);  
+  va_start (args, format);
   gts_file_verror (f, format, args);
   va_end (args);
 }
@@ -665,13 +749,13 @@ void id_insert (gpointer p)
 
 void id_remove (gpointer p)
 {
-  g_assert (g_hash_table_lookup (ids, p));  
+  g_assert (g_hash_table_lookup (ids, p));
   g_hash_table_remove (ids, p);
 }
 
-void gts_write_triangle (GtsTriangle * t, 
-			 GtsPoint * o,
-			 FILE * fptr)
+void gts_write_triangle (GtsTriangle * t,
+                         GtsPoint * o,
+                         FILE * fptr)
 {
   gdouble xo = o ? o->x : 0.0;
   gdouble yo = o ? o->y : 0.0;
@@ -681,24 +765,24 @@ void gts_write_triangle (GtsTriangle * t,
 
   fprintf (fptr, "(hdefine geometry \"t%d\" { =\n", id (t));
   fprintf (fptr, "OFF 3 1 0\n"
-	   "%g %g %g\n%g %g %g\n%g %g %g\n3 0 1 2\n})\n"
-	   "(geometry \"t%d\" { : \"t%d\"})\n"
-	   "(normalization \"t%d\" none)\n",
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v1)->x - xo, 
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v1)->y - yo,
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v1)->z - zo,
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v2)->x - xo, 
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v2)->y - yo, 
-	   GTS_POINT (GTS_SEGMENT (t->e1)->v2)->z - zo,
-	   GTS_POINT (gts_triangle_vertex (t))->x - xo,
-	   GTS_POINT (gts_triangle_vertex (t))->y - yo,
-	   GTS_POINT (gts_triangle_vertex (t))->z - zo,
-	   id (t), id (t), id (t));
+           "%g %g %g\n%g %g %g\n%g %g %g\n3 0 1 2\n})\n"
+           "(geometry \"t%d\" { : \"t%d\"})\n"
+           "(normalization \"t%d\" none)\n",
+           GTS_POINT (GTS_SEGMENT (t->e1)->v1)->x - xo,
+           GTS_POINT (GTS_SEGMENT (t->e1)->v1)->y - yo,
+           GTS_POINT (GTS_SEGMENT (t->e1)->v1)->z - zo,
+           GTS_POINT (GTS_SEGMENT (t->e1)->v2)->x - xo,
+           GTS_POINT (GTS_SEGMENT (t->e1)->v2)->y - yo,
+           GTS_POINT (GTS_SEGMENT (t->e1)->v2)->z - zo,
+           GTS_POINT (gts_triangle_vertex (t))->x - xo,
+           GTS_POINT (gts_triangle_vertex (t))->y - yo,
+           GTS_POINT (gts_triangle_vertex (t))->z - zo,
+           id (t), id (t), id (t));
 }
 
-void gts_write_segment (GtsSegment * s, 
-			GtsPoint * o,
-			FILE * fptr)
+void gts_write_segment (GtsSegment * s,
+                        GtsPoint * o,
+                        FILE * fptr)
 {
   gdouble xo = o ? o->x : 0.0;
   gdouble yo = o ? o->y : 0.0;
@@ -708,13 +792,13 @@ void gts_write_segment (GtsSegment * s,
 
   fprintf (fptr, "(geometry \"s%d\" { =\n", id (s));
   fprintf (fptr, "VECT 1 2 0 2 0 %g %g %g %g %g %g })\n"
-	   "(normalization \"s%d\" none)\n",
-	   GTS_POINT (s->v1)->x - xo, 
-	   GTS_POINT (s->v1)->y - yo, 
-	   GTS_POINT (s->v1)->z - zo,
-	   GTS_POINT (s->v2)->x - xo, 
-	   GTS_POINT (s->v2)->y - yo, 
-	   GTS_POINT (s->v2)->z - zo,
-	   id (s));
+           "(normalization \"s%d\" none)\n",
+           GTS_POINT (s->v1)->x - xo,
+           GTS_POINT (s->v1)->y - yo,
+           GTS_POINT (s->v1)->z - zo,
+           GTS_POINT (s->v2)->x - xo,
+           GTS_POINT (s->v2)->y - yo,
+           GTS_POINT (s->v2)->z - zo,
+           id (s));
 }
 #endif /* DEBUG_FUNCTIONS */

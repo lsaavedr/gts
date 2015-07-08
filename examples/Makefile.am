@@ -20,6 +20,7 @@ bin_PROGRAMS = \
 
 noinst_PROGRAMS = \
 	set \
+	setobj \
 	volume \
 	cleanup \
 	coarsen \
