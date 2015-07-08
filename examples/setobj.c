@@ -29,15 +29,19 @@
 #endif /* HAVE_UNISTD_H */
 #include "gts.h"
 
-static void write_edge (GtsSegment * s, FILE * fp)
+static void write_vertex_obj (GtsPoint * p, gpointer * data)
 {
-  fprintf (fp, "e %g %g %g %g %g %g\n",
-           GTS_POINT (s->v1)->x,
-           GTS_POINT (s->v1)->y,
-           GTS_POINT (s->v1)->z,
-           GTS_POINT (s->v2)->x,
-           GTS_POINT (s->v2)->y,
-           GTS_POINT (s->v2)->z);
+  FILE * fp = data[0];
+
+  fprintf (fp, "v %g %g %g\n", p->x, p->y, p->z);
+  GTS_OBJECT (p)->reserved = GUINT_TO_POINTER ((*((guint *) data[1]))++);
+}
+
+static void write_edge_obj (GtsSegment * s, FILE * fp)
+{
+  fprintf (fp, "l %u %u\n",
+           GPOINTER_TO_UINT (GTS_OBJECT (s->v1)->reserved),
+           GPOINTER_TO_UINT (GTS_OBJECT (s->v2)->reserved));
 }
 
 /* setobj - compute set operations between surfaces */
@@ -49,7 +53,7 @@ int main (int argc, char * argv[])
   FILE * fptr;
   GtsFile * fp;
   int c = 0;
-  gboolean verbose = TRUE;
+  gboolean verbose = FALSE;
   gboolean inter = FALSE;
   gboolean check_self_intersection = FALSE;
   gchar * operation, * file1, * file2, * file3;
@@ -81,7 +85,7 @@ int main (int argc, char * argv[])
       inter = TRUE;
       break;
     case 'v': /* verbose */
-      verbose = FALSE;
+      verbose = TRUE;
       break;
     case 'h': /* help */
       fprintf (stderr,
@@ -89,12 +93,12 @@ int main (int argc, char * argv[])
              "Compute set operations between surfaces, where OPERATION is either.\n"
              "union, inter, diff, all.\n"
              "\n"
-             "  -i      --inter    output a list \'e x1 y1 z1 x2 y2 z2\' representation of\n"
-             "                     the curve intersection of the surfaces\n"
+             "  -i      --inter    output an OBJ representation of the curve\n"
+             "                     intersection of the surfaces\n"
              "  -s      --self     checks that the surfaces are not self-intersecting\n"
              "                     if one of them is, the set of self-intersecting faces\n"
              "                     is written (as a GtsSurface) on standard output\n"
-             "  -v      --verbose  do not print statistics about the surface\n"
+             "  -v      --verbose  print statistics about the surface\n"
              "  -h      --help     display this help and exit\n"
              "\n"
              "Reports bugs to %s\n",
@@ -329,10 +333,20 @@ int main (int argc, char * argv[])
   }
   /* write resulting surface to standard output */
   if (inter) {
-    g_slist_foreach (si->edges, (GFunc) write_edge, fptr);
+    guint n = 1;
+    gpointer data[2];
+
+    data[0] = fptr;
+    data[1] = &n;
+
+    GSList * vertices = gts_vertices_from_segments (si->edges);
+    g_slist_foreach (vertices, (GFunc) write_vertex_obj, data);
+    g_slist_foreach (si->edges, (GFunc) write_edge_obj, fptr);
+
+    g_slist_foreach (vertices, (GFunc) gts_object_reset_reserved, NULL);
+    g_slist_free (vertices);
   }
   else {
-    GTS_POINT_CLASS (gts_vertex_class ())->binary = TRUE;
     gts_surface_write_obj (s3, fptr);
   }
   fclose (fptr);
